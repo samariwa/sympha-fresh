@@ -1,7 +1,8 @@
 <?php
- session_start();
+ 
  require_once 'core/init.php';
- Database::getInstance();
+ $user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
+ 
  require('config.php');
  require('functions.php');
  require('queries.php');

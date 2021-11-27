@@ -3,6 +3,8 @@ use \PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 require('../config.php');
 require('../functions.php');
+require_once '../core/init.php';
+
 session_start();
 $botDetect = FALSE;
 $usernamenotempty = TRUE;
@@ -11,7 +13,12 @@ $usernotduplicate = TRUE;
 $passwordnotempty = TRUE;
 $passwordvalidate = TRUE;
 $passwordmatch  = TRUE;
-if (isset($_REQUEST['submit_button'])) {
+$user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
+if(Input::exists())
+{
+   echo "hi";
+}
+/*if (isset($_REQUEST['submit_button'])) {
 	$url = $token_verification_site;
 	$data = [
 		'secret' => $private_key,
@@ -108,7 +115,7 @@ if (isset($_REQUEST['submit_button'])) {
 	else{
 		$botDetect = TRUE;
 	}
- }
+ }*/
 ?>    
 <!DOCTYPE html>
 <html lang="en">

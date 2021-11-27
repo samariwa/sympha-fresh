@@ -4,7 +4,7 @@ session_start();
 $GLOBALS['config'] = array(
     'mysql' => array(
         'host' => '127.0.0.1',
-        'port' => '3306',
+        'port' => '3307',
         'username' => 'root',
         'password' => 'samokoth.1999',
         'database' => 'sympha_fresh'
@@ -59,6 +59,18 @@ $GLOBALS['config'] = array(
     )
 );
 
-spl_autoload_register(function($class){
-    require_once 'classes/'.$class.'.php';
-});
+
+
+    spl_autoload_register(function($class){
+        $directory = 'classes/'.$class.'.php';
+        if(file_exists($directory))
+        {
+            require_once $directory;
+        }
+        else
+        {
+            require_once '../classes/'.$class.'.php';
+        }
+    });
+
+
