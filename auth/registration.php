@@ -16,7 +16,7 @@ $passwordmatch  = TRUE;
 $user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
 if(Input::exists())
 {
-   echo "hi";
+   $validation = new Validation();
 }
 /*if (isset($_REQUEST['submit_button'])) {
 	$url = $token_verification_site;

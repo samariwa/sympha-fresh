@@ -1,17 +1,18 @@
 <?php
 require('../config.php');
 require('../functions.php');
+require_once '../core/init.php';
 $where = $_POST['where'];
+$validate = new Validation;
 if($where == 'email' )
 {
-    $email = sanitize($_POST['email']);
-   $row = mysqli_query($connection,"SELECT email FROM users WHERE email = '".$email."'")or die($connection->error);
-   $result = mysqli_fetch_array($row);
-   if ( $result == TRUE) {
-    echo "exists";
-   }
+    $result = $validate->emailCheck(sanitize($_POST['email']));
+   if($result == TRUE)
+    {
+        echo "exists";
+    }
    else{
-       if($email != '')
+       if(sanitize($_POST['email']) != '')
        {
          echo "missing";
        }
@@ -19,12 +20,17 @@ if($where == 'email' )
 }
 elseif($where == 'mobile' )
 {
-    $mobile = sanitize($_POST['mobile']);
-   $row = mysqli_query($connection,"SELECT mobile FROM users WHERE number = '".$mobile."'")or die($connection->error);
-   $result = mysqli_fetch_array($row);
-   if ( $result == TRUE) {
-    echo "exists";
-   }
+    $result = $validate->mobileNumberCheck(sanitize($_POST['mobile']));
+    if($result == TRUE)
+     {
+         echo "exists";
+     }
+    else{
+        if(sanitize($_POST['mobile']) != '')
+        {
+          echo "missing";
+        }
+    }
 } 
 elseif($where == 'password' )
 {
