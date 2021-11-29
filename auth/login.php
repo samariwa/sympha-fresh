@@ -7,6 +7,7 @@ session_start();
 //require user configuration and database connection parameters
 require('../config.php');
 require_once "../functions.php";
+require_once '../core/init.php';
 if (isset($_SESSION['logged_in'])) {
 	if ($_SESSION['logged_in'] == TRUE) {
 //valid user has logged-in to the website
@@ -64,28 +65,16 @@ if (isset($_SESSION['logged_in'])) {
 $validationresults = TRUE;
 $registered = TRUE;
 $botDetect = FALSE;
+$internetConnection = TRUE;
 //Check if a user has logged-in
 if (!isset($_SESSION['logged_in'])) {
     $_SESSION['logged_in'] = FALSE;
 }
-if(isset($_REQUEST['login-button'])){
-  $url = $token_verification_site;
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-    'remoteip' => $iptocheck
-	];
-  $options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-  $context = stream_context_create($options);
-	$response = file_get_contents($url, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == true && $res['score'] >= 0.5) {
+if(Input::exists()){
+  $token_verification = new Token();
+  $token_result = $token_verification->AuthToken($_POST['token']);
+	if ($token_result == "success") 
+  {
 //Check if the form is submitted
 if ((isset($_POST["pass"])) && (isset($_POST["email"])) && ($_SESSION['logged_in'] == FALSE)) {
 //Email and password has been submitted by the user
@@ -189,6 +178,10 @@ if ((isset($_POST["pass"])) && (isset($_POST["email"])) && ($_SESSION['logged_in
     }
 }
 }
+elseif($token_result == "no connection")
+{
+  $internetConnection = FALSE;
+}
 else{
   $botDetect = TRUE;
 }
@@ -274,14 +267,15 @@ if (!$_SESSION['logged_in']):
              <p>Don't have an account?&ensp;<a href="registration.php" style="color: inherit;text-decoration: underline;">Register</a></p>
           </div>
           <?php 
-          if (($validationresults == FALSE) || ($registered == FALSE)){
+          if (($validationresults == FALSE) || ($registered == FALSE) || ($internetConnection == FALSE)){
           ?>
           <div style="margin-top: 20px">
           <!-- Display validation errors -->
                      <?php if ($botDetect == TRUE)
 		                        echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
-		                   ?>
-                  <?php if ($validationresults == FALSE || $registered == FALSE)
+                            if ($internetConnection  == FALSE)
+		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
+                            if ($validationresults == FALSE || $registered == FALSE)
                         echo '<font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;Please enter valid email address, password <br> &ensp;&emsp;(if required).</font>';
                    ?>
                   </div>

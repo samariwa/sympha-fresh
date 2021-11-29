@@ -76,10 +76,15 @@ class Database{
         }
     }
 
-    public function get($table, $where)
+    public function getAll($table, $where)
     {
         return $this->action('SELECT *', $table, $where);
     }
+
+    public function get($table, $field, $where)
+    {
+        return $this->action('SELECT '.$field, $table, $where);
+    } 
 
     public function delete($table, $where)
     {

@@ -13,7 +13,7 @@ $usernotduplicate = TRUE;
 $passwordnotempty = TRUE;
 $passwordvalidate = TRUE;
 $passwordmatch  = TRUE;
-$user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
+//$user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
 if(Input::exists())
 {
    $validation = new Validation();

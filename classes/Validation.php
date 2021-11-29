@@ -11,21 +11,27 @@ class Validation{
 
     public function emailCheck($enteredEmail)
     {
-         $check = $this->_db->get('users', array('email', '=', $enteredEmail));
-         if($check->count())
-         {
-             return true;
-         }
+        if($enteredEmail != '')
+        {
+            $check = $this->_db->getAll('users', array('email', '=', $enteredEmail));
+            if($check->count())
+            {
+                return true;
+            }
+        }
          return false;
     }
 
     public function mobileNumberCheck($enteredNumber)
     {
-        $check = $this->_db->get('users', array('number', '=', $enteredNumber));
-        if($check->count())
+        if($enteredNumber != '')
         {
-            return true;
+            $check = $this->_db->getAll('users', array('number', '=', $enteredNumber));
+            if($check->count())
+            {
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }

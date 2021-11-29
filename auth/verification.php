@@ -1,5 +1,4 @@
 <?php
-require('../config.php');
 require('../functions.php');
 require_once '../core/init.php';
 $where = $_POST['where'];
@@ -11,11 +10,9 @@ if($where == 'email' )
     {
         echo "exists";
     }
-   else{
-       if(sanitize($_POST['email']) != '')
-       {
+   else
+   {
          echo "missing";
-       }
    }
 }
 elseif($where == 'mobile' )
@@ -25,28 +22,19 @@ elseif($where == 'mobile' )
      {
          echo "exists";
      }
-    else{
-        if(sanitize($_POST['mobile']) != '')
-        {
+    else
+    {
           echo "missing";
-        }
     }
 } 
 elseif($where == 'password' )
 {
-    $email = sanitize($_POST['email']);
-    $password = sanitize($_POST['password']);
-    $result = mysqli_query($connection,"SELECT `password` FROM `users` WHERE `email`='$email'");
-    $row = mysqli_fetch_array($result);
-    if ( $row == TRUE) {
-        $correctpassword = $row['password'];
-        if($password != '')
-        {
-        if(!password_verify($password, $correctpassword))
-            {
-                echo "invalid";
-            }
-        }    
-    }
+    $verify = new Verification();
+    $result = $verify->verifyPassword(sanitize($_POST['email']), sanitize($_POST['password']));
+    if($result == FALSE)
+     {
+         echo "invalid";
+     }
+    
 }
 ?>

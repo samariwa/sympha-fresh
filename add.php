@@ -2,9 +2,10 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 require('config.php');
+require_once 'core/init.php';
 require_once "functions.php";
 $where =$_POST['where'];
-session_start();
+$token_verification = new Token();
 if($where == 'customer' )
 {
    $name = $_POST['name'];
@@ -913,22 +914,9 @@ elseif ($where == 'site_contact') {
   $number = "";
   $registered = "";
   if (isset($_POST['email']) && isset($_POST['message']) && isset($_POST['subject'])) {
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($token_verification_site, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == 'true' && $res['score'] >= 0.5) {
+  $token_result = $token_verification->AuthToken($_POST['token']);
+	if ($token_result == "success") 
+  {
   $row = mysqli_query($connection,"SELECT * FROM users WHERE email = '".$_POST['email']."'")or die($connection->error);
    $result = mysqli_fetch_array($row);
    if ( $result == TRUE) {
@@ -961,7 +949,9 @@ elseif ($where == 'site_contact') {
    mysqli_query($connection,"INSERT INTO `site_communication` (`name`, `email`, `number`,`subject`, `message`,`registered_user`) VALUES ('$full_name','".$_POST['email']."','$number','".$_POST["subject"]."','".$_POST["message"]."','$registered')") or die(mysqli_error($connection));
     echo "success";
   }
-  else{
+
+elseif($token_result == "error")
+{
     echo "error";
   } 
 }
@@ -970,22 +960,9 @@ elseif ($where == 'site_comment') {
   $name = "";
   $registered = "";
   if (isset($_POST['email']) && isset($_POST['comment'])) {
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($token_verification_site, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == 'true' && $res['score'] >= 0.5) {
+  $token_result = $token_verification->AuthToken($_POST['token']);
+  if ($token_result == "success") 
+  {
   $row = mysqli_query($connection,"SELECT * FROM users WHERE email = '".$_POST['email']."'")or die($connection->error);
    $result = mysqli_fetch_array($row);
    if ( $result == TRUE) {
@@ -999,31 +976,17 @@ elseif ($where == 'site_comment') {
    mysqli_query($connection,"INSERT INTO `comments` (`blog_id`,`commenter`, `registered`, `belongs_to`,`comment`) VALUES ('".$_POST['id']."','$name','$registered','blog','".$_POST['comment']."')") or die(mysqli_error($connection));
     echo "success";
   }
-  else{
+  elseif($token_result == "error")
     echo "error";
   } 
-}
 }
 elseif ($where == 'site_subcomment') {
   $name = "";
   $registered = "";
   if (isset($_POST['email']) && isset($_POST['subcomment'])) {
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($token_verification_site, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == true && $res['score'] >= 0.5) {
+    $token_result = $token_verification->AuthToken($_POST['token']);
+    if ($token_result == "success") 
+    {
   $row = mysqli_query($connection,"SELECT * FROM users WHERE email = '".$_POST['email']."'")or die($connection->error);
    $result = mysqli_fetch_array($row);
    if ( $result == TRUE) {
@@ -1037,7 +1000,8 @@ elseif ($where == 'site_subcomment') {
    mysqli_query($connection,"INSERT INTO `comments` (`comment_id`,`commenter`, `registered`, `belongs_to`,`comment`) VALUES ('".$_POST['id']."','$name','$registered','comment','".$_POST['subcomment']."')") or die(mysqli_error($connection));
     echo "success";
   }
-  else{
+  elseif($token_result == "error")
+  {
     echo "error";
   } 
 }
