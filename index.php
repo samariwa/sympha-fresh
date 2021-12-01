@@ -1,6 +1,15 @@
 <?php
 include('header.php');
 echo $message;
+if(Session::exists('success'))
+{
+?>
+    <div class="alert alert-dismissible" style="background-color: #59b828; color:white;">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+       <?php echo Session::flash('success'); ?>
+    </div>
+ <?php 
+}
 ?>
              <!-- banner-section start -->
              <section class="slider-banner" style="animation: 20s slider infinite">

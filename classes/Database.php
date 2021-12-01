@@ -93,7 +93,7 @@ class Database{
 
     public function insert($table, $fields = array())
     {
-            $keys = array_keys($fields);
+           $keys = array_keys($fields);
             $values = null;
             $x = 1;
             foreach($fields as $field)

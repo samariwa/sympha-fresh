@@ -5,38 +5,101 @@ require('../config.php');
 require('../functions.php');
 require_once '../core/init.php';
 
-session_start();
 $botDetect = FALSE;
-$usernamenotempty = TRUE;
-$usernamevalidate = TRUE;
 $usernotduplicate = TRUE;
-$passwordnotempty = TRUE;
 $passwordvalidate = TRUE;
 $passwordmatch  = TRUE;
+$error = FALSE;
+$internetConnection = TRUE;
 //$user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
 if(Input::exists())
 {
-   $validation = new Validation();
-}
-/*if (isset($_REQUEST['submit_button'])) {
-	$url = $token_verification_site;
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($url, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == true && $res['score'] >= 0.5) {
+$token_verification = new Token();
+$token_result = $token_verification->AuthToken($_POST['token']);
+if ($token_result == "success") 
+{
+	$random = generateRandomString();
+	$validation = new Validation;
+    $email_validation = $validation->emailCheck(sanitize(Input::get('email')));
+	$mobile_validation = $validation->mobileNumberCheck(sanitize(Input::get('mobile')));
+	if(($email_validation == TRUE) || ($mobile_validation == TRUE))
+	{
+		$usernotduplicate = FALSE;
+	}
+	else
+	{
+		$usernotduplicate = TRUE;
+	}
+	if( ((strlen(sanitize(Input::get('pass')))) < 8)) 
+	{
+        $passwordvalidate = FALSE;
+    } 
+	else 
+	{
+        $passwordvalidate = TRUE;
+    }
 
+    if(sanitize(Input::get('pass')) == sanitize(Input::get('pass2'))) 
+	{
+        $passwordmatch = TRUE;
+    } 
+	else
+	{
+        $passwordmatch = FALSE;
+    }
+	if (($usernotduplicate == TRUE) && ($passwordmatch == TRUE) && ($passwordvalidate == TRUE))
+	{
+		$user = new User();
+		try
+		{
+			$user->create(array(
+				'firstname' => sanitize(Input::get('firstname')),
+				'lastname' => sanitize(Input::get('lastname')),
+				'number' => sanitize(Input::get('mobile')),
+				'email' => sanitize(Input::get('email')),
+				'location' => sanitize(Input::get('location')),
+				'password' => password_hash(sanitize(Input::get('pass')), PASSWORD_DEFAULT)
+			));
+		}
+		catch(Exception $e)
+		{
+			$error = TRUE;
+		}
+		$customer_fullname = sanitize(Input::get('firstname')).' '.sanitize(Input::get('lastname'));
+		$customer = new Customer();
+		try
+		{
+			$customer->create(array(
+				'User_id' => $user->fetchUserId(sanitize(Input::get('email'))),
+				'Name' => $customer_fullname,
+				'Number' => sanitize(Input::get('mobile')),
+				'Location' => sanitize(Input::get('location')),
+				'Status' => 'clean',
+				'Note' => 'Add Note...'
+			));
+		}
+		catch(Exception $e)
+		{
+			$error = TRUE;
+		}
+	}
+
+	/*if ($session->exists('logged_in'))
+	{
+        $log = Database::getInstance()->insert("logged_devices", array('user_id' => $user_id, 'ip_address' => $iptocheck, 'browser/device' => $useragent));
+	}*/
+   Session::flash('success', 'You have registered successfully');
+   Redirect::to('../'.$home_url);
+}
+elseif($token_result == "no connection")
+{
+  $internetConnection = FALSE;
+}
+else{
+  $botDetect = TRUE;
+}
+}
+/*
 		//sanitize user inputs
     $first_name = sanitize($_POST["firstname"]);
     $last_name = sanitize($_POST["lastname"]);
@@ -47,46 +110,9 @@ if(Input::exists())
     $desired_password1 = sanitize($_POST["pass2"]);
     $random = generateRandomString();
     $hash = password_hash($desired_password, PASSWORD_DEFAULT);
-    if (!($fetch = mysqli_fetch_array(mysqli_query($connection,"SELECT `number` FROM `users` WHERE `number`='$mobile'")))) {
-//no records for this user in the MySQL database
-        $usernotduplicate = TRUE;
-    } else {
-        $usernotduplicate = FALSE;
-    }
 
-    if (!($fetch = mysqli_fetch_array(mysqli_query($connection,"SELECT `email` FROM `users` WHERE `email`='$email'")))) {
-//no records for this user in the MySQL database
-        $usernotduplicate = TRUE;
-    } else {
-        $usernotduplicate = FALSE;
-    }
-//validate password
 
-    if (empty($desired_password)) {
-        $passwordnotempty = FALSE;
-    } else {
-        $passwordnotempty = TRUE;
-    }
-//php function ctype_alnum for checking the characters used in registration
-    if ( ((strlen($desired_password)) < 8)) {
-        $passwordvalidate = FALSE;
-    } else {
-        $passwordvalidate = TRUE;
-    }
 
-    if ($desired_password == $desired_password1) {
-        $passwordmatch = TRUE;
-    } else {
-        $passwordmatch = FALSE;
-    }
-
-    if (($usernamenotempty == TRUE)
-        && ($usernamevalidate == TRUE)
-        && ($usernotduplicate == TRUE)
-        && ($passwordnotempty == TRUE)
-        && ($passwordmatch == TRUE)
-        && ($passwordvalidate == TRUE)
-        ){
 	//Insert details to database
     mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`email`,`location`,`password`) VALUES ('$first_name','$last_name','$mobile','$email','$location','$hash')") or die(mysqli_error($connection));
 	$customer_fullname = $first_name.' '.$last_name;
@@ -111,11 +137,7 @@ if(Input::exists())
      header("Location: ../$home_url");
      exit;
 	 }
-	}
-	else{
-		$botDetect = TRUE;
-	}
- }*/
+ */
 ?>    
 <!DOCTYPE html>
 <html lang="en">
@@ -228,16 +250,15 @@ if(Input::exists())
 		                  <!-- Display error -->
 		                  <?php if ($botDetect == TRUE)
 		                        echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
-		                   ?>
-						    <?php 
-					         if ($passwordmatch == FALSE)
-					        echo '<br><br>&emsp;&emsp;&emsp;&ensp;<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Your passwords do not match.</font>'; ?>
-					<?php  if ($passwordvalidate == FALSE)
-					        echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your password should be greater than 8 characters.</font>'; ?>
-					   <?php if ($usernamevalidate == FALSE)
-					        echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your username should be less than 11 characters.</font>'; ?>
-					     <?php if ($usernotduplicate == FALSE)
-					        echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bxs-data bx-flashing"></i>&ensp;User already exists.</font>'; ?>
+								if ($internetConnection  == FALSE)
+		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
+								if ($passwordmatch == FALSE)
+								echo '<br><br>&emsp;&emsp;&emsp;&ensp;<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Your passwords do not match.</font>'; 
+								if ($passwordvalidate == FALSE)
+								echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your password should be greater than 8 characters.</font>'; 
+								if ($usernotduplicate == FALSE)
+								echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bxs-data bx-flashing"></i>&ensp;User already exists.</font>'; 
+							?>
                   </div>
 					<input type="hidden" id="token" name="token">       		        
 				</form>

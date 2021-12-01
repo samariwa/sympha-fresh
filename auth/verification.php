@@ -2,7 +2,7 @@
 require('../functions.php');
 require_once '../core/init.php';
 $where = $_POST['where'];
-$validate = new Validation;
+$validate = new Validation();
 if($where == 'email' )
 {
     $result = $validate->emailCheck(sanitize($_POST['email']));
