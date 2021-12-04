@@ -11,7 +11,6 @@ $passwordvalidate = TRUE;
 $passwordmatch  = TRUE;
 $error = FALSE;
 $internetConnection = TRUE;
-//$user = Database::getInstance()->update('users', 3,array('email' => 'samuel.mariwa@strathmore.edu'));
 if(Input::exists())
 {
 $token_verification = new Token();
@@ -83,11 +82,6 @@ if ($token_result == "success")
 			$error = TRUE;
 		}
 	}
-
-	/*if ($session->exists('logged_in'))
-	{
-        $log = Database::getInstance()->insert("logged_devices", array('user_id' => $user_id, 'ip_address' => $iptocheck, 'browser/device' => $useragent));
-	}*/
    Session::flash('success', 'You have registered successfully');
    Redirect::to('../'.$home_url);
 }
@@ -95,49 +89,12 @@ elseif($token_result == "no connection")
 {
   $internetConnection = FALSE;
 }
-else{
+else
+{
   $botDetect = TRUE;
 }
 }
-/*
-		//sanitize user inputs
-    $first_name = sanitize($_POST["firstname"]);
-    $last_name = sanitize($_POST["lastname"]);
-	$location = sanitize($_POST["location"]);
-    $email = sanitize($_POST["email"]);
-    $mobile = sanitize($_POST["mobile"]);
-    $desired_password = sanitize($_POST["pass"]);
-    $desired_password1 = sanitize($_POST["pass2"]);
-    $random = generateRandomString();
-    $hash = password_hash($desired_password, PASSWORD_DEFAULT);
 
-
-
-	//Insert details to database
-    mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`email`,`location`,`password`) VALUES ('$first_name','$last_name','$mobile','$email','$location','$hash')") or die(mysqli_error($connection));
-	$customer_fullname = $first_name.' '.$last_name;
-	mysqli_query($connection,"INSERT INTO `customers` (`Name`,`Number`,`Location`,`Status`,`Note`) VALUES ('$customer_fullname','$mobile','$location','clean','Add Note...')") or die(mysqli_error($connection));
-    $result = mysqli_query($connection,"SELECT `id` FROM `users` WHERE `email`='$email'");
-          $row = mysqli_fetch_array($result);
-          $owner_id = $row['id'];
-        $_SESSION['user'] = $first_name;
-        $_SESSION['email'] = $email;
-        $random = genRandomSaltString();
-        $salt_ip = substr($random, 0, $length_salt);
-        //hash the ip address, user-agent and the salt
-        $hash_user = sha1($salt_ip . $iptocheck . $useragent);
-        //concatenate the salt and the hash to form a signature
-        $signature = $salt_ip . $hash_user;
-        $_SESSION['signature'] = $signature;
-        $_SESSION['logged_in'] = TRUE;
-        $_SESSION['LAST_ACTIVITY'] = time();
-        if (isset($_SESSION['logged_in'])) {
-            mysqli_query($connection,"UPDATE `users` SET `online` = '1', ipAddress = '$iptocheck' WHERE `email` = '$email'");
-        }
-     header("Location: ../$home_url");
-     exit;
-	 }
- */
 ?>    
 <!DOCTYPE html>
 <html lang="en">
@@ -250,6 +207,8 @@ else{
 		                  <!-- Display error -->
 		                  <?php if ($botDetect == TRUE)
 		                        echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
+								if ($error == TRUE)
+		                        echo '<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Something went wrong. Please try again.</font>';
 								if ($internetConnection  == FALSE)
 		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
 								if ($passwordmatch == FALSE)
@@ -379,7 +338,7 @@ else{
      grecaptcha.ready(function() {
     // do request for recaptcha token
     // response is promise with passed token
-        grecaptcha.execute('<?php echo $public_key; ?>', {action:'validate_captcha'})
+        grecaptcha.execute('<?php echo Config::get('google_recaptcha/public_key'); ?>', {action:'validate_captcha'})
                   .then(function(token) {
             // add token value to form
             document.getElementById('token').value = token;

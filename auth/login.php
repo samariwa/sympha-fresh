@@ -2,14 +2,13 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 //require user configuration and database connection parameters
-//Start PHP session
-session_start();
-//require user configuration and database connection parameters
 require('../config.php');
 require_once "../functions.php";
 require_once '../core/init.php';
-if (isset($_SESSION['logged_in'])) {
-	if ($_SESSION['logged_in'] == TRUE) {
+if (isset($_SESSION['logged_in']))
+ {
+	if ($_SESSION['logged_in'] == TRUE)
+  {
 //valid user has logged-in to the website
 //Check for unauthorized use of user sessions
     mysqli_query($connection,"UPDATE `users` SET `on` = '1' WHERE `email` = '$email'");
@@ -28,7 +27,8 @@ if (isset($_SESSION['logged_in'])) {
 
     $hashrecreate = sha1($saltrecreate . $iptocheck . $useragent);
 
-    if (!($hashrecreate == $originalhash)) {
+    if (!($hashrecreate == $originalhash))
+    {
 
 //Signature submitted by the user does not matched with the
 //authorized signature
@@ -37,24 +37,26 @@ if (isset($_SESSION['logged_in'])) {
         header("Location: ../$logout_url?page_url=<?php echo $redirect_link; ?>");
         exit;
     }
-    else{
+    else
+    {
       $logged_in_email = $_SESSION['email'];
       $session_access = mysqli_query($connection,"SELECT * FROM `users` WHERE `email`='$logged_in_email'");
         $row = mysqli_fetch_array($session_access);
         $access = $row['access'];
-      if($access == 'customer'){
-        header("Location: ../$home_url"); 
-        exit();
-      }else{
-        header("Location: ../$admin_url"); 
-        exit();
+      if($access == 'customer')
+      {
+        Redirect::to('../'.$home_url);
+      }
+      else
+      {
+        Redirect::to('../'.$admin_url);
       }
     }
 
-//Session Lifetime control for inactivity
-
-    if ((isset($_SESSION['LAST_ACTIVITY'])) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessiontimeout)) {
-//redirect the user back to login page for re-authentication
+   //Session Lifetime control for inactivity
+    if ((Session::exists('LAST_ACTIVITY')) && (time() - Session::get('LAST_ACTIVITY') > $sessiontimeout)) 
+    {
+       //redirect the user back to login page for re-authentication
          header("Location: ../$logout_url?page_url=<?php echo $redirect_link; ?>");
         exit;
     }
@@ -63,118 +65,40 @@ if (isset($_SESSION['logged_in'])) {
 }
 //Pre-define validation
 $validationresults = TRUE;
-$registered = TRUE;
 $botDetect = FALSE;
 $internetConnection = TRUE;
 //Check if a user has logged-in
-if (!isset($_SESSION['logged_in'])) {
-    $_SESSION['logged_in'] = FALSE;
+if (!Session::exists('logged_in')) 
+{
+    Session::put('logged_in', FALSE);
 }
-if(Input::exists()){
+if(Input::exists())
+{
   $token_verification = new Token();
   $token_result = $token_verification->AuthToken($_POST['token']);
 	if ($token_result == "success") 
   {
 //Check if the form is submitted
-if ((isset($_POST["pass"])) && (isset($_POST["email"])) && ($_SESSION['logged_in'] == FALSE)) {
-//Email and password has been submitted by the user
-//Receive and sanitize the submitted information
+ if ((isset($_POST["pass"])) && (isset($_POST["email"])) && ($_SESSION['logged_in'] == FALSE)) 
+ {
+    $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize($_POST["email"])));
+    $access = $userDetails->first_result()->access;
+    $roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='".$userDetails->first_result()->email."'");
+    $row5 = mysqli_fetch_array($roleSession);
+     Session::put('role', $row5['Name']);
+     Session::put('user', $userDetails->first_result()->firstname);
+     Session::put('email', $userDetails->first_result()->email);
 
-
-    $email = sanitize($_POST["email"]);
-    $pass = sanitize($_POST["pass"]);
-    $Name = mysqli_query($connection,"SELECT * FROM `users` WHERE `email`='$email'");
-        $row = mysqli_fetch_array($Name);
-        $identity = $row['firstname'];
-        $user_id = $row['id'];
-        $user_email = $row['email'];
-        $access = $row['access'];
-        $roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='$user_email'");
-        $row5 = mysqli_fetch_array($roleSession);
-        $role = $row5['Name'];      
-     $_SESSION['role'] = $role;
-    $_SESSION['user'] = $identity;
-    $_SESSION['email'] = $user_email;
-//validate email
-    if (!($fetch = mysqli_fetch_array(mysqli_query($connection,"SELECT `email` FROM `users` WHERE `email`='$email'")))) {
-//no records of email in database
-//user is not yet registered
-        $registered = FALSE;
+    $verification = new Verification();
+    $verificationResults = $verification->verifyCredentials($userDetails->first_result()->id, Input::get('email'), Input::get('pass'));
+    if($verificationResults == 'invalid')
+    {
+      $validationresults = FALSE;
     }
-   
-//u is registered in database, now get the hashed password    
-    $result = mysqli_query($connection,"SELECT `password` FROM `users` WHERE `email`='$email'");
-        $row = mysqli_fetch_array($result);
-        $correctpassword = $row['password'];
-    if (!password_verify($pass, $correctpassword) || ($registered == FALSE)) {
-    
-           $validationresults = FALSE;
-              $result1 = mysqli_query($connection,"SELECT `loginattempt` FROM `users` WHERE `email`='$email'");
-              $row = mysqli_fetch_array($result1);
-              $loginattempts_email = $row['loginattempt'];
-            $loginattempts_email = $loginattempts_email + 1;
-            $loginattempts_email = intval($loginattempts_email);
-//update login attempt records
-         
-            mysqli_query($connection,"UPDATE `users` SET `loginattempt` = '$loginattempts_email' WHERE `email` = '$email'"); 
-     
-    } 
-    else {
-    	//remember me functionality
-        $rem = sanitize($_POST["remember"]);
-        if(isset($rem)){
-        setcookie('email', $email, $remember_me_expiry);
-        setcookie('pass', $pass, $remember_me_expiry);
-        }
-        else{
-        	if(isset($_COOKIE['email']))
-        	{
-        		setcookie('email','');
-        	}
-        	if(isset($_COOKIE['pass']))
-        	{
-        		setcookie('pass','');
-        	}
-        }
-
-//user successfully authenticates with the provided email address and password
-//Reset login attempts for a specific email address to 0 as well as the ip address
-
-        $loginattempts_email = 0;
-        $loginattempts_total = 0;
-        $loginattempts_email = intval($loginattempts_email);
-        $loginattempts_total = intval($loginattempts_total);
-        mysqli_query($connection,"UPDATE `users` SET `loginattempt` = '$loginattempts_email' WHERE `email` = '$email'");
-        //mysqli_query("UPDATE `ipcheck` SET `failedattempts` = '$loginattempts_total' WHERE `loggedip` = '$iptocheck'");
-
-//Generate unique signature of the user based on IP address
-//and the browser then append it to session
-//This will be used to authenticate the user session
-//To make sure it belongs to an authorized user and not to anyone else.
-//generate random hash
-        $random = genRandomSaltString();
-        $salt_ip = substr($random, 0, $length_salt);
-
-//hash the ip address, user-agent and the salt
-        $hash_user = sha1($salt_ip . $iptocheck . $useragent);
-
-//concatenate the salt and the hash to form a signature
-        $signature = $salt_ip . $hash_user;
-
-//Regenerate session id prior to setting any session variable
-//to mitigate session fixation attacks
-        session_regenerate_id();
-
-       
-//Finally store user unique signature in the session
-//and set logged_in to TRUE as well as start activity time
-        $_SESSION['signature'] = $signature;
-        $_SESSION['logged_in'] = TRUE;
-        $_SESSION['LAST_ACTIVITY'] = time();
-        if (isset($_SESSION['logged_in'])) {
-          mysqli_query($connection,"INSERT INTO `logged_devices` (`user`,`ip_address`,`browser/device`) VALUES ('$user_id','$iptocheck','$useragent')");
-        }
-        
+    elseif($verificationResults == 'valid')
+    {
+       $user = new User();
+       $login = $user->login($userDetails->first_result()->id,sanitize(Input::get('email')),sanitize(Input::get('pass')),sanitize(Input::get('remember')));
     }
 }
 }
@@ -182,7 +106,8 @@ elseif($token_result == "no connection")
 {
   $internetConnection = FALSE;
 }
-else{
+else
+{
   $botDetect = TRUE;
 }
 }
@@ -241,7 +166,7 @@ if (!$_SESSION['logged_in']):
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="password-error"></span>
             <span class="label-input100">Password</span>
-            <input class="input100" value="<?php if(isset($_COOKIE['pass'])){echo $_COOKIE['pass'];}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
+            <input class="input100" value="<?php if(isset($_COOKIE['password'])){echo $_COOKIE['password'];}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
             <span class="focus-input100"></span>
           </div>
            <div class="flex-sb-m w-full m-b-30">
@@ -267,7 +192,8 @@ if (!$_SESSION['logged_in']):
              <p>Don't have an account?&ensp;<a href="registration.php" style="color: inherit;text-decoration: underline;">Register</a></p>
           </div>
           <?php 
-          if (($validationresults == FALSE) || ($registered == FALSE) || ($internetConnection == FALSE)){
+          if (($validationresults == FALSE) || ($botDetect == TRUE) || ($internetConnection == FALSE))
+          {
           ?>
           <div style="margin-top: 20px">
           <!-- Display validation errors -->
@@ -275,7 +201,7 @@ if (!$_SESSION['logged_in']):
 		                        echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
                             if ($internetConnection  == FALSE)
 		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
-                            if ($validationresults == FALSE || $registered == FALSE)
+                            if ($validationresults == FALSE)
                         echo '<font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;Please enter valid email address, password <br> &ensp;&emsp;(if required).</font>';
                    ?>
                   </div>
@@ -368,20 +294,21 @@ if (!$_SESSION['logged_in']):
 </html>
 <?php
 else:
-	//redirect to dashboard
-  if($access == 'customer'){
-    $redirect_page = $_REQUEST['page_url'];
-    if($redirect_link == ''){
-      header("Location: ../$home_url"); 
-      exit();
+	//redirect
+  if($access == 'customer')
+  {
+    if($redirect_link == '')
+    {
+      Redirect::to('../'.$home_url);
     }
-    else{
-      header("Location: $redirect_page"); 
-    exit();
+    else
+    {
+      Redirect::to($_REQUEST['page_url']);
     }
-  }else{
-    header("Location: ../$admin_url"); 
-    exit();
+  }
+  else
+  {
+    Redirect::to('../'.$admin_url);
   }
 endif;
 ?>

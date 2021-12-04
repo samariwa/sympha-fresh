@@ -9,18 +9,33 @@ class Verification{
         $this->_db = Database::getInstance();
     }
 
+    public function verifyCredentials($id,$email,$password)
+    {
+        //check if email address exists in the database
+        $validate = new Validation();
+        $result = $validate->emailCheck($email);
+        //verify that credentials match
+        if (($this->verifyPassword($email,$passowrd) == FALSE) || ($result == FALSE)) 
+        {     
+            //fetch & increament login attempts
+            $user = new User();
+            $updateLoginAttempts = $user->updateUserLoginAttempts($id,intval($user->fetchUserLoginAttempts($email)+1));
+            return "invalid";
+        }
+        else
+        {
+            return "valid";
+        }
+    }
+
     public function verifyPassword($email, $password)
     {
        if($password != '')
        {
-            $data = $this->_db->get('users', 'password', array('email', '=', $email));
-            if($data->count())
+            $user = new User();
+            if(!password_verify($password, $user->fetchUserPassword($email)))
             {
-                $this->_data = $data->first_result()->password;
-                    if(!password_verify($password, $this->_data))
-                    {
-                        return false;
-                    }
+                return false;
             }
         }
         return true;
