@@ -15,7 +15,7 @@ class Verification{
         $validate = new Validation();
         $result = $validate->emailCheck($email);
         //verify that credentials match
-        if (($this->verifyPassword($email,$passowrd) == FALSE) || ($result == FALSE)) 
+        if (($this->verifyPassword($email,$password) == FALSE) || ($result == FALSE)) 
         {     
             //fetch & increament login attempts
             $user = new User();
@@ -33,7 +33,7 @@ class Verification{
        if($password != '')
        {
             $user = new User();
-            if(!password_verify($password, $user->fetchUserPassword($email)))
+            if(password_verify($password, $user->fetchUserPassword($email)) == FALSE)
             {
                 return false;
             }

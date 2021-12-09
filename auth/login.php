@@ -18,7 +18,7 @@ if (!Session::exists('logged_in'))
 if(Input::exists())
 {
   $token_verification = new Token();
-  $token_result = $token_verification->AuthToken($_POST['token']);
+  $token_result = $token_verification->AuthToken(Input::get('token'));
 	if ($token_result == "success") 
   {
 //Check if the form is submitted
@@ -26,12 +26,12 @@ if(Input::exists())
  {
     $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize($_POST["email"])));
     $access = $userDetails->first_result()->access;
+    $user_id = $userDetails->first_result()->id;
     $roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='".$userDetails->first_result()->email."'");
     $row5 = mysqli_fetch_array($roleSession);
      Session::put('role', $row5['Name']);
      Session::put('user', $userDetails->first_result()->firstname);
      Session::put('email', $userDetails->first_result()->email);
-
     $verification = new Verification();
     $verificationResults = $verification->verifyCredentials($userDetails->first_result()->id, Input::get('email'), Input::get('pass'));
     if($verificationResults == 'invalid')
@@ -41,7 +41,7 @@ if(Input::exists())
     elseif($verificationResults == 'valid')
     {
        $user = new User();
-       $login = $user->login($userDetails->first_result()->id,sanitize(Input::get('email')),sanitize(Input::get('pass')),sanitize(Input::get('remember')));
+       $login = $user->login($user_id,sanitize(Input::get('email')),sanitize(Input::get('pass')),sanitize(Input::get('remember')));
     }
 }
 }
@@ -85,7 +85,7 @@ if (!$_SESSION['logged_in']):
     <!--===============================================================================================-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $public_key; ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo Config::get('google_recaptcha/public_key'); ?>"></script>
     
 </head>
   <div class="limiter">
@@ -102,14 +102,14 @@ if (!$_SESSION['logged_in']):
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="email-error"></span>
             <span class="label-input100">Email Address</span>
-            <input class="input100" value="<?php if(isset($_COOKIE['email'])){echo $_COOKIE['email'];}?>"  type="email" name="email" id="email" required placeholder="Enter email address">
+            <input class="input100" value="<?php if(isset($_COOKIE['email'])){echo Cookie::get('email');}?>"  type="email" name="email" id="email" required placeholder="Enter email address">
             <span class="focus-input100"></span>
           </div>
 
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="password-error"></span>
             <span class="label-input100">Password</span>
-            <input class="input100" value="<?php if(isset($_COOKIE['password'])){echo $_COOKIE['password'];}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
+            <input class="input100" value="<?php if(isset($_COOKIE['password'])){echo Cookie::get('password');}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
             <span class="focus-input100"></span>
           </div>
            <div class="flex-sb-m w-full m-b-30">
@@ -145,7 +145,7 @@ if (!$_SESSION['logged_in']):
                             if ($internetConnection  == FALSE)
 		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
                             if ($validationresults == FALSE)
-                        echo '<font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;Please enter valid email address, password <br> &ensp;&emsp;(if required).</font>';
+                            echo '<font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;Please enter valid email address, password <br> &ensp;&emsp;(if required).</font>';
                    ?>
                   </div>
             <?php
@@ -214,7 +214,7 @@ if (!$_SESSION['logged_in']):
           check_email();
           check_pass();   
 
-          if (emailError == false &&  passError == false) {
+          if (emailError == false && passError == false) {
           	return true;
           }else{
           	return false;
@@ -226,7 +226,7 @@ if (!$_SESSION['logged_in']):
   grecaptcha.ready(function() {
     // do request for recaptcha token
     // response is promise with passed token
-        grecaptcha.execute('<?php echo $public_key; ?>', {action:'validate_captcha'})
+        grecaptcha.execute('<?php echo Config::get('google_recaptcha/public_key'); ?>', {action:'validate_captcha'})
                   .then(function(token) {
             // add token value to form
             document.getElementById('token').value = token;
@@ -242,7 +242,7 @@ else:
   {
     if($redirect_link == '')
     {
-      Redirect::to('../'.$home_url);
+      Redirect::to('../'.Config::get('pages/home_url'));
     }
     else
     {
@@ -251,7 +251,7 @@ else:
   }
   else
   {
-    Redirect::to('../'.$admin_url);
+    Redirect::to('../'.Config::get('pages/admin_url'));
   }
 endif;
 ?>

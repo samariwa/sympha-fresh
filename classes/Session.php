@@ -1,11 +1,5 @@
 <?php
 class Session{
-    private $_db = null;
-
-    public function __construct()
-    {
-        $this->_db = Database::getInstance();
-    }
 
     public static function exists($name)
    {
