@@ -56,6 +56,13 @@ $GLOBALS['config'] = array(
     ),
     'salt' => array(
         'salt_length' => 15
+    ),
+    'pages' => array(
+        'home_url' => 'index.php',
+        'admin_url' => 'admin/dashboard.php',
+        'logout_url' => 'auth/logout.php',
+        'login_url' => 'auth/login.php',
+        'redirect_link' => $_SERVER['SERVER_PROTOCOL'].$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
     )
 );
 

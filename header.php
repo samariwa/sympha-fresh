@@ -1,17 +1,8 @@
 <?php
  //session_start();
  require_once 'core/init.php';
- /*$user = Database::getInstance()->get('users', array('email','=','samuel.mariwa@strathmore.edu'));
- if(!$user->count())
- {
-     echo 'No user';
- }
- else{
-     foreach($user->results() as $user)
-     {
-         echo $user->location;
-     }
- }*/
+ //$user = Database::getInstance()->update('users', 'email', '57', array('loginattempt' => '0'));
+ //$user = Database::getInstance()->update('users','email', Session::get('email'), array('online' => '1'));
  require('config.php');
  require('functions.php');
  require('queries.php');

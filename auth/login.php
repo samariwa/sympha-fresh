@@ -5,64 +5,7 @@ use PHPMailer\PHPMailer\SMTP;
 require('../config.php');
 require_once "../functions.php";
 require_once '../core/init.php';
-if (isset($_SESSION['logged_in']))
- {
-	if ($_SESSION['logged_in'] == TRUE)
-  {
-//valid user has logged-in to the website
-//Check for unauthorized use of user sessions
-    mysqli_query($connection,"UPDATE `users` SET `on` = '1' WHERE `email` = '$email'");
-    $signaturerecreate = $_SESSION['signature'];
-
-//Extract original salt from authorized signature
-
-    $saltrecreate = substr($signaturerecreate, 0, $length_salt);
-
-//Extract original hash from authorized signature
-
-    $originalhash = substr($signaturerecreate, $length_salt, 40);
-
-//Re-create the hash based on the user IP and user agent
-//then check if it is authorized or not
-
-    $hashrecreate = sha1($saltrecreate . $iptocheck . $useragent);
-
-    if (!($hashrecreate == $originalhash))
-    {
-
-//Signature submitted by the user does not matched with the
-//authorized signature
-//This is unauthorized access
-//Block it
-        header("Location: ../$logout_url?page_url=<?php echo $redirect_link; ?>");
-        exit;
-    }
-    else
-    {
-      $logged_in_email = $_SESSION['email'];
-      $session_access = mysqli_query($connection,"SELECT * FROM `users` WHERE `email`='$logged_in_email'");
-        $row = mysqli_fetch_array($session_access);
-        $access = $row['access'];
-      if($access == 'customer')
-      {
-        Redirect::to('../'.$home_url);
-      }
-      else
-      {
-        Redirect::to('../'.$admin_url);
-      }
-    }
-
-   //Session Lifetime control for inactivity
-    if ((Session::exists('LAST_ACTIVITY')) && (time() - Session::get('LAST_ACTIVITY') > $sessiontimeout)) 
-    {
-       //redirect the user back to login page for re-authentication
-         header("Location: ../$logout_url?page_url=<?php echo $redirect_link; ?>");
-        exit;
-    }
-    $_SESSION['LAST_ACTIVITY'] = time();
-}
-}
+  Session::validateAuthSession();
 //Pre-define validation
 $validationresults = TRUE;
 $botDetect = FALSE;

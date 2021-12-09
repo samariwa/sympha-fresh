@@ -74,7 +74,7 @@ class User{
 
     public function updateUserLoginAttempts($id,$attempts)
     {
-        $this->_db->update('users', $id, array('loginattempt' => $attempts));
+        $this->_db->update('users', 'id', $id, array('loginattempt' => $attempts));
     }
 
     public function fetchUserId($email)

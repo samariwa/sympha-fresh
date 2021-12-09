@@ -113,7 +113,7 @@ class Database{
         return false;
     }
 
-    public function update($table, $id, $fields)
+    public function update($table, $field, $val, $fields)
     {
         $set = '';
         $x = 1;
@@ -126,8 +126,8 @@ class Database{
             }
             $x++;
         }
-        $sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
-        if($this->query($sql, $fields)->error())
+        $sql = "UPDATE {$table} SET {$set} WHERE {$field} = '{$val}'";
+        if(!$this->query($sql, $fields)->error())
         {
             return true;
         }
