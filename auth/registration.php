@@ -14,13 +14,13 @@ $internetConnection = TRUE;
 if(Input::exists())
 {
 $token_verification = new Token();
-$token_result = $token_verification->AuthToken(Input::get('token'));
+$token_result = $token_verification->AuthToken(Input::post('token'));
 if ($token_result == "success") 
 {
 	$random = generateRandomString();
 	$validation = new Validation;
-    $email_validation = $validation->emailCheck(sanitize(Input::get('email')));
-	$mobile_validation = $validation->mobileNumberCheck(sanitize(Input::get('mobile')));
+    $email_validation = $validation->emailCheck(sanitize(Input::post('email')));
+	$mobile_validation = $validation->mobileNumberCheck(sanitize(Input::post('mobile')));
 	if(($email_validation == TRUE) || ($mobile_validation == TRUE))
 	{
 		$usernotduplicate = FALSE;
@@ -29,7 +29,7 @@ if ($token_result == "success")
 	{
 		$usernotduplicate = TRUE;
 	}
-	if( ((strlen(sanitize(Input::get('pass')))) < 8)) 
+	if( ((strlen(sanitize(Input::post('pass')))) < 8)) 
 	{
         $passwordvalidate = FALSE;
     } 
@@ -38,7 +38,7 @@ if ($token_result == "success")
         $passwordvalidate = TRUE;
     }
 
-    if(sanitize(Input::get('pass')) == sanitize(Input::get('pass2'))) 
+    if(sanitize(Input::post('pass')) == sanitize(Input::post('pass2'))) 
 	{
         $passwordmatch = TRUE;
     } 
@@ -52,27 +52,27 @@ if ($token_result == "success")
 		try
 		{
 			$user->create(array(
-				'firstname' => sanitize(Input::get('firstname')),
-				'lastname' => sanitize(Input::get('lastname')),
-				'number' => sanitize(Input::get('mobile')),
-				'email' => sanitize(Input::get('email')),
-				'location' => sanitize(Input::get('location')),
-				'password' => password_hash(sanitize(Input::get('pass')), PASSWORD_DEFAULT)
+				'firstname' => sanitize(Input::post('firstname')),
+				'lastname' => sanitize(Input::post('lastname')),
+				'number' => sanitize(Input::post('mobile')),
+				'email' => sanitize(Input::post('email')),
+				'location' => sanitize(Input::post('location')),
+				'password' => password_hash(sanitize(Input::post('pass')), PASSWORD_DEFAULT)
 			));
 		}
 		catch(Exception $e)
 		{
 			$error = TRUE;
 		}
-		$customer_fullname = sanitize(Input::get('firstname')).' '.sanitize(Input::get('lastname'));
+		$customer_fullname = sanitize(Input::post('firstname')).' '.sanitize(Input::post('lastname'));
 		$customer = new Customer();
 		try
 		{
 			$customer->create(array(
-				'User_id' => $user->fetchUserId(sanitize(Input::get('email'))),
+				'User_id' => $user->fetchUserId(sanitize(Input::post('email'))),
 				'Name' => $customer_fullname,
-				'Number' => sanitize(Input::get('mobile')),
-				'Location' => sanitize(Input::get('location')),
+				'Number' => sanitize(Input::post('mobile')),
+				'Location' => sanitize(Input::post('location')),
 				'Status' => 'clean',
 				'Note' => 'Add Note...'
 			));
@@ -125,7 +125,7 @@ else
     <!--===============================================================================================-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <!--===============================================================================================--> 
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $public_key; ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo Config::get('google_recaptcha/public_key'); ?>"></script>
 </head>
 <body>	
 	<div class="limiter">
@@ -136,7 +136,7 @@ else
 						Sign Up
 					</span>
 				</div>  
-				<form class="login100-form" id="registration-form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+				<form class="login100-form" id="registration-form" method="POST" action="<?php echo Config::get('server_id/self'); ?>">
 
 					<div class="wrap-input100 m-b-20">
 						<span class="label-input100">First Name</span>

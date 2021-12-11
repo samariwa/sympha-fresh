@@ -29,11 +29,15 @@ $GLOBALS['config'] = array(
     'server_id' => array(
         'protocol' => $protocol,
         'host' => $_SERVER['HTTP_HOST'],
+        'self' => $_SERVER['PHP_SELF'],
         'current_directory' => $_SERVER['REQUEST_URI']
     ),
     'client_id' => array(
         'ip_address' => $_SERVER['REMOTE_ADDR'],
         'user_agent' => $_SERVER["HTTP_USER_AGENT"]
+    ),
+    'password_reset' => array(
+        'token_expiry' => '5'
     ),
     'cart_cookie' => array(
         'name' => 'cart',

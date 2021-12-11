@@ -52,6 +52,16 @@ class User{
         }
     }
 
+    public function ForgotPasswordToken($email, $token)
+    {
+        $this->_db->update('users', 'email', $email, array('token' => $token,'tokenExpire' => date('Y-m-d H:i:s', strtotime("+".Config::get('password_reset/token_expiry')." min"))));
+    }
+
+    public function resetPassword($email,$password)
+    {
+        $this->_db->update('users', 'email', $email, array('password' => password_hash($password, PASSWORD_DEFAULT)));
+    }
+
     public function logout()
     {
         if (Session::exists('logged_in'))

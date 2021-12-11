@@ -7,20 +7,23 @@ $no_Error = TRUE;
 $exists = TRUE;
 $internetConnection = TRUE;
 $botDetect = FALSE;
-if (Input::set('forgot-button')) 
+if(Input::exists())
 {
   $token_verification = new Token();
-  $token_result = $token_verification->AuthToken(Input::get('token'));
+  $token_result = $token_verification->AuthToken(Input::post('token'));
 	if ($token_result == "success") 
   {
-   if (Input::set('email'))
+   if (Input::postSet('email'))
    {
       $user = new User();
-      $name = $user->fetchUserFirstname(sanitize(Input::get('email')));
+      $name = $user->fetchUserFirstname(sanitize(Input::post('email')));
       if ($name !== false)
       {
+        $token = Functions::generateRandomString();
+        $user = new User();
+        $resetToken = $user->ForgotPasswordToken(sanitize(Input::post('email')),$token);
         $mail = new Mail();
-        $send = $mail->forgotPasswordMail(sanitize(Input::get('email')),$name);
+        $send = $mail->forgotPasswordMail(sanitize(Input::post('email')),$name,$token);
         if($send == true)
         {
           $verified = TRUE;
@@ -87,7 +90,7 @@ if (Input::set('forgot-button'))
           </span>
         </div>
 
-        <form class="login100-form" method="POST" id="forgot-form">
+        <form class="login100-form" method="POST" id="forgot-form" action="<?php echo Config::get('server_id/self'); ?>">
 
           <div class="wrap-input100 m-b-20">
           <span style="color: red;" id="email-error"></span>
@@ -105,13 +108,13 @@ if (Input::set('forgot-button'))
             </button>
           </div>
           <?php if ($botDetect == TRUE)
-              echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
+              echo '<br><br><font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
             if ($verified == TRUE)
             echo '&emsp;&emsp;&emsp;<font color="green"><i class="bx bx-check-circle bx-flashing"></i>&ensp;Please check your email for verification code.<br><i class="bx bxs-hourglass-bottom bx-flashing"></i>&ensp;The code expires in 5 minutes.</font>'; 
              if ($no_Error == FALSE)
             echo '<br><br>&emsp;&emsp;<font color="red"><i class="bx bx-error-alt bx-flashing"></i>&ensp;Something went wrong. Please try again.</font>'; 
             if ($internetConnection  == FALSE)
-		        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
+		        echo '<br><br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
              if ($exists == FALSE)
             echo '<br>&emsp;&emsp;<font color="red"><i class="bx bx-error-alt bx-flashing"></i>&ensp;Please ensure that the email address entered was <br>&emsp;&ensp;used in registration.</font>'; ?>
             <br><br>

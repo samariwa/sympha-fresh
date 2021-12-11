@@ -1,76 +1,72 @@
 <?php
 require_once "../functions.php";
 require('../config.php');
+require_once '../core/init.php';
 $passwordnotempty = TRUE;
 $passwordvalidate = TRUE;
+$internetConnection = TRUE;
 $passwordmatch  = TRUE;
 $botDetect = FALSE;
-if (isset($_REQUEST['reset_button'])) {
-	$url = $token_verification_site;
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($url, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == true && $res['score'] >= 0.5) {
-   if (isset($_GET['email']) && isset($_GET['token'])){
-      $email = $connection->real_escape_string($_GET['email']);
-      $token = $connection->real_escape_string($_GET['token']);
+if(Input::exists())
+ {
+  $token_verification = new Token();
+  $token_result = $token_verification->AuthToken(Input::post('token'));
+	if ($token_result == "success") 
+  {
+   if ((Input::getSet('email') == true) && (Input::getSet('token') == true)){
+      $email = sanitize($_GET['email']);
+      $token = sanitize($_GET['token']);
       $sql = "SELECT number FROM users WHERE email='$email' AND token='$token' AND tokenExpire > NOW()";
       $check=mysqli_query($connection,$sql);
       $exists=mysqli_num_rows($check);
       if($exists > 0){
-         if ((isset($_POST["pass"])) &&  (isset($_POST["pass2"]))) {
+         if ((Input::postSet('pass') == true) &&  (Input::postSet('pass2') == true)) {
          $desired_password = sanitize($_POST["pass"]);
          $desired_password1 = sanitize($_POST["pass2"]);
-         if (empty($desired_password)) {
-        $passwordnotempty = FALSE;
-    } else {
-        $passwordnotempty = TRUE;
-    }
-    if (empty($desired_password1)) {
-        $passwordnotempty1 = FALSE;
-    } else {
-        $passwordnotempty1 = TRUE;
-    }
-     if ($desired_password == $desired_password1) {
-        $passwordmatch = TRUE;
-    } else {
-        $passwordmatch = FALSE;
+    if ($desired_password == $desired_password1) 
+    {
+      $passwordmatch = TRUE;
+    } 
+    else 
+    {
+      $passwordmatch = FALSE;
     }
        
-    if ( ((strlen($desired_password)) < 8)) {
-        $passwordvalidate = FALSE;
-    } else {
-        $passwordvalidate = TRUE;
+    if (strlen($desired_password) < 8) 
+    {
+      $passwordvalidate = FALSE;
     }
-        
-             if(($passwordnotempty == TRUE) && ($passwordnotempty1 == TRUE) && ($passwordmatch == TRUE)){
-                 $hash = password_hash($desired_password, PASSWORD_DEFAULT);
-                 mysqli_query($connection, "UPDATE users SET password= '$hash' WHERE email='$email'");
-                 //redirect to login page
-                 echo '<script type="text/javascript">
-                alert("Your password reset was successfull!");
-                window.location.href="login.php?page_url=../template/index.php";
-                </script>';
-             }
-         }
+    else 
+    {
+      $passwordvalidate = TRUE;
+    }
+    if(($passwordnotempty == TRUE) && ($passwordmatch == TRUE))
+    {
+        $user = new User();
+        $resetPassword = $user->resetPassword($email,$desired_password);
+        //redirect to login page
+        echo '<script type="text/javascript">
+        alert("Your password reset was successful!");
+        window.location.href="login.php?page_url=../template/index.php";
+        </script>';
+    }
+    }
+    else
+    {
+      $passwordnotempty = FALSE;
+    }
       }else
+      {
          redirectToLoginPage();
+      }     
    }else{
    	redirectToLoginPage();
    }
   }
+  elseif($token_result == "no connection")
+{
+  $internetConnection = FALSE;
+}
   else{
     $botDetect = TRUE;
   }
@@ -105,7 +101,7 @@ if (isset($_REQUEST['reset_button'])) {
     <!--===============================================================================================-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $public_key; ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo Config::get('google_recaptcha/public_key'); ?>"></script>
     
 </head>
   <div class="limiter">
@@ -147,10 +143,11 @@ if (isset($_REQUEST['reset_button'])) {
           <!-- Display validation errors -->
           <?php if ($botDetect == TRUE)
               echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
-          ?>
-          <?php if ($passwordmatch == FALSE)
-            echo '<br><font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Your passwords do not match.</font>'; ?>
-            <?php if ($passwordvalidate = FALSE)
+              if ($internetConnection  == FALSE)
+              echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
+           if ($passwordmatch == FALSE)
+            echo '<br><font color="red"><i class="bx bxs-lock bx-flashing"></i>&ensp;<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Your passwords do not match.</font>'; 
+             if ($passwordvalidate = FALSE)
                 echo '<br><br><font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your password should be greater than 8 characters.</font>'; ?>
             <br>
         </div>  
@@ -219,7 +216,7 @@ if (isset($_REQUEST['reset_button'])) {
   grecaptcha.ready(function() {
     // do request for recaptcha token
     // response is promise with passed token
-        grecaptcha.execute('<?php echo $public_key; ?>', {action:'validate_captcha'})
+        grecaptcha.execute('<?php echo Config::get('google_recaptcha/public_key'); ?>', {action:'validate_captcha'})
                   .then(function(token) {
             // add token value to form
             document.getElementById('token').value = token;

@@ -59,7 +59,7 @@ class Session{
                {
                    //Signature submitted by the user does not matched with the authorized signature
                    //Block it since this is unauthorized access
-                   Redirect::to('../auth/logout.php?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
+                   Redirect::to('../'.Config::get('pages/logout_url').'?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
                }
                else
                {
@@ -67,18 +67,18 @@ class Session{
                    $access = $userDetails->first_result()->access;
                    if($access == 'customer')
                    {
-                       Redirect::to('../index.php');
+                        Redirect::to('../'.Config::get('pages/home_url'));
                    }
                    else
                    {
-                       Redirect::to('../admin/dashboard.php');
+                        Redirect::to('../'.Config::get('pages/admin_url'));
                    }
                }
                //Session Lifetime control for inactivity
                if ((Session::exists('LAST_ACTIVITY')) && (time() - get('LAST_ACTIVITY') > Config::get('session_timeout/session_expiry'))) 
                {
                    //redirect the user back to login page for re-authentication
-                   Redirect::to('../auth/logout.php?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
+                   Redirect::to('../'.Config::get('pages/logout_url').'?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
                }
                put('LAST_ACTIVITY', time());
             }

@@ -18,13 +18,13 @@ if (!Session::exists('logged_in'))
 if(Input::exists())
 {
   $token_verification = new Token();
-  $token_result = $token_verification->AuthToken(Input::get('token'));
+  $token_result = $token_verification->AuthToken(Input::post('token'));
 	if ($token_result == "success") 
   {
 //Check if the form is submitted
- if (Input::set('pass') && Input::set('email') && (Session::get('logged_in') == FALSE)) 
+ if (Input::postSet('pass') && Input::postSet('email') && (Session::get('logged_in') == FALSE)) 
  {
-    $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize(Input::get('email'))));
+    $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize(Input::post('email'))));
     $access = $userDetails->first_result()->access;
     $user_id = $userDetails->first_result()->id;
     $roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='".$userDetails->first_result()->email."'");
@@ -33,7 +33,7 @@ if(Input::exists())
      Session::put('user', $userDetails->first_result()->firstname);
      Session::put('email', $userDetails->first_result()->email);
     $verification = new Verification();
-    $verificationResults = $verification->verifyCredentials($userDetails->first_result()->id, Input::get('email'), Input::get('pass'));
+    $verificationResults = $verification->verifyCredentials($userDetails->first_result()->id, Input::post('email'), Input::post('pass'));
     if($verificationResults == 'invalid')
     {
       $validationresults = FALSE;
@@ -41,7 +41,7 @@ if(Input::exists())
     elseif($verificationResults == 'valid')
     {
        $user = new User();
-       $login = $user->login($user_id,sanitize(Input::get('email')),sanitize(Input::get('pass')),sanitize(Input::get('remember')));
+       $login = $user->login($user_id,sanitize(Input::post('email')),sanitize(Input::post('pass')),sanitize(Input::post('remember')));
     }
 }
 }
@@ -97,24 +97,24 @@ if (!$_SESSION['logged_in']):
           </span>
         </div>
 
-        <form class="login100-form" method="POST" id="login-form">
+        <form class="login100-form" method="POST" id="login-form" action="<?php echo Config::get('server_id/self'); ?>">
 
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="email-error"></span>
             <span class="label-input100">Email Address</span>
-            <input class="input100" value="<?php if(isset($_COOKIE['email'])){echo Cookie::get('email');}?>"  type="email" name="email" id="email" required placeholder="Enter email address">
+            <input class="input100" value="<?php if(Cookie::exists('email')){echo Cookie::get('email');}?>"  type="email" name="email" id="email" required placeholder="Enter email address">
             <span class="focus-input100"></span>
           </div>
 
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="password-error"></span>
             <span class="label-input100">Password</span>
-            <input class="input100" value="<?php if(isset($_COOKIE['password'])){echo Cookie::get('password');}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
+            <input class="input100" value="<?php if(Cookie::exists('password')){echo Cookie::get('password');}?>" type="password" name="pass" id="pass" required placeholder="Enter password">
             <span class="focus-input100"></span>
           </div>
            <div class="flex-sb-m w-full m-b-30">
             <div class="contact100-form-checkbox">
-              <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember" <?php if(isset($_COOKIE['email'])){ ?> checked <?php }?>>
+              <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember" <?php if(Cookie::exists('email')){ ?> checked <?php }?>>
               <label class="label-checkbox100" for="ckb1">
                 Remember Me
               </label>

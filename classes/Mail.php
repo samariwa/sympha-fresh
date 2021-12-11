@@ -41,9 +41,9 @@ class Mail{
         return false;
     }
 
-    public function forgotPasswordMail($email, $user_first_name)
+    public function forgotPasswordMail($email, $user_first_name, $token)
     {
-        $reset_link = Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/auth/reset.php?email='.$email.'&token='.Functions::generateRandomString();
+        $reset_link = Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/auth/reset.php?email='.$email.'&token='.$token;
         $message = "In order to reset your password, please click on the link below:<br>
                     <a href='
                     $reset_link'>Password Reset Link</a><br><br>

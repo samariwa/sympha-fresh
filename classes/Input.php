@@ -25,23 +25,57 @@ class Input{
         {
             return true;
         }
-        else
-        {
             return false;
+    }
+
+    public static function getSet($item)
+    {
+        if(isset($_GET[$item]))
+        {
+            return true;
         }
+            return false;
+    }
+
+    public static function postSet($item)
+    {
+        if(isset($_POST[$item]))
+        {
+            return true;
+        }
+            return false;
+    }
+
+    public static function requestSet($item)
+    {
+        if(isset($_REQUEST[$item]))
+        {
+            return true;
+        }
+            return false;
     }
 
     public static function get($item)
+    {
+        if(isset($_GET[$item]))
+        {
+            return $_GET[$item];
+        }
+        return '';
+    }
+
+    public static function post($item)
     {
         if(isset($_POST[$item]))
         {
             return $_POST[$item];
         }
-        elseif(isset($_GET[$item]))
-        {
-            return $_GET[$item];
-        }
-        elseif(isset($_REQUEST[$item]))
+        return '';
+    }
+
+    public static function request($item)
+    {
+        if(isset($_REQUEST[$item]))
         {
             return $_REQUEST[$item];
         }

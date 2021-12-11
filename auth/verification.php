@@ -5,7 +5,7 @@ $where = $_POST['where'];
 $validate = new Validation();
 if($where == 'email' )
 {
-    $result = $validate->emailCheck(sanitize(Input::get('email')));
+    $result = $validate->emailCheck(sanitize(Input::post('email')));
    if($result == TRUE)
     {
         echo "exists";
@@ -17,7 +17,7 @@ if($where == 'email' )
 }
 elseif($where == 'mobile' )
 {
-    $result = $validate->mobileNumberCheck(sanitize(Input::get('mobile')));
+    $result = $validate->mobileNumberCheck(sanitize(Input::post('mobile')));
     if($result == TRUE)
      {
          echo "exists";
@@ -30,7 +30,7 @@ elseif($where == 'mobile' )
 elseif($where == 'password' )
 {
     $verify = new Verification();
-    $result = $verify->verifyPassword(sanitize(Input::get('email')), sanitize(Input::get('password')));
+    $result = $verify->verifyPassword(sanitize(Input::post('email')), sanitize(Input::post('password')));
     if($result == FALSE)
      {
          echo "invalid";
