@@ -52,6 +52,67 @@ class User{
         }
     }
 
+    public function logout()
+    {
+        if (Session::exists('logged_in'))
+        {
+            $userDetails = Database::getInstance()->getAll('users', array('email', '=', Session::get('email')));
+            $access = $userDetails->first_result()->access;
+            $this->_db->update('users', 'email', Session::get('email'), array('online' => '0', 'lastActivity' => date('Y-m-d H:i:s'),  'ipAddress' => '0'));
+            $this->_db->delete('logged_devices', array('user_id' , '=', $userDetails->first_result()->id));
+            Session::put('logged_in', FALSE);
+            session_destroy();
+            session_unset();
+            if($access == 'customer'){
+                $redirect_link = Input::get('page_url');
+                $profile_link = FALSE;
+                if (strpos($redirect_link, 'profile.php') == TRUE) {
+                  $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'checkout.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'order-details.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'track-order-single.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'track-order.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'user-dashboard.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'wishlist.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                elseif (strpos($redirect_link, 'login.php') == TRUE){
+                    $profile_link = TRUE;
+                }
+                if(($redirect_link == '') || ($profile_link == TRUE)){
+                    Redirect::to('../'.Config::get('pages/home_url'));
+                }
+                else{
+                    Redirect::to($_REQUEST['page_url']);
+                }
+              }
+              else{
+                Redirect::to('../'.Config::get('pages/home_url'));
+              }
+        }
+    }
+
+    public function fetchUserFirstname($email)
+    {
+        $data = $this->_db->get('users', 'firstname', array('email', '=', $email));
+        if($data->count())
+        {
+            return $data->first_result()->firstname;        
+        }
+        return false;
+    }
+
     public function fetchUserPassword($email)
     {
         $data = $this->_db->get('users', 'password', array('email', '=', $email));

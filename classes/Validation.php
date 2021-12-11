@@ -18,8 +18,12 @@ class Validation{
             {
                 return true;
             }
+            else
+            {
+                return false;
+            }
         }
-         return false;
+        return true;
     }
 
     public function mobileNumberCheck($enteredNumber)
@@ -31,7 +35,11 @@ class Validation{
             {
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -1,77 +1,47 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 require_once "../functions.php";
 require('../config.php');
+require_once '../core/init.php';
 $verified = FALSE;
 $no_Error = TRUE;
 $exists = TRUE;
+$internetConnection = TRUE;
 $botDetect = FALSE;
-if (isset($_REQUEST['forgot-button'])) {
-	$url = $token_verification_site;
-	$data = [
-		'secret' => $private_key,
-		'response' => $_POST['token'],
-        'remoteip' => $iptocheck
-	];
-	$options = array(
-		'http' => array(
-		 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-		     'method' => 'POST',
-		     'content' => http_build_query($data)
-		 )
-	);
-	$context = stream_context_create($options);
-	$response = file_get_contents($url, false, $context);
-	$res = json_decode($response, true);
-	if ($res['success'] == true && $res['score'] >= 0.5) {
-   if (isset($_POST['email'])){
-      $email = $connection->real_escape_string($_POST['email']);
-      $sql= "SELECT firstname FROM users WHERE email='$email'";
-       $check=mysqli_query($connection,$sql);
-       $row = mysqli_fetch_array($check);
-      $exists=mysqli_num_rows($check);
-        $name = $row['firstname'];
-      if ($exists > 0){
-        $random = generateRandomString();
-        $reset_link = $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/auth/reset.php?email='.$email.'&token='.$random;
-        mysqli_query($connection, "UPDATE users SET token= '$random',tokenExpire=DATE_ADD(NOW(), INTERVAL 5 MINUTE )WHERE email='$email'");
-        require_once "PHPMailer/PHPMailer.php";
-        require_once "PHPMailer/Exception.php";
-        require_once "PHPMailer/SMTP.php";
-         $mail = new PHPMailer(true);
-        $mail -> addAddress($email,'Recepient');
-        $mail -> setFrom($authenticator_email,$organization);
-        $mail->IsSMTP();
-        $mail->Host = $mail_host;
-        // optional
-        // used only when SMTP requires authentication  
-        $mail->SMTPAuth = true;
-        $mail->Username = $authenticator_email;
-        $mail->Password = $authenticator_password;
-        $mail -> Subject = "Reset Password";
-        $mail -> isHTML(true);
-        $mail -> Body = "
-              Hi $name,<br><br>
-                In order to reset your password, please click on the link below:<br>
-                <a href='
-                $reset_link'>Password Reset Link</a><br><br>
-                Kindly reset your password in the given time limit of 5 minutes.<br><br>
-                Kind Regards,
-                Sympha Fresh Limited.
-                ";
-          if($mail -> send()){
-            $verified = TRUE;
+if (Input::set('forgot-button')) 
+{
+  $token_verification = new Token();
+  $token_result = $token_verification->AuthToken(Input::get('token'));
+	if ($token_result == "success") 
+  {
+   if (Input::set('email'))
+   {
+      $user = new User();
+      $name = $user->fetchUserFirstname(sanitize(Input::get('email')));
+      if ($name !== false)
+      {
+        $mail = new Mail();
+        $send = $mail->forgotPasswordMail(sanitize(Input::get('email')),$name);
+        if($send == true)
+        {
+          $verified = TRUE;
         }
-          else{
-            $no_Error = FALSE;
+        else
+        {
+          $no_Error = FALSE;
         }
-      }else{
+      }
+      else
+      {
         $exists = FALSE;
       }
    }
   }
-  else{
+  elseif($token_result == "no connection")
+{
+  $internetConnection = FALSE;
+}
+  else
+  {
     $botDetect = TRUE;
   }
 } 
@@ -105,7 +75,7 @@ if (isset($_REQUEST['forgot-button'])) {
     <!--===============================================================================================-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $public_key; ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo Config::get('google_recaptcha/public_key'); ?>"></script>
     
 </head>
   <div class="limiter">
@@ -136,12 +106,13 @@ if (isset($_REQUEST['forgot-button'])) {
           </div>
           <?php if ($botDetect == TRUE)
               echo '<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Access Denied!</font>';
-          ?>
-            <?php if ($verified == TRUE)
-            echo '&emsp;&emsp;&emsp;<font color="green"><i class="bx bx-check-circle bx-flashing"></i>&ensp;Please check your email for verification code.<br><i class="bx bxs-hourglass-bottom bx-flashing"></i>&ensp;The code expires in 5 minutes.</font>'; ?>
-            <?php if ($no_Error == FALSE)
-            echo '<br><br>&emsp;&emsp;<font color="red"><i class="bx bx-error-alt bx-flashing"></i>&ensp;Something went wrong. Please try again.</font>'; ?>
-            <?php if ($exists == FALSE)
+            if ($verified == TRUE)
+            echo '&emsp;&emsp;&emsp;<font color="green"><i class="bx bx-check-circle bx-flashing"></i>&ensp;Please check your email for verification code.<br><i class="bx bxs-hourglass-bottom bx-flashing"></i>&ensp;The code expires in 5 minutes.</font>'; 
+             if ($no_Error == FALSE)
+            echo '<br><br>&emsp;&emsp;<font color="red"><i class="bx bx-error-alt bx-flashing"></i>&ensp;Something went wrong. Please try again.</font>'; 
+            if ($internetConnection  == FALSE)
+		        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
+             if ($exists == FALSE)
             echo '<br>&emsp;&emsp;<font color="red"><i class="bx bx-error-alt bx-flashing"></i>&ensp;Please ensure that the email address entered was <br>&emsp;&ensp;used in registration.</font>'; ?>
             <br><br>
           <div>
@@ -197,7 +168,7 @@ if (isset($_REQUEST['forgot-button'])) {
   grecaptcha.ready(function() {
     // do request for recaptcha token
     // response is promise with passed token
-        grecaptcha.execute('<?php echo $public_key; ?>', {action:'validate_captcha'})
+        grecaptcha.execute('<?php echo Config::get('google_recaptcha/public_key'); ?>', {action:'validate_captcha'})
                   .then(function(token) {
             // add token value to form
             document.getElementById('token').value = token;

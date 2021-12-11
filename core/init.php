@@ -1,6 +1,16 @@
 <?php
 session_start();
 
+$protocol = $_SERVER['SERVER_PROTOCOL'];
+if(strpos($protocol, "https"))
+{
+    $protocol="https://";
+}
+else
+{
+    $protocol="http://";
+}
+
 $GLOBALS['config'] = array(
     'mysql' => array(
         'host' => '127.0.0.1',
@@ -17,7 +27,7 @@ $GLOBALS['config'] = array(
         'session_expiry' => 60*30
     ),
     'server_id' => array(
-        'protocol' => $_SERVER['SERVER_PROTOCOL'],
+        'protocol' => $protocol,
         'host' => $_SERVER['HTTP_HOST'],
         'current_directory' => $_SERVER['REQUEST_URI']
     ),

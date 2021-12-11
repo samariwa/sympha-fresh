@@ -183,4 +183,5 @@ class Functions{
    imagecopyresampled($imageLayer,$resourceType,0,0,0,0,$resizeWidth,$resizeHeight,$image_width,$image_height);
    return $imageLayer;
  }
+ 
 }

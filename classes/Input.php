@@ -19,15 +19,31 @@ class Input{
         }
     }
 
+    public static function set($item)
+    {
+        if(isset($_POST[$item]))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static function get($item)
     {
         if(isset($_POST[$item]))
         {
             return $_POST[$item];
         }
-        else if(isset($_GET[$item]))
+        elseif(isset($_GET[$item]))
         {
             return $_GET[$item];
+        }
+        elseif(isset($_REQUEST[$item]))
+        {
+            return $_REQUEST[$item];
         }
         return '';
     }

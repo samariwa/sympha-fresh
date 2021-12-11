@@ -22,9 +22,9 @@ if(Input::exists())
 	if ($token_result == "success") 
   {
 //Check if the form is submitted
- if ((isset($_POST["pass"])) && (isset($_POST["email"])) && ($_SESSION['logged_in'] == FALSE)) 
+ if (Input::set('pass') && Input::set('email') && (Session::get('logged_in') == FALSE)) 
  {
-    $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize($_POST["email"])));
+    $userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize(Input::get('email'))));
     $access = $userDetails->first_result()->access;
     $user_id = $userDetails->first_result()->id;
     $roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='".$userDetails->first_result()->email."'");

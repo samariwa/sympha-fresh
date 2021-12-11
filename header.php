@@ -200,13 +200,13 @@
                                     }
                                 else{
                                 ?>
-                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/wishlist.php#dashboard-nav' ?>"
+                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
                                 <?php    
                                 }   
                             } 
                             else{
                             ?>
-                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/wishlist.php#dashboard-nav' ?>"
+                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
                             <?php
                             }
                                 ?>
@@ -403,7 +403,7 @@
 
                 </div>
                   <div class="col-6">
-                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/product-list.php?action=delete&id='.$row["id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
+                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$row["id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
                   </div>
                 </div>
             </div>   
@@ -476,7 +476,7 @@
 
                 </div>
                   <div class="col-6">
-                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
+                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
                   </div>
                 </div>
             </div>   
@@ -549,7 +549,7 @@
     
                     </div>
                       <div class="col-6">
-                        <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
+                        <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
                       </div>
                     </div>
                 </div>   
@@ -598,17 +598,17 @@
                 <?php 
                         }
                         else{ ?>
-                            href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/checkout.php' ?>"
+                            href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/checkout.php' ?>"
                         <?php }
                     }  
                     else{
                         ?>
-                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/checkout.php' ?>"
+                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/checkout.php' ?>"
                     <?php
                     } 
                   } 
                 ?> class="procced-checkout"  style=" background-color: #59b828;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Proceed to Checkout</a>
-                <a <?php if($cart_count == 0){?> href="#" <?php } else{ ?>href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/product-list.php?action=clear' ?>" <?php } ?> class="clear-cart" style=" background-color: #df4759;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Clear Cart</a>
+                <a <?php if($cart_count == 0){?> href="#" <?php } else{ ?>href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=clear' ?>" <?php } ?> class="clear-cart" style=" background-color: #df4759;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Clear Cart</a>
             </div>
         </div>
     </div>
@@ -715,13 +715,13 @@
                             }
                         else{
                         ?>
-                         href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/wishlist.php#dashboard-nav' ?>"
+                         href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
                         <?php    
                         }   
                        } 
                        else{
                        ?>
-                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/wishlist.php#dashboard-nav' ?>"
+                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
                        <?php
                        }
                         ?>

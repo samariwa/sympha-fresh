@@ -14,7 +14,7 @@ $internetConnection = TRUE;
 if(Input::exists())
 {
 $token_verification = new Token();
-$token_result = $token_verification->AuthToken($_POST['token']);
+$token_result = $token_verification->AuthToken(Input::get('token'));
 if ($token_result == "success") 
 {
 	$random = generateRandomString();
