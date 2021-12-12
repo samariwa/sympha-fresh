@@ -1,11 +1,9 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 //require user configuration and database connection parameters
 require('../config.php');
 require_once "../functions.php";
 require_once '../core/init.php';
-  Session::validateAuthSession();
+Session::validateAuthSession();
 //Pre-define validation
 $validationresults = TRUE;
 $botDetect = FALSE;
@@ -97,7 +95,7 @@ if (!$_SESSION['logged_in']):
           </span>
         </div>
 
-        <form class="login100-form" method="POST" id="login-form" action="<?php echo Config::get('server_id/self'); ?>">
+        <form class="login100-form" method="POST" id="login-form">
 
           <div class="wrap-input100 m-b-20">
 						<span style="color: red;" id="email-error"></span>

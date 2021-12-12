@@ -1,6 +1,4 @@
 <?php
-use \PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 require('../config.php');
 require('../functions.php');
 require_once '../core/init.php';
