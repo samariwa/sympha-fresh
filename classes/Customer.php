@@ -14,5 +14,15 @@ class Customer{
             throw new Exception('error');
         }
     }
+
+    public function fetchCustomerId($userId)
+    {
+        $data = $this->_db->get('customers', 'id', array('User_id', '=', $userId));
+        if($data->count())
+        {
+            return $data->first_result()->id;        
+        }
+        return false;
+    }
    
 }

@@ -1,89 +1,11 @@
 <?php
- //session_start();
  require_once 'core/init.php';
- //$user = Database::getInstance()->update('users', 'email', '57', array('loginattempt' => '0'));
- //$user = Database::getInstance()->update('users','email', Session::get('email'), array('online' => '1'));
  require('config.php');
  require('functions.php');
  require('queries.php');
  include('cart.php');
  include('wishlist_process.php');
- if (isset($_SESSION['logged_in'])) {
-   if ($_SESSION['logged_in'] == TRUE) {
- //valid user has logged-in to the website
- //Check for unauthorized use of user sessions
-     $signaturerecreate = $_SESSION['signature'];
- 
- //Extract original salt from authorized signature
-     $saltrecreate = substr($signaturerecreate, 0, $length_salt);
- 
- //Extract original hash from authorized signature
-     $originalhash = substr($signaturerecreate, $length_salt, 40);
- 
- //Re-create the hash based on the user IP and user agent
- //then check if it is authorized or not
-     $hashrecreate = sha1($saltrecreate . $iptocheck . $useragent);
-     if (!($hashrecreate == $originalhash)) {
- 
- //Signature submitted by the user does not matched with the
- //authorized signature
- //This is unauthorized access
- //Block it
-         header("Location: $home_url");
-         exit;
-     }
-     $logged_in_user = $_SESSION['user'];
-     $logged_in_email = $_SESSION['email'];
-        $result1 = mysqli_query($connection,"SELECT `active` FROM `users` WHERE `email`='$logged_in_email'");
-         $row = mysqli_fetch_array($result1);
-         $active = $row['active'];
-
-        $customer = mysqli_query($connection,"SELECT customers.id as id FROM `customers` inner join users on customers.User_id = users.id WHERE users.email='$logged_in_email'");
-        $customer_row = mysqli_fetch_array($customer);
-        $customer_id = $customer_row['id'];  
-        //transfer cart cookie to database 
-        if(isset($_COOKIE['shopping_cart']))
-        {
-            $cookie_data = stripslashes($_COOKIE['shopping_cart']);
-            $cart_data = json_decode($cookie_data, true);
-            foreach($cart_data as $keys => $values)
-            {  
-                $product_id = $values["item_id"];
-                $cart_duplicate = mysqli_query($connection,"SELECT * FROM `cart` WHERE customer_id ='$customer_id' AND product_id = '$product_id'");
-                $cart_duplicate_result = mysqli_fetch_array($cart_duplicate);
-                if ( $cart_duplicate_result == FALSE) {
-                    $quantity = $values["item_quantity"];
-                    mysqli_query($connection,"INSERT INTO `cart` (`customer_id`,`product_id`,`quantity`) VALUES ('$customer_id','$product_id','$quantity')");
-                }     
-            }
-            setcookie('shopping_cart', '', $cart_expiry);
-        }
-        //transfer wishlist cookie to database
-        if(isset($_COOKIE["shopping_wishlist"]))
-        {
-            $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
-            $wishlist_data = json_decode($wishlist_data, true);
-            foreach($wishlist_data as $keys => $values)
-            {
-                $product_id = $values["item_id"];
-                $wishlist_duplicate = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE customer_id ='$customer_id' AND product_id = '$product_id'");
-                $wishlist_duplicate_result = mysqli_fetch_array($wishlist_duplicate);
-                if ( $wishlist_duplicate_result == FALSE) {
-                    mysqli_query($connection,"INSERT INTO `wishlist` (`customer_id`,`product_id`) VALUES ('$customer_id','$product_id')");
-                }
-            }
-            setcookie('shopping_wishlist', '', $cart_expiry);
-        }
-
- //Session Lifetime control for inactivity
-     if ((isset($_SESSION['LAST_ACTIVITY'])) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessiontimeout) || (isset($_SESSION['LAST_ACTIVITY'])) && ($active == 2)) {
- //redirect the user back to login page for re-authentication
-          header('Location: '.$logout_url.'?page_url='.$redirect_link );
-         exit;
-     }
-     $_SESSION['LAST_ACTIVITY'] = time();
- }
- }
+ Session::validateAuthSession();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +13,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo $organization ?> - Fresh at your doorstep!</title>
+    <title><?php echo Config::get('organization_details/name'); ?> - <?php echo Config::get('organization_details/slogan'); ?></title>
     <link rel="shortcut icon" type="image/png" sizes="196x196" href="assets/images/sympha_fresh_white.png" />
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/all.min.css">
@@ -101,7 +23,7 @@
     <link rel="stylesheet" type="text/css" href="assets/css/slick-theme.css">
     <link rel="stylesheet" href="assets/css/custom-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $public_key; ?>"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo Config::get('google_recaptcha/public_key'); ?>"></script>
 </head>
 <style type="text/css">
       .error-page {
@@ -152,7 +74,7 @@
     <div class="preloader">
         <div class="loader">
             <div class="loader__figure"></div>
-            <p class="loader__label"><?php echo $organization ?></p>
+            <p class="loader__label"><?php echo Config::get('organization_details/name'); ?></p>
         </div>
     </div>
     <a class="position-absolute" href="javascript:void(0)" onclick="cartopen()">
@@ -172,44 +94,35 @@
                     <div class="header-top-action-dropdown">
                         <ul>
                         <?php
-                             if (isset($_SESSION['logged_in'])) {
-                                if ($_SESSION['logged_in'] == TRUE) {
-                            ?> 
-                             <li><a href="<?php echo $logout_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-sign-out-alt mr-2"></i> Sign Out</a></li>
-                             <li><a href="profile.php#dashboard-nav"><i class="fas fa-user mr-2"></i> Profile</a></li>
-                            <?php
-                                }
-                                else{
-                                ?>
-                              <li class="signin-option"><a href="<?php echo  $login_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-key mr-2"></i>Sign In</a></li>
-                                <?php
-                                }
-                            }
-                            else{
-                                ?>
+                             if (Session::loggedIn() == TRUE)
+                             {
+                        ?> 
+                                <li><a href="<?php echo $logout_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-sign-out-alt mr-2"></i> Sign Out</a></li>
+                                <li><a href="profile.php#dashboard-nav"><i class="fas fa-user mr-2"></i> Profile</a></li>
+                        <?php
+                             }
+                              else
+                             {
+                        ?>
                                 <li class="signin-option"><a href="<?php echo  $login_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-key mr-2"></i>Sign In</a></li>
-                                <?php
-                            }
-                            ?>
+                        <?php
+                             }
+                        ?>
                             <li><a
-                            <?php if (isset($_SESSION['logged_in'])) {
-                                 if ($_SESSION['logged_in'] == TRUE) {
-                                ?>    
-                                href="wishlist.php#dashboard-nav"
-                                <?php
-                                    }
-                                else{
-                                ?>
-                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
-                                <?php    
-                                }   
-                            } 
-                            else{
-                            ?>
-                                href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
+                        <?php 
+                        if (Session::loggedIn() == TRUE)
+                        {
+                            ?>    
+                            href="wishlist.php#dashboard-nav"
                             <?php
-                            }
-                                ?>
+                        }
+                        else
+                        {
+                            ?>
+                            href="auth/login.php?page_url=<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
+                            <?php    
+                        }   
+                            ?>
                             ><i class="fas fa-heart mr-2"></i> Wishlist</a></li>
                         </ul>
                     </div>
@@ -225,7 +138,7 @@
                 <div class="modal-body">
                     <div class="header-top-action-dropdown">
                         <ul>
-                            <li class="site-phone"><a href="tel:<?php echo $contact_number; ?>"><i class="fas fa-phone"></i> <?php echo $contact_number; ?></a></li>
+                            <li class="site-phone"><a href="tel:<?php echo Config::get('organization_details/contact'); ?>"><i class="fas fa-phone"></i> <?php echo Config::get('organization_details/contact'); ?></a></li>
                             <li class="site-help"><a href="#"><i class="fas fa-question-circle"></i> Help & More</a></li>
                         </ul>
                     </div>
@@ -243,7 +156,8 @@
                             <select id="Cat_Select">
                               <option id="cat0" value="0">Select Category</option>
                               <?php
-                                foreach($categoriesList as $row){
+                                foreach($categoriesList as $row)
+                                {
                                 $id = $row['id'];
                                 $category = $row['Category_Name'];
                             ?>
@@ -313,30 +227,21 @@
                    c6.478,2.714,11.037,9.108,11.037,16.568C328.448,206.586,320.407,214.625,310.484,214.625z"/></svg>
                    <?php
                         $cart_count=0;
-                        if (isset($_SESSION['logged_in'])) {
-                            if ($_SESSION['logged_in'] == TRUE) {
-                              $cart_checker = mysqli_query($connection,"SELECT s.id AS id,s.Name as Name,cart.quantity as cartQty,image,i_u.Name as unit_name,s.Discount as Discount,sf.Selling_price as Price,c.Category_Name as Category_Name,s.Restock_Level as Restock_Level,s.Quantity as Quantity FROM `cart` inner join stock s on cart.product_id = s.id INNER JOIN stock_flow sf ON s.id = sf.Stock_id JOIN inventory_units i_u ON s.Unit_id = i_u.id JOIN category c ON s.Category_id=c.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at WHERE cart.customer_id='$customer_id';");
-                              $cart_count = mysqli_num_rows($cart_checker);
-                            }
-                            else{
-                                if(isset($_COOKIE['shopping_cart'])){
-                                    $cookie_data = stripslashes($_COOKIE['shopping_cart']);
-                                    $cart_data = json_decode($cookie_data, true); 
-                                    foreach($cart_data as $cart){
-                                        $cart_count++;
-                                    }
-                                }
-                            }
-                        }else{
-                            if(isset($_COOKIE['shopping_cart'])){
-                                $cookie_data = stripslashes($_COOKIE['shopping_cart']);
-                                $cart_data = json_decode($cookie_data, true); 
-                                foreach($cart_data as $cart){
+                        if (Session::loggedIn() == TRUE)
+                        {
+                            $cart_checker = mysqli_query($connection,"SELECT s.id AS id,s.Name as Name,cart.quantity as cartQty,image,i_u.Name as unit_name,s.Discount as Discount,sf.Selling_price as Price,c.Category_Name as Category_Name,s.Restock_Level as Restock_Level,s.Quantity as Quantity FROM `cart` inner join stock s on cart.product_id = s.id INNER JOIN stock_flow sf ON s.id = sf.Stock_id JOIN inventory_units i_u ON s.Unit_id = i_u.id JOIN category c ON s.Category_id=c.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at WHERE cart.customer_id='$customer_id';");
+                            $cart_count = mysqli_num_rows($cart_checker);
+                        }
+                        else
+                        {
+                            if(Cart::cookieExists())
+                            {
+                                foreach(Cart::decodeCookie() as $cart)
+                                {
                                     $cart_count++;
                                 }
                             }
-                        }
-                        
+                        }  
                     ?>
                    <span><?php echo $cart_count; ?> Items</span>
                 </div>
@@ -345,71 +250,72 @@
     <div class="cart-product-container">
         <?php
         $total = 0;
-        if (isset($_SESSION['logged_in'])) {
-            if ($_SESSION['logged_in'] == TRUE) {
+        if (Session::loggedIn() == TRUE)
+        {
               $cart_checker = mysqli_query($connection,"SELECT s.id AS id,s.Name as Name,cart.quantity as cartQty,image,i_u.Name as unit_name,s.Discount as Discount,sf.Selling_price as Price,c.Category_Name as Category_Name,s.Restock_Level as Restock_Level,s.Quantity as Quantity FROM `cart` inner join stock s on cart.product_id = s.id INNER JOIN stock_flow sf ON s.id = sf.Stock_id JOIN inventory_units i_u ON s.Unit_id = i_u.id JOIN category c ON s.Category_id=c.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at WHERE cart.customer_id='$customer_id';");
               $cart_count = mysqli_num_rows($cart_checker);
-              if($cart_count > 0){
-              foreach($cart_checker as $row)
-             {
-                 ?>
-                    <div class="cart-product-item">
-                <div class="row align-items-center">
-                    <div class="col-6 p-0">
-                        <div class="thumb">
-                            <a href="#"><img src="assets/images/products/<?php echo $row["image"]; ?>" alt="products"></a>
+              if($cart_count > 0)
+              {
+                    foreach($cart_checker as $row)
+                    {
+                    ?>
+                        <div class="cart-product-item">
+                    <div class="row align-items-center">
+                        <div class="col-6 p-0">
+                            <div class="thumb">
+                                <a href="#"><img src="assets/images/products/<?php echo $row["image"]; ?>" alt="products"></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="product-content">
-                            <a href="#" class="product-title"><?php echo $row["Name"]; ?></a>
-                            <div class="product-cart-info">
-                            <?php if($row['Discount'] > 0){ ?> <del>Ksh<?php echo number_format($row["Price"],2); ?> /unit</del> <br><?php }?>
-                            Ksh<?php echo number_format($row["Price"] - $row["Discount"],2); ?> /unit
-                            <br>
-                            x<span id="cart_unit_qty<?php echo $row['id']; ?>"><?php echo $row["cartQty"]; ?></span> <?php echo $row["unit_name"]; ?>
+                        <div class="col-6">
+                            <div class="product-content">
+                                <a href="#" class="product-title"><?php echo $row["Name"]; ?></a>
+                                <div class="product-cart-info">
+                                <?php if($row['Discount'] > 0){ ?> <del>Ksh<?php echo number_format($row["Price"],2); ?> /unit</del> <br><?php }?>
+                                Ksh<?php echo number_format($row["Price"] - $row["Discount"],2); ?> /unit
+                                <br>
+                                x<span id="cart_unit_qty<?php echo $row['id']; ?>"><?php echo $row["cartQty"]; ?></span> <?php echo $row["unit_name"]; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-  
-                <div class="row align-items-center mt-1">
-                    <div class="col-6">
-                        <div class="price-increase-decrese-group d-flex">
-                        
-                            <span class="decrease-btn">
-                                <button type="button"
-                                    class="btn quantity-left-minus cart_decrease" id="<?php echo $row['id']; ?>" data-type="minus" data-field="">-
-                                </button> 
-                            </span>
-                            <input type="text" name="quantity" disabled class="form-controls input-number" id="cart_qty<?php echo $row["id"]; ?>" value="<?php echo $row["cartQty"]; ?>">
+    
+                    <div class="row align-items-center mt-1">
+                        <div class="col-6">
+                            <div class="price-increase-decrese-group d-flex">
                             
-                            <span class="increase">
-                                <button type="button"
-                                    class="btn quantity-right-plus cart_increase" id="<?php echo $row['id']; ?>" data-type="plus" data-field="" >+
-                                </button>
-                            </span>
-                          
+                                <span class="decrease-btn">
+                                    <button type="button"
+                                        class="btn quantity-left-minus cart_decrease" id="<?php echo $row['id']; ?>" data-type="minus" data-field="">-
+                                    </button> 
+                                </span>
+                                <input type="text" name="quantity" disabled class="form-controls input-number" id="cart_qty<?php echo $row["id"]; ?>" value="<?php echo $row["cartQty"]; ?>">
+                                
+                                <span class="increase">
+                                    <button type="button"
+                                        class="btn quantity-right-plus cart_increase" id="<?php echo $row['id']; ?>" data-type="plus" data-field="" >+
+                                    </button>
+                                </span>
+                            
+                            </div>
                         </div>
+                        <div class="col-6">
+                            <div >
+                                <span class="ml-2">Ksh<span id="cart_subtotal<?php echo $row['id']; ?>"><?php echo number_format($row["cartQty"] * ($row["Price"] - $row["Discount"]),2); ?></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-1">
+                    <div class="col-6">
+
                     </div>
                     <div class="col-6">
-                        <div >
-                            <span class="ml-2">Ksh<span id="cart_subtotal<?php echo $row['id']; ?>"><?php echo number_format($row["cartQty"] * ($row["Price"] - $row["Discount"]),2); ?></span></span>
-                        </div>
+                        <a href="<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/product-list.php?action=delete&id='.$row["id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
                     </div>
-                </div>
-                <div class="row align-items-center mt-1">
-                <div class="col-6">
-
-                </div>
-                  <div class="col-6">
-                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$row["id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
-                  </div>
-                </div>
-            </div>   
-        <?php 
-          $total = $total + ($row["cartQty"] * ($row["Price"] - $row["Discount"])); 
-             }
+                    </div>
+                </div>   
+                <?php 
+                $total = $total + ($row["cartQty"] * ($row["Price"] - $row["Discount"])); 
+                }
             }
             else{
                 echo'
@@ -417,14 +323,11 @@
             ';
             }
             }
-            else{
-                if(isset($_COOKIE['shopping_cart']))
-        {     
-            $cookie_data = stripslashes($_COOKIE['shopping_cart']);
-            $cart_data = json_decode($cookie_data, true);
-            foreach($cart_data as $keys => $values)
-            {
-                
+        else{
+            if(Cart::cookieExists())
+            {     
+                foreach(Cart::decodeCookie() as $keys => $values)
+                {     
         ?>
             <div class="cart-product-item">
                 <div class="row align-items-center">
@@ -476,7 +379,7 @@
 
                 </div>
                   <div class="col-6">
-                    <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
+                    <a href="<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
                   </div>
                 </div>
             </div>   
@@ -489,81 +392,7 @@
             <h4 style="text-align:center;" class="mt-5">No Item in Cart</h4>
             ';
         }
-            }   
-        }
-        else{
-            if(isset($_COOKIE['shopping_cart']))
-            {     
-                $cookie_data = stripslashes($_COOKIE['shopping_cart']);
-                $cart_data = json_decode($cookie_data, true);
-                foreach($cart_data as $keys => $values)
-                {
-            ?>
-                <div class="cart-product-item">
-                    <div class="row align-items-center">
-                        <div class="col-6 p-0">
-                            <div class="thumb">
-                                <a href="#"><img src="assets/images/products/<?php echo $values["item_image"]; ?>" alt="products"></a>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="product-content">
-                                <a href="#" class="product-title"><?php echo $values["item_name"]; ?></a>
-                                <div class="product-cart-info">
-                                <?php if($values['item_discount'] > 0){ ?> <del>Ksh<?php echo number_format($values["item_price"],2); ?> /unit</del> <br><?php }?>
-                                Ksh<?php echo number_format($values["item_price"] - $values["item_discount"],2); ?> /unit
-                                <br>
-                                x<span id="cart_unit_qty<?php echo $values['item_id']; ?>"><?php echo $values["item_quantity"]; ?></span> <?php echo $values["item_unit"]; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-      
-                    <div class="row align-items-center mt-1">
-                        <div class="col-6">
-                            <div class="price-increase-decrese-group d-flex">
-                            
-                                <span class="decrease-btn">
-                                    <button type="button"
-                                        class="btn quantity-left-minus cart_decrease" id="<?php echo $values['item_id']; ?>" data-type="minus" data-field="">-
-                                    </button> 
-                                </span>
-                                <input type="text" name="quantity" disabled class="form-controls input-number" id="cart_qty<?php echo $values["item_id"]; ?>" value="<?php echo $values["item_quantity"]; ?>">
-                                
-                                <span class="increase">
-                                    <button type="button"
-                                        class="btn quantity-right-plus cart_increase" id="<?php echo $values['item_id']; ?>" data-type="plus" data-field="" >+
-                                    </button>
-                                </span>
-                              
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div >
-                                <span class="ml-2">Ksh<span id="cart_subtotal<?php echo $values['item_id']; ?>"><?php echo number_format($values["item_quantity"] * ($values["item_price"] - $values["item_discount"]),2); ?></span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mt-1">
-                    <div class="col-6">
-    
-                    </div>
-                      <div class="col-6">
-                        <a href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=delete&id='.$values["item_id"] ?>" class="ml-5 text-danger"><i class="fas fa-times"></i> Remove</a>
-                      </div>
-                    </div>
-                </div>   
-            <?php 
-              $total = $total + ($values["item_quantity"] * ($values["item_price"] - $values["item_discount"])); 
-                }      
-            }
-            else{
-                echo'
-                <h4 style="text-align:center;" class="mt-5">No Item in Cart</h4>
-                ';
-            }
-        }
-        
+        }    
         ?>
         <br><br><br>
         </div> 
@@ -586,29 +415,29 @@
                     <input type="hidden" id="cart_total" value="<?php echo $total; ?>" >
                     <span>Ksh<span id="total_value"><?php echo number_format($total,2); ?><span></span>   
                 </p>
-                <a <?php if(($cart_count == 0)){
+                <a <?php if(($cart_count == 0))
+                {
                 ?> 
                 href="#" 
                 <?php 
-                  } else{ 
-                    if (isset($_SESSION['logged_in'])) {
-                        if ($_SESSION['logged_in'] == TRUE) {
+                } 
+                else
+                { 
+                    if (Session::loggedIn() == TRUE)
+                    {
                 ?> 
                      href="checkout.php" 
                 <?php 
-                        }
-                        else{ ?>
-                            href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/checkout.php' ?>"
-                        <?php }
-                    }  
-                    else{
+                    }
+                    else
+                    {
                         ?>
-                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/checkout.php' ?>"
-                    <?php
+                        href="auth/login.php?page_url=<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/checkout.php' ?>"
+                        <?php 
                     } 
-                  } 
+                } 
                 ?> class="procced-checkout"  style=" background-color: #59b828;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Proceed to Checkout</a>
-                <a <?php if($cart_count == 0){?> href="#" <?php } else{ ?>href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php?action=clear' ?>" <?php } ?> class="clear-cart" style=" background-color: #df4759;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Clear Cart</a>
+                <a <?php if($cart_count == 0){?> href="#" <?php } else{ ?>href="<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/product-list.php?action=clear' ?>" <?php } ?> class="clear-cart" style=" background-color: #df4759;color: white;display: block;text-align: center;padding: 10px 30px;border-radius: 5px;margin-top: 10px;">Clear Cart</a>
             </div>
         </div>
     </div>
@@ -655,7 +484,8 @@
                             <select id="Cat_select">
                               <option id="cat0" value="0">Select Category</option>
                               <?php
-                                foreach($categoriesList as $row){
+                                foreach($categoriesList as $row)
+                                {
                                 $id = $row['id'];
                                 $category = $row['Category_Name'];
                             ?>
@@ -677,78 +507,58 @@
                 </div>
                 <div class="col-2 col-md-1 col-lg-5">
                     <ul class="site-action d-none d-lg-flex align-items-center justify-content-between  ml-auto">
-                        <li class="site-phone"><a href="tel:<?php echo $contact_number; ?>"><i class="fas fa-phone"></i> <?php echo $contact_number; ?></a></li>
+                        <li class="site-phone"><a href="tel:<?php echo Config::get('organization_details/contact'); ?>"><i class="fas fa-phone"></i> <?php echo Config::get('organization_details/contact'); ?></a></li>
                         <li class="site-help"><a href="#"><i class="fas fa-question-circle"></i> Help & More</a></li>
                         <li class="wish-list"><a 
                         <?php
                         $wishlist_count=0;
-                        if (isset($_SESSION['logged_in'])) {
-                            if ($_SESSION['logged_in'] == TRUE) {
+                        if (Session::loggedIn() == TRUE)
+                        {
                               $wishlist_checker = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE wishlist.customer_id='$customer_id';");
                               $wishlist_count = mysqli_num_rows($wishlist_checker);
-                            }
-                            else{
-                                if(isset($_COOKIE['shopping_wishlist'])){
-                                    $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
-                                    $wishlist_data = json_decode($wishlist_data, true); 
-                                    foreach($wishlist_data as $cart){
-                                        $wishlist_count++;
-                                    }
-                                }
-                            }
                         }
-                        else{
-                            if(isset($_COOKIE['shopping_wishlist'])){
-                                $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
-                                $wishlist_data = json_decode($wishlist_data, true); 
-                                foreach($wishlist_data as $cart){
+                        else
+                        {
+                            if(Wishlist::cookieExists())
+                            { 
+                                foreach(Wishlist::decodeCookie()  as $wishlist)
+                                {
                                     $wishlist_count++;
                                 }
                             }
                         }
-                        
-                        if (isset($_SESSION['logged_in'])) {
-                            if ($_SESSION['logged_in'] == TRUE) {
-                        ?>    
-                        href="wishlist.php#dashboard-nav"
-                        <?php
-                            }
-                        else{
-                        ?>
-                         href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
-                        <?php    
+                        if (Session::loggedIn() == TRUE)
+                        {
+                            ?>    
+                            href="wishlist.php#dashboard-nav"
+                            <?php
+                        }
+                        else
+                        {
+                            ?>
+                            href="auth/login.php?page_url=<?php echo Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
+                            <?php    
                         }   
-                       } 
-                       else{
-                       ?>
-                        href="auth/login.php?page_url=<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php#dashboard-nav' ?>"
-                       <?php
-                       }
                         ?>
                         ><i class="fas fa-heart"></i> <span class="count"><?php echo $wishlist_count; ?></span></a></li>
                         <?php
-                        if (isset($_SESSION['logged_in'])) {
-                          if ($_SESSION['logged_in'] == TRUE) {
-                        ?>
-                        <li class="my-account"><a class="dropdown-toggle" href="#" role="button" id="myaccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user mr-1"></i> Hello, <?php echo $logged_in_user; ?></a>
-                            <ul class="submenu dropdown-menu" aria-labelledby="myaccount">
-                                <li><a href="profile.php#dashboard-nav">Profile</a></li>
-                                <li><a href="<?php echo $logout_url.'?page_url='.$redirect_link; ?>">Sign Out</a></li>
-                            </ul>
-                        </li>
-                        <?php
-                          }
-                            else{
+                        if (Session::loggedIn() == TRUE)
+                        {
                             ?>
-                              <li class="signin-option"><a href="<?php echo  $login_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-user mr-2"></i>Sign In</a></li>    
+                            <li class="my-account"><a class="dropdown-toggle" href="#" role="button" id="myaccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user mr-1"></i> Hello, <?php echo Session::get('user'); ?></a>
+                                <ul class="submenu dropdown-menu" aria-labelledby="myaccount">
+                                    <li><a href="profile.php#dashboard-nav">Profile</a></li>
+                                    <li><a href="<?php echo $logout_url.'?page_url='.$redirect_link; ?>">Sign Out</a></li>
+                                </ul>
+                            </li>
                             <?php
-                          }
                         }
-                          else{
-                        ?>
-                        <li class="signin-option"><a href="<?php echo  $login_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-user mr-2"></i>Sign In</a></li>
-                        <?php
-                          }
+                        else
+                        {
+                            ?>
+                            <li class="signin-option"><a href="<?php echo  $login_url.'?page_url='.$redirect_link; ?>"><i class="fas fa-user mr-2"></i>Sign In</a></li>    
+                            <?php
+                        }
                         ?>
                     </ul>
                 </div>

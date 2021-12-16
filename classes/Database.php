@@ -74,6 +74,18 @@ class Database{
                }
             }
         }
+        /*if((count($where) > 3) && (count($where) % 3 == 0))
+        {
+            $operators = array('=','>','<','>=','<=', 'AND', 'OR', 'LIKE');
+           $conditions_count = count($where) / 3;
+           $condition_arrays = array();
+
+           $i = 1;
+           while($i < $conditions_count)
+           {
+               
+           }
+        }*/
     }
 
     public function getAll($table, $where)

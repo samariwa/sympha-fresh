@@ -157,4 +157,14 @@ class User{
         }
         return false;
     }
+
+    public function fetchUserStatus($email)
+    {
+        $data = $this->_db->get('users', 'active', array('email', '=', $email));
+        if($data->count())
+        {
+            return $data->first_result()->active;        
+        }
+        return false;
+    }
 }

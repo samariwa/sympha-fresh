@@ -57,6 +57,7 @@ $GLOBALS['config'] = array(
     ),
     'organization_details' => array(
         'name' => 'Sympha Fresh',
+        'slogan' => 'Fresh at your doorstep!',
         'contact' => '+254 797 233 726',
         'physical_address' => 'This address',
         'mission' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. consequuntur quibusdam enim expedita sed nesciunt incidunt accusamus adipisci officia libero laboriosam! Proin gravida nibh vel velit auctor aliquet. nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vultate cursus a sit amet mauris. Duis sed odio sit amet nibh vultate cursus a sit amet mauris.',
