@@ -197,9 +197,8 @@ if(Session::exists('success'))
                                                 <?php
                                                 $item_in_wishlist = '';
                                                 $item_in_wishlist_id = '';
-                                                if (isset($_SESSION['logged_in'])) {
-                                                    //session set to true
-                                                    if ($_SESSION['logged_in'] == TRUE) {
+                                                if (Session::loggedIn() == TRUE)
+                                                {
                                                 $product_in_wishlist = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE customer_id ='$customer_id' AND product_id = '".$row['id']."'");
                                                 $product_wishlist_result = mysqli_fetch_array($product_in_wishlist);
                                                 if ( $product_wishlist_result == true) {
@@ -213,7 +212,7 @@ if(Session::exists('success'))
                                                 //session set to false
                                                 else{
                                                     //wishlist cookie set
-                                                    if(isset($_COOKIE["shopping_wishlist"]))
+                                                    if(Wishlist::cookieExists())
                                                     {
                                                         $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
                                                         $wishlist_data = json_decode($wishlist_data, true);
@@ -234,42 +233,14 @@ if(Session::exists('success'))
                                                     }
                                                 }
                                                 //wishlist cookie not set
-                                                else{
+                                                else
+                                                {
                                                     $item_in_wishlist = false; 
                                                 }
                                                 }
-                                            }
-                                            //session not set
-                                            else{
-                                                //wishlist cookie set
-                                                if(isset($_COOKIE["shopping_wishlist"]))
-                                                    {
-                                                        $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
-                                                        $wishlist_data = json_decode($wishlist_data, true);
-                                                        $item_id = array_column($wishlist_data, 'item_id');
-                                                    if(in_array( $row['id'], $item_id))
-                                                    {
-                                                        foreach($wishlist_data as $keys => $values)
-                                                        {
-                                                            if($wishlist_data[$keys]["item_id"] == $row['id'])
-                                                            {
-                                                                $item_in_wishlist = true;
-                                                                $item_in_wishlist_id = $values["item_id"];
-                                                            }
-                                                        }
-                                                    }
-                                                    else{
-                                                        $item_in_wishlist = false;
-                                                    }
-                                                }
-                                                //wishlist cookie not set
-                                                else{
-                                                    $item_in_wishlist = false; 
-                                                }
-                                            } 
                                             ?>
                                             <a class="wish-link"
-                                            href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/index.php?action=add_wishlist&id='.$row['id'] ?>">
+                                            href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/index.php?action=add_wishlist&id='.$row['id'] ?>">
                                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="heart" class="svg-inline--fa fa-heart fa-w-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path
                                                     <?php
                                                        if($item_in_wishlist == true){
@@ -292,9 +263,8 @@ if(Session::exists('success'))
                                                     $item_in_cart = '';
                                                     $item_in_cart_qty = '';
                                                     $item_in_cart_id = '';
-                                                    if (isset($_SESSION['logged_in'])) {
-                                                        //session set to true
-                                                        if ($_SESSION['logged_in'] == TRUE) {
+                                                    if (Session::loggedIn() == TRUE)
+                                                    {
                                                     $product_in_cart = mysqli_query($connection,"SELECT * FROM `cart` WHERE customer_id ='$customer_id' AND product_id = '".$row['id']."'");
                                                     $product_cart_result = mysqli_fetch_array($product_in_cart);
                                                     if ( $product_cart_result == true) {
@@ -309,7 +279,7 @@ if(Session::exists('success'))
                                                     //session set to false
                                                     else{
                                                         //cart cookie set
-                                                        if(isset($_COOKIE["shopping_cart"]))
+                                                        if(Cart::cookieExists())
                                                         {
                                                             $cart_data = stripslashes($_COOKIE['shopping_cart']);
                                                             $cart_data = json_decode($cart_data, true);
@@ -335,36 +305,6 @@ if(Session::exists('success'))
                                                         $item_in_cart = false; 
                                                     }
                                                     }
-                                                }
-                                                //session not set
-                                                else{
-                                                    //cart cookie set
-                                                    if(isset($_COOKIE["shopping_cart"]))
-                                                        {
-                                                            $cart_data = stripslashes($_COOKIE['shopping_cart']);
-                                                            $cart_data = json_decode($cart_data, true);
-                                                            $item_id = array_column($cart_data, 'item_id');
-                                                        if(in_array( $row['id'], $item_id))
-                                                        {
-                                                            foreach($cart_data as $keys => $values)
-                                                            {
-                                                                if($cart_data[$keys]["item_id"] == $row['id'])
-                                                                {
-                                                                    $item_in_cart = true;
-                                                                    $item_in_cart_id = $values["item_id"];
-                                                                    $item_in_cart_qty = $values["item_quantity"];
-                                                                }
-                                                            }
-                                                        }
-                                                        else{
-                                                            $item_in_cart = false;
-                                                        }
-                                                    }
-                                                    //cart cookie not set
-                                                    else{
-                                                        $item_in_cart = false; 
-                                                    }
-                                                } 
                                                     ?>
                                                 <div class="cart-btn-toggle">
                                                     <?php
@@ -431,7 +371,7 @@ if(Session::exists('success'))
                     <div class="section-header text-center">
                         <h3>Deal of the Day</h3>
                     </div>
-                    <div class="countdown-container countdown show d-flex justify-content-center" data-Date='2021/12/10 13:37:53'>
+                    <div class="countdown-container countdown show d-flex justify-content-center" data-Date='2022/06/01 00:00:00'>
                         <div class="running">
                             <timer class="d-flex flex-wrap justify-content-center">
                                 <div class="count-item">
@@ -522,9 +462,8 @@ if(Session::exists('success'))
                                                 <?php
                                                 $item_in_wishlist = '';
                                                 $item_in_wishlist_id = '';
-                                                if (isset($_SESSION['logged_in'])) {
-                                                    //session set to true
-                                                    if ($_SESSION['logged_in'] == TRUE) {
+                                                if (Session::loggedIn() == TRUE)
+                                                {
                                                 $product_in_wishlist = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE customer_id ='$customer_id' AND product_id = '".$row['id']."'");
                                                 $product_wishlist_result = mysqli_fetch_array($product_in_wishlist);
                                                 if ( $product_wishlist_result == true) {
@@ -538,7 +477,7 @@ if(Session::exists('success'))
                                                 //session set to false
                                                 else{
                                                     //wishlist cookie set
-                                                    if(isset($_COOKIE["shopping_wishlist"]))
+                                                    if(Wishlist::cookieExists())
                                                     {
                                                         $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
                                                         $wishlist_data = json_decode($wishlist_data, true);
@@ -563,38 +502,9 @@ if(Session::exists('success'))
                                                     $item_in_wishlist = false; 
                                                 }
                                                 }
-                                            }
-                                            //session not set
-                                            else{
-                                                //wishlist cookie set
-                                                if(isset($_COOKIE["shopping_wishlist"]))
-                                                    {
-                                                        $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
-                                                        $wishlist_data = json_decode($wishlist_data, true);
-                                                        $item_id = array_column($wishlist_data, 'item_id');
-                                                    if(in_array( $row['id'], $item_id))
-                                                    {
-                                                        foreach($wishlist_data as $keys => $values)
-                                                        {
-                                                            if($wishlist_data[$keys]["item_id"] == $row['id'])
-                                                            {
-                                                                $item_in_wishlist = true;
-                                                                $item_in_wishlist_id = $values["item_id"];
-                                                            }
-                                                        }
-                                                    }
-                                                    else{
-                                                        $item_in_wishlist = false;
-                                                    }
-                                                }
-                                                //wishlist cookie not set
-                                                else{
-                                                    $item_in_wishlist = false; 
-                                                }
-                                            } 
                                             ?>
                                             <a class="wish-link"
-                                            href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/index.php?action=add_wishlist&id='.$row['id'] ?>">
+                                            href="<?php echo $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/index.php?action=add_wishlist&id='.$row['id'] ?>">
                                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="heart" class="svg-inline--fa fa-heart fa-w-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path
                                                     <?php
                                                        if($item_in_wishlist == true){
@@ -617,9 +527,8 @@ if(Session::exists('success'))
                                                     $item_in_cart = '';
                                                     $item_in_cart_qty = '';
                                                     $item_in_cart_id = '';
-                                                    if (isset($_SESSION['logged_in'])) {
-                                                        //session set to true
-                                                        if ($_SESSION['logged_in'] == TRUE) {
+                                                    if (Session::loggedIn() == TRUE)
+                                                    {
                                                     $product_in_cart = mysqli_query($connection,"SELECT * FROM `cart` WHERE customer_id ='$customer_id' AND product_id = '".$row['id']."'");
                                                     $product_cart_result = mysqli_fetch_array($product_in_cart);
                                                     if ( $product_cart_result == true) {
@@ -634,7 +543,7 @@ if(Session::exists('success'))
                                                     //session set to false
                                                     else{
                                                         //cart cookie set
-                                                        if(isset($_COOKIE["shopping_cart"]))
+                                                        if(Cart::cookieExists())
                                                         {
                                                             $cart_data = stripslashes($_COOKIE['shopping_cart']);
                                                             $cart_data = json_decode($cart_data, true);
@@ -660,36 +569,6 @@ if(Session::exists('success'))
                                                         $item_in_cart = false; 
                                                     }
                                                     }
-                                                }
-                                                //session not set
-                                                else{
-                                                    //cart cookie set
-                                                    if(isset($_COOKIE["shopping_cart"]))
-                                                        {
-                                                            $cart_data = stripslashes($_COOKIE['shopping_cart']);
-                                                            $cart_data = json_decode($cart_data, true);
-                                                            $item_id = array_column($cart_data, 'item_id');
-                                                        if(in_array( $row['id'], $item_id))
-                                                        {
-                                                            foreach($cart_data as $keys => $values)
-                                                            {
-                                                                if($cart_data[$keys]["item_id"] == $row['id'])
-                                                                {
-                                                                    $item_in_cart = true;
-                                                                    $item_in_cart_id = $values["item_id"];
-                                                                    $item_in_cart_qty = $values["item_quantity"];
-                                                                }
-                                                            }
-                                                        }
-                                                        else{
-                                                            $item_in_cart = false;
-                                                        }
-                                                    }
-                                                    //cart cookie not set
-                                                    else{
-                                                        $item_in_cart = false; 
-                                                    }
-                                                } 
                                                     ?>
                                                 <div class="cart-btn-toggle">
                                                     <?php

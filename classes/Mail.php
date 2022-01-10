@@ -23,11 +23,31 @@ class Mail{
         $mail->Password = Config::get('mailer/authenticator_email_password');
         $mail -> Subject = $subject;
         $mail -> isHTML(true);
+        $mail->AddEmbeddedImage('../assets/images/mail-header.jpeg', 'logo');
+        $mail->AddEmbeddedImage('../assets/images/mail-header-line.png', 'line');
+        $mail->AddEmbeddedImage('../assets/images/socials/facebook.png', 'facebook');
+        $mail->AddEmbeddedImage('../assets/images/socials/twitter.png', 'twitter');
+        $mail->AddEmbeddedImage('../assets/images/socials/instagram.png', 'instagram');
+        $mail->AddEmbeddedImage('../assets/images/socials/youtube.png', 'youtube');
         $mail -> Body = "
+                <p style='text-align:center'><img src='cid:logo'  alt='logo'></p>
+                <p style='text-align:center'><img src='cid:line' style='width:100%;height:10px;' alt='line'></p>
+                <br>
                 Hi $recepient_name,<br><br>
                 $body
                 Kind Regards,<br>
                 $organization.
+                <br><br><br><br><br><br>
+                <hr style='border-top: 1px solid #666666;'>
+                <br>
+                <a href='#'><img src='cid:facebook' style='width:25px;height:25px;' alt='facebook'></a>
+                <a href='#'><img src='cid:twitter' style='width:25px;height:25px;' alt='twitter'></a>
+                <a href='#'><img src='cid:instagram' style='width:25px;height:25px;' alt='instagram'></a>
+                <a href='#'><img src='cid:youtube' style='width:25px;height:25px;' alt='youtube'></a>
+                
+                <a href='#' style='margin-left:10px;color: #666666; text-align:right'>Unsubscribe</a>
+                <a href='#' style='margin-left:10px;color: #666666; text-align:right'>Privacy Policy</a>
+                <a href='#' style='margin-left:10px;color: #666666; text-align:right'>Terms of Service</a>
                 ";
         return $mail;
     }

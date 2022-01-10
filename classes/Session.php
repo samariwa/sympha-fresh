@@ -89,9 +89,10 @@ class Session{
                     $userId = $user->fetchUserId(Session::get('email')); 
                     $customerId = $customer->fetchCustomerId($userId);
                     //transfer cart cookie to database 
-                    if(Cookie::exists('shopping_cart'))
+                    /*if(Cookie::exists('shopping_cart'))
                     {
                         $cart = new Cart();
+                        die(var_dump(Cart::decodeCookie()));
                         foreach(Cart::decodeCookie() as $keys => $values)
                         {  
                             $cartDump = $cart->transferCookieToDatabase($customerId, $values["item_id"],$values["item_quantity"]);   
@@ -107,7 +108,7 @@ class Session{
                             $wishlistDump = $wishlist->transferCookieToDatabase($customerId, $values["item_id"]);
                         }
                         Cookie::put('shopping_wishlist','', Config::get('wishlist_cookie/expiry'));
-                    }
+                    }*/
                     if(basename(Config::get('server_id/self')) == 'login.php')
                     {
                         Redirect::to('../'.Config::get('pages/home_url'));
@@ -125,9 +126,9 @@ class Session{
             if ((Session::exists('LAST_ACTIVITY')) && ((time() - Session::get('LAST_ACTIVITY')) > Config::get('session_timeout/session_expiry')) || (Session::exists('LAST_ACTIVITY')) && ($user->fetchUserStatus(Session::get('email')) == 2))
             {
                 //redirect the user back to login page for re-authentication
-                if(basename(Config::get('server_id/self')) == 'login.php')
+                if(basename(Config::get('server_id/self')) != 'login.php')
                 {
-                    Redirect::to('../'.Config::get('pages/logout_url').'?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
+                    Redirect::to('../sympha-fresh/'.Config::get('pages/logout_url').'?page_url='.Config::get('server_id/protocol').Config::get('server_id/host').Config::get('server_id/current_directory'));
                 }
             }
             Session::put('LAST_ACTIVITY', time());

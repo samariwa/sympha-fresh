@@ -4,13 +4,13 @@ $refresh_page = '';
 $products_page = 'product-list.php';
 $wishlist_page = 'wishlist.php'; 
 if (strpos($redirect_link, $home_url) == TRUE) {
-    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/index.php';
+    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/index.php';
 }
 elseif (strpos($redirect_link, $products_page) == TRUE){
-    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/product-list.php';
+    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/product-list.php';
 } 
 elseif (strpos($redirect_link, $wishlist_page) == TRUE){
-    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/SymphaFresh/wishlist.php';
+    $refresh_page = $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/wishlist.php';
 } 
 if(isset($_GET['action']))
 {
@@ -122,11 +122,11 @@ if(isset($_GET['action']))
 
     if($_GET['action'] == 'wishlist_delete')
     { 
-      /*  if (isset($_SESSION['logged_in'])) {
-            if ($_SESSION['logged_in'] == TRUE) {*/
+        if (isset($_SESSION['logged_in'])) {
+            if ($_SESSION['logged_in'] == TRUE) {
                 mysqli_query($connection,"DELETE FROM `wishlist` WHERE customer_id ='".$customer_row['id']."' AND product_id ='".$_GET['id']."'");
                 header('location:'.$refresh_page.'?remove=1');
-         /*   }
+            }
             else{
                 $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
                 $wishlist_data = json_decode($wishlist_data, true);
@@ -155,15 +155,15 @@ if(isset($_GET['action']))
                     header('location:'.$refresh_page.'?wishlist-remove=1');
                 }
             }
-        }*/
+        }
     }
     if($_GET['action'] == 'wishlist-clear')
     {
-       /* if (isset($_SESSION['logged_in'])) {
-            if ($_SESSION['logged_in'] == TRUE) { */
+        if (isset($_SESSION['logged_in'])) {
+            if ($_SESSION['logged_in'] == TRUE) { 
                 mysqli_query($connection,"DELETE FROM `wishlist` WHERE customer_id ='".$customer_row['id']."'");
                 header('location:'.$refresh_page.'?wishlist-clear=1');
-          /*  }
+            }
             else{
                 setcookie('shopping_wishlist', '', $wishlist_expiry);
                 header('location:'.$refresh_page.'?wishlist-clear=1');
@@ -172,12 +172,12 @@ if(isset($_GET['action']))
         else{
             setcookie('shopping_wishlist', '', $wishlist_expiry);
             header('location:'.$refresh_page.'?wishlist-clear=1');
-        }*/
+        }
     }
     if($_GET['action'] == 'wishlist-cart-all')
     {
-       /* if (isset($_SESSION['logged_in'])) {
-            if ($_SESSION['logged_in'] == TRUE) { */
+        if (isset($_SESSION['logged_in'])) {
+            if ($_SESSION['logged_in'] == TRUE) { 
                 $wishlist_duplicate = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE customer_id ='".$customer_row['id']."'");
                 foreach($wishlist_duplicate as $row)
                 {
@@ -189,7 +189,7 @@ if(isset($_GET['action']))
                 }
                 mysqli_query($connection,"DELETE FROM `wishlist` WHERE customer_id = '".$customer_row['id']."'");
                 header('location:'.$refresh_page.'?wishlist-to-cart=1');
-           /*  }
+             }
            else{
                 $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
                 $wishlist_data = json_decode($wishlist_data, true);
@@ -268,7 +268,7 @@ if(isset($_GET['action']))
             setcookie('shopping_cart', $item_data, $cart_expiry);
             setcookie('shopping_wishlist', '', $wishlist_expiry);
             header('location:'.$refresh_page.'?wishlist-to-cart=1');
-        }   */  
+        }     
     }
     if($_GET['action'] == 'wishlist_cart')
     {

@@ -792,7 +792,7 @@ $(document).on('click','.anonymousSubscription',function(){
     var subject = $('#subject').val();
     var message = $('#message').val();
     var token = $('.contact_page_token').val();
-    var where = 'site_contact'
+    var where = 'site_contact';
     $.post("add.php",{email:email,token:token,subject:subject,message:message,where:where},
     function(result){
         if (result == 'success') {

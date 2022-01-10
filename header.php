@@ -6,6 +6,43 @@
  include('cart.php');
  include('wishlist_process.php');
  Session::validateAuthSession();
+ $customer = mysqli_query($connection,"SELECT customers.id as id FROM `customers` inner join users on customers.User_id = users.id WHERE users.email='".$_SESSION['email']."'");
+ $customer_row = mysqli_fetch_array($customer);
+ $customer_id = $customer_row['id'];  
+ //transfer cart cookie to database 
+ if(isset($_COOKIE['shopping_cart']))
+ {
+     $cookie_data = stripslashes($_COOKIE['shopping_cart']);
+     $cart_data = json_decode($cookie_data, true);
+     foreach($cart_data as $keys => $values)
+     {  
+         $product_id = $values["item_id"];
+         $cart_duplicate = mysqli_query($connection,"SELECT * FROM `cart` WHERE customer_id ='$customer_id' AND product_id = '$product_id'");
+         $cart_duplicate_result = mysqli_fetch_array($cart_duplicate);
+         if ( $cart_duplicate_result == FALSE) {
+             $quantity = $values["item_quantity"];
+             mysqli_query($connection,"INSERT INTO `cart` (`customer_id`,`product_id`,`quantity`) VALUES ('$customer_id','$product_id','$quantity')");
+         }     
+     }
+     setcookie('shopping_cart', '', $cart_expiry);
+ }
+ //transfer wishlist cookie to database
+ if(isset($_COOKIE["shopping_wishlist"]))
+ {
+     $wishlist_data = stripslashes($_COOKIE['shopping_wishlist']);
+     $wishlist_data = json_decode($wishlist_data, true);
+     foreach($wishlist_data as $keys => $values)
+     {
+         $product_id = $values["item_id"];
+         $wishlist_duplicate = mysqli_query($connection,"SELECT * FROM `wishlist` WHERE customer_id ='$customer_id' AND product_id = '$product_id'");
+         $wishlist_duplicate_result = mysqli_fetch_array($wishlist_duplicate);
+         if ( $wishlist_duplicate_result == FALSE) {
+             mysqli_query($connection,"INSERT INTO `wishlist` (`customer_id`,`product_id`) VALUES ('$customer_id','$product_id')");
+         }
+     }
+     setcookie('shopping_wishlist', '', $cart_expiry);
+ }
+ $userDetails = Database::getInstance()->getAll('users', array('email', '=', Session::get('email')));
 ?>
 <!DOCTYPE html>
 <html lang="en">
