@@ -76,4 +76,20 @@ class Mail{
         }
         return false;
     }
+
+    public function registrationVerificationMail($email, $user_first_name, $verification_key)
+    {
+        $verified_link = Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/auth/registration.php?email='.$email.'&verification='.$verification_key;
+        $message = "You've successfully signed up for Sympha Fresh.
+        In order to activate your account, please click on the link below (this will confirm you email address):<br>
+        <a href='
+        $verified_link'>Account Activation Link</a><br><br>";
+        $mail = $this->create($email, $user_first_name, 'Activate your Sympha Fresh account', $message);
+        $sendMail = $this->send($mail);
+        if($sendMail == TRUE)
+        {
+            return true;
+        }
+        return false;
+    }
 }

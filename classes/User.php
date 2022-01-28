@@ -34,6 +34,11 @@ class User{
             }
         }
         $this->updateUserLoginAttempts($id,'0');
+        $this->SetSessionVariables($id);
+    }
+
+    public function SetSessionVariables($user_id)
+    {
         //generate random hash
         $random = Functions::genRandomSaltString();
         $salt_ip = substr($random, 0, Config::get('salt/salt_length'));
@@ -48,7 +53,7 @@ class User{
         Session::put('LAST_ACTIVITY', time());
         if (Session::exists('logged_in'))
         {
-            $this->_db->insert("logged_devices", array('user_id' => $id, 'ip_address' => Config::get('client_id/ip_address'), 'browser/device' => Config::get('client_id/user_agent')));
+            $this->_db->insert("logged_devices", array('user_id' => $user_id, 'ip_address' => Config::get('client_id/ip_address'), 'browser/device' => Config::get('client_id/user_agent')));
         }
     }
 
@@ -60,6 +65,11 @@ class User{
     public function resetPassword($email,$password)
     {
         $this->_db->update('users', 'email', $email, array('password' => password_hash($password, PASSWORD_DEFAULT)));
+    }
+
+    public function RegistrationToken($email, $token)
+    {
+        $this->_db->update('users', 'email', $email, array('token' => $token));
     }
 
     public function logout()

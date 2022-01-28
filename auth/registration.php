@@ -9,6 +9,32 @@ $passwordvalidate = TRUE;
 $passwordmatch  = TRUE;
 $error = FALSE;
 $internetConnection = TRUE;
+$mailsent = FALSE;
+$verificationmatch = TRUE;
+$user = new User();
+if(isset($_GET['verification']))
+{
+	$userDetails = Database::getInstance()->getAll('users', array('email', '=', sanitize($_GET['email'])));
+	$roleSession = mysqli_query($connection,"SELECT jobs.Name as Name FROM `users` inner join jobs on users.Job_id = jobs.id WHERE `email`='".$userDetails->first_result()->email."'");
+    $row5 = mysqli_fetch_array($roleSession);
+	Session::put('role', $row5['Name']);
+    Session::put('user', $userDetails->first_result()->firstname);
+    Session::put('email', $userDetails->first_result()->email);
+		if($_GET['verification'] == $userDetails->first_result()->token)
+		{
+			$login = $user->SetSessionVariables($userDetails->first_result()->id);
+			Session::flash('success', 'You have registered successfully');
+			if (Session::loggedIn()) 
+			{
+				Redirect::to('../'.$home_url);
+				exit;
+			}		
+		}
+		else
+		{
+			$verificationmatch = FALSE;
+		}
+}
 if(Input::exists())
 {
 $token_verification = new Token();
@@ -46,7 +72,6 @@ if ($token_result == "success")
     }
 	if (($usernotduplicate == TRUE) && ($passwordmatch == TRUE) && ($passwordvalidate == TRUE))
 	{
-		$user = new User();
 		try
 		{
 			$user->create(array(
@@ -79,9 +104,16 @@ if ($token_result == "success")
 		{
 			$error = TRUE;
 		}
+		$verification_key = generateRandomString();
+		$verified_link = $protocol.$_SERVER['HTTP_HOST'].'/sympha-fresh/auth/registration.php?email='.$email.'&verification='.$verification_key;
+        $registrationToken = $user->RegistrationToken(sanitize(Input::post('email')),$verification_key);
+		$mail = new Mail();
+        $send = $mail->registrationVerificationMail(sanitize(Input::post('email')),Input::post('firstname'),$verification_key);
+		if($send == TRUE)
+		{
+			$mailsent = TRUE;
+		}
 	}
-   Session::flash('success', 'You have registered successfully');
-   Redirect::to('../'.$home_url);
 }
 elseif($token_result == "no connection")
 {
@@ -211,8 +243,12 @@ else
 		                        echo '<br><font color="red"><i class="bx bx-wifi bx-flashing"></i>&ensp;Please check your internet connection and try again.</font>';
 								if ($passwordmatch == FALSE)
 								echo '<br><br>&emsp;&emsp;&emsp;&ensp;<font color="red"><i class="bx bxs-error bx-flashing"></i>&ensp;Your passwords do not match.</font>'; 
+							    if ($mailsent == TRUE)
+					            echo '<br><br><font color="green"><i class="bx bx-check-circle bx-flashing"></i>&ensp;Please check your email for an activation link for your account.</font>'; 
 								if ($passwordvalidate == FALSE)
 								echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your password should be greater than 8 characters.</font>'; 
+								if ($verificationmatch == FALSE)
+					           echo '<br><br><font color="red"><i class="bx bx-shield-quarter bx-flashing"></i>&ensp;Your verification keys do not match. <br>Kindly ensure that you are using the correct activation link.</font>'; 	
 								if ($usernotduplicate == FALSE)
 								echo '<br><br>&emsp;&emsp;&emsp;&emsp;<font color="red"><i class="bx bxs-data bx-flashing"></i>&ensp;User already exists.</font>'; 
 							?>
