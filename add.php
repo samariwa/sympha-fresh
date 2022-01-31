@@ -365,7 +365,7 @@ elseif ($where=='order') {
   $sql = '';
   if($cleared == 1)
   {
-    $amount_paid = (int)$cost*(int)$quantity;
+    $amount_paid = (float)$cost*(float)$quantity;
     $mode = $_POST['mode'];
     if($mode == 0)
     {
@@ -378,7 +378,7 @@ elseif ($where=='order') {
   }
   else{
     $newDebt = $balance;
-    $newBalance = (int)$newDebt - ((int)$cost*(int)$quantity);
+    $newBalance = (float)$newDebt - ((float)$cost*(float)$quantity);
     $sql = "INSERT INTO `orders`(`Customer_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer','$category','$quantity','$newDebt','$discount','$newBalance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
   }
   $product = mysqli_query($connection,"SELECT Name,Category_Name  FROM `stock` inner join category on stock.Category_id = category.id WHERE stock.id = '".$stockIDx."'")or die($connection->error);

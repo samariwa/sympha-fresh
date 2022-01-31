@@ -994,16 +994,16 @@ function selectSeller(selection) {
           $('#cartEditable td').on('change', function(evt, newValue) {
             for (var i = 0; i < cartItems.length; i++) {
               var availableQty = cartItems[i][5];
-               if (parseFloat($(`#quantity${cartItems[i][0]}`).html()).toFixed(2) == newValue) {
-                if (parseFloat(newValue).toFixed(2) <= availableQty && parseFloat(newValue).toFixed(2) > 0) {
+               if (parseFloat($(`#quantity${cartItems[i][0]}`).html()) == newValue) {
+                if (parseFloat(newValue) <= availableQty && parseInt(newValue) > 0) {
                   var id = cartItems[i][0];
-                  var price = parseInt($(`#price${id}`).html());
-                  var discount = parseInt($(`#discount${id}`).html());
+                  var price = parseFloat($(`#price${id}`).html());
+                  var discount = parseFloat($(`#discount${id}`).html());
                   var cost = price - discount;
                   newSub = newValue * cost;
                   //$(`#upQuantity${id}`).setAttribute('onclick',`upQuantity(${id},${price},${newValue})`);
                   cartItems[i][3] = newValue;
-                  $(`#subTotal${id}`).html(newSub);
+                  $(`#subTotal${id}`).html(parseFloat(newSub).toFixed(2));
                 } else{
                   alert('Quantity Not Available');
                   return false;
@@ -1014,12 +1014,12 @@ function selectSeller(selection) {
               document.getElementById(`upQuantity${id}`).setAttribute('onclick',`upQuantity(${id},${price},${newValue})`);
                    */
 
-              if (parseInt($(`#discount${cartItems[i][0]}`).html()) == newValue) {
-                if (newValue <= parseInt($(`#price${cartItems[i][0]}`).html())) {
-                  var cost = parseInt($(`#price${cartItems[i][0]}`).html()) - newValue;
-                  newSub2 = parseInt($(`#quantity${cartItems[i][0]}`).html()) * cost;
+              if (parseFloat($(`#discount${cartItems[i][0]}`).html()) == newValue) {
+                if (newValue <= parseFloat($(`#price${cartItems[i][0]}`).html())) {
+                  var cost = parseFloat($(`#price${cartItems[i][0]}`).html()) - parseFloat(newValue);
+                  newSub2 = parseFloat($(`#quantity${cartItems[i][0]}`).html()) * parseFloat(cost);
                   cartItems[i][4] = newValue;
-                  $(`#subTotal${cartItems[i][0]}`).html(newSub2);
+                  $(`#subTotal${cartItems[i][0]}`).html(parseFloat(newSub2).toFixed(2));
                 } else {
                   alert('Discount cannot be greater than unit price.');
                   return false;
@@ -1035,9 +1035,9 @@ function selectSeller(selection) {
        function calculateTotal(){
          var total=0;
          for (var i = 0; i < cartItems.length; i++) {
-           total = total + parseFloat($(`#subTotal${cartItems[i][0]}`).html()).toFixed(2);
+           total += parseFloat($(`#subTotal${cartItems[i][0]}`).html());
          }
-         $(`#cartTotal`).html(total)
+         $(`#cartTotal`).html(Math.round(total));
        }
 
        function upQuantity(a,b,c){

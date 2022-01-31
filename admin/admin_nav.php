@@ -330,8 +330,14 @@ Preloader
           <span>Expenses</span></a>
       </li>
       <br>
-       
-         
+
+      <li class="nav-item">&emsp;
+        <a style="color: black;" href="#">
+        <i class="fa fa-tag"></i>
+          <span>Assets</span></a>
+      </li>
+      <br>
+           
        <li class="nav-item">&emsp;
         <a style="color: black;" href="liabilities.php">
         <i class="bx bxs-coin"></i>
