@@ -327,11 +327,12 @@ elseif ($where == 'expenseHeading') {
      mysqli_query($connection,"INSERT INTO `expenses` (`Name`) VALUES ('$name')") or die(mysqli_error($connection));
 }
 elseif ($where=='order') {
-  $balance = "";
+  $balance = 0;
   $category="";
   $price = $_POST['price'];
   $discount = $_POST['discount'];
   $quantity = $_POST['quantity'];
+  $cleared = $_POST['cleared'];
   $customer = '1';
   $customerType = 'walk_in';
   $newCustomer = $_POST['newCustomer'];
@@ -361,10 +362,25 @@ elseif ($where=='order') {
     }
       $count++;
   }
-  $newDebt = $balance;
-  $newBalance = (int)$newDebt - ((int)$cost*(int)$quantity);
-  $sql = "INSERT INTO `orders`(`Customer_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer','$category','$quantity','$newDebt','$discount','$newBalance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
-  echo "success";
+  $sql = '';
+  if($cleared == 1)
+  {
+    $amount_paid = (int)$cost*(int)$quantity;
+    $mode = $_POST['mode'];
+    if($mode == 0)
+    {
+      $sql = "INSERT INTO `orders`(`Customer_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Cash`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
+    }
+    elseif($mode == 1)
+    {
+      $sql = "INSERT INTO `orders`(`Customer_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`MPesa`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
+    }
+  }
+  else{
+    $newDebt = $balance;
+    $newBalance = (int)$newDebt - ((int)$cost*(int)$quantity);
+    $sql = "INSERT INTO `orders`(`Customer_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer','$category','$quantity','$newDebt','$discount','$newBalance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
+  }
   $product = mysqli_query($connection,"SELECT Name,Category_Name  FROM `stock` inner join category on stock.Category_id = category.id WHERE stock.id = '".$stockIDx."'")or die($connection->error);
    $Product = mysqli_fetch_array($product);
   $Category_Name = $Product['Category_Name'];
@@ -566,7 +582,9 @@ elseif ($where=='order') {
   if (mysqli_query($connection, $sql) === TRUE) {
     echo 'success';
   }
-  
+  else{
+    die($connection->error);
+  }
 }
 elseif ($where=='sales') {
   $balance = "";

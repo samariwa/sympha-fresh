@@ -163,7 +163,58 @@
         </div><br><br>
 
           <div class="row">
-          <button type="submit" class="btn btn-success col-md-4 completeOrder" style="margin-left: 340px"><i class="fa fa-check"></i>&emsp;Complete Order</button>
+          <div class="col-6 d-flex justify-content-center">
+          <button type="submit" class="btn btn-success btn-md completeOrder"><i class="fa fa-check"></i>&emsp;Complete Order</button>
+          </form>
+          </div>
+          <div class="col-6 d-flex justify-content-center">
+          <a href="#" data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md placeOrder" role="button" aria-pressed="true"><i class="fa fa-print"></i>&ensp;Complete Order & Print Receipt</a>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalScrollableTitle">Place Order</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="POST">
+                <input type="hidden" id="orderCustomerName" value="John Doe"></input>
+                <div class="row"><p style="margin-left: 60px" id="orderTotal">Order Cost: Ksh. 00.00</p></div>
+                <div class="row">
+                  <label for="amount_paid" style="margin-left: 60px">Amount Paid</label>
+                 <input type="number" name="amount_paid" id= "amount_paid" class="form-control col-md-9" style="padding:15px;margin-left: 60px" required min="0" val="0.00">
+                  </div><br>
+                  <p style="margin-left: 60px;">Mode of Payment:</p> 
+                  <div class="row">
+                    <div class="form-check mt-n3" style="margin-left: 60px;">
+                        <input class="form-check-input" type="radio" name="payment-mode" id="cash" value="0" >
+                        <label class="form-check-label" for="exampleRadios1">
+                          Cash
+                        </label>
+                    </div>  
+                    </div> 
+                    <div class="row">   
+                  <div class="form-check mt-n1" style="margin-left: 60px;">
+                        <input class="form-check-input" type="radio" name="payment-mode" id="mpesa" value="1">
+                        <label class="form-check-label" for="exampleRadios2">
+                          M-Pesa
+                        </label>
+                  </div>
+            </div><br>
+            <div class="row"><p style="margin-left: 60px" id="paidBalance">Balance: Ksh. 00.00</p></div>
+                  <input type="hidden" name="where" id= "where"  value="customer">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" style="margin-right: 50px" id="orderAndPrint">Print Receipt</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+          </div>
         </div><br>
 <!--
              <div class="row">
@@ -197,8 +248,8 @@
         <div class="row">
           <button type="button" class="btn btn-success col-md-4 " style="margin-left: 320px"><i class="fa fa-cart-plus" id="addToCart"></i>&emsp;Add to Cart</button>
         </div><br>
+        </form>
 -->
  
-        </form>
   <!-- Scroll to Top Button-->
   <?php include "admin_footer.php" ?> 

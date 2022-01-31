@@ -852,7 +852,7 @@ var name = $("#newCustomer").val();
             if ($('#customerDetails').html('')){
             $("#customerDetails").append(customerDetails);
           }
-          newCustomer = $(`#newCustomer`).val();
+          newCustomer = $(`#newCustomer`).val();     
 });
 
 var newCustomer = '';
@@ -872,6 +872,7 @@ $("#newCustomer").on("keyup", function() {
             $("#customerDetails").append(customerDetails);
           }
           newCustomer = $(`#newCustomer`).val();
+          $(`#orderCustomerName`).val(name);
 })
 
 var customerArr = new Array();
@@ -912,6 +913,7 @@ function selectCustomer(selection) {
             customerDetails += deliverer;
             if ($('#customerDetails').html('')){
             $("#customerDetails").append(customerDetails);
+            $(`#orderCustomerName`).val(name);
           }
 }
 
@@ -992,8 +994,8 @@ function selectSeller(selection) {
           $('#cartEditable td').on('change', function(evt, newValue) {
             for (var i = 0; i < cartItems.length; i++) {
               var availableQty = cartItems[i][5];
-               if (parseInt($(`#quantity${cartItems[i][0]}`).html()) == newValue) {
-                if (parseInt(newValue) <= availableQty && parseInt(newValue) > 0) {
+               if (parseFloat($(`#quantity${cartItems[i][0]}`).html()).toFixed(2) == newValue) {
+                if (parseFloat(newValue).toFixed(2) <= availableQty && parseFloat(newValue).toFixed(2) > 0) {
                   var id = cartItems[i][0];
                   var price = parseInt($(`#price${id}`).html());
                   var discount = parseInt($(`#discount${id}`).html());
@@ -1033,7 +1035,7 @@ function selectSeller(selection) {
        function calculateTotal(){
          var total=0;
          for (var i = 0; i < cartItems.length; i++) {
-           total = total + parseInt($(`#subTotal${cartItems[i][0]}`).html());
+           total = total + parseFloat($(`#subTotal${cartItems[i][0]}`).html()).toFixed(2);
          }
          $(`#cartTotal`).html(total)
        }
@@ -1115,14 +1117,56 @@ function getIndexOfProduct(arr, k) {
   }
 }
 
+$(document).on('click','.placeOrder',function(){
+    $(`#orderTotal`).html('Order Cost: Ksh. '+ (Math.round(parseInt($('#cartTotal').html()))).toFixed(2));
+    if($(`#deliveryDate`).val() == '')
+    {
+      let today = new Date().toISOString().slice(0, 10);
+      $(`#deliveryDate`).val(today);
+    }
+  });
+
+     $(`#amount_paid`).keyup(function(){
+      $(`#paidBalance`).html('Balance: Ksh. '+ (Math.round(parseInt($(`#amount_paid`).val()) - parseInt($('#cartTotal').html()))).toFixed(2));
+    });
+
+    $(document).on('click','#orderAndPrint',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var customer = $(`#orderCustomerName`).val();
+      var paid = $(`#amount_paid`).val();
+      var radios = document.getElementsByName('payment-mode');
+          for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                var mode = radios[i].value;
+            }
+         }
+      var cleared = 1;
+      var orderData = JSON.stringify(cartItems);
+      $.post("receiptPrint.php",{customer:customer, mode:mode, paid:paid, order: orderData},
+      function(result){
+         completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared, mode);
+         var mywindow = window.open('', 'Sympha Fresh', 'height=400,width=600');
+                      mywindow.document.write('<html><head><title></title>');
+                      mywindow.document.write('</head><body>');
+                      mywindow.document.write(result);
+                      mywindow.document.write('</body></html>');
+                      mywindow.document.close();
+                      mywindow.focus();
+                      mywindow.print();
+                      //mywindow.close();
+       });
+    });
+
         $('.completeOrder').click(function(){
-            completeOrderBalance(customerArr[0],cartItems,newCustomer);
+            var cleared = 0;
+            completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a');
         });
 
-      function completeOrderBalance(custID,cartArr,newCust){
+      function completeOrderBalance(custID,cartArr,newCust,cleared, mode){
         for (var i = 0; i < cartArr.length; i++) {
           var stockID = cartArr[i][0];
-          $.post("../add.php",{where:'order',price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust},
+          $.post("../add.php",{where:'order',price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust, cleared: cleared, mode:mode},
           function(result){
             if (result=='success') {
                 cartArr.shift();
@@ -1130,7 +1174,7 @@ function getIndexOfProduct(arr, k) {
                 //alert("Order Successfully Added"); 
             }
             else if(result=='unavailable'){
-                alert("Quantity for stock id "+ stockID +" reduced below ordered quantity in ordering process. Order for the prodcust could not be completed.");
+                alert("Quantity for stock id "+ stockID +" reduced below ordered quantity in ordering process. Order for the prodcuts could not be completed.");
             }
           });
         }
