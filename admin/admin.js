@@ -945,10 +945,10 @@ function selectSeller(selection) {
           var id = Id;
           var productId = $(`#id${id}`).text();
           var productName = $(`#name${id}`).text();
-          var productPrice = $(`#sp${id}`).text();
-          var available = $(`#qty${id}`).text();
+          var productPrice = parseFloat($(`#sp${id}`).text());
+          var available = parseFloat($(`#qty${id}`).text());
           var quantity = '1';
-          var discount = $(`#Discount${id}`).text();
+          var discount = parseFloat($(`#Discount${id}`).text());
           var button = document.getElementById(`add_product${id}`);
           button.disabled = true;
            cartItems.push([productId,productName, productPrice,quantity, discount,available,button]);
@@ -984,7 +984,7 @@ function selectSeller(selection) {
                <button id="deleteCart${id}" onclick="deleteCart(${id},this,${price},${qty})" type='button' class='btn btn-danger btn-sm deleteFromCart' >
                <i class='fa fa-times-circle'></i>&ensp;Remove</button>
                </td>
-              <td class="uneditable" id="subTotal${id}">${subTotal}</td>
+              <td class="uneditable" id="subTotal${id}">${parseFloat(subTotal).toFixed(2)}</td>
                  </tr>`;
                  $('#cartData').html(productDetails);
                  $('#cartEditable').editableTableWidget();
@@ -1037,14 +1037,14 @@ function selectSeller(selection) {
          for (var i = 0; i < cartItems.length; i++) {
            total += parseFloat($(`#subTotal${cartItems[i][0]}`).html());
          }
-         $(`#cartTotal`).html(Math.round(total));
+         $(`#cartTotal`).html(Math.round(total).toFixed(2));
        }
 
        function upQuantity(a,b,c){
          for (var i = 0; i < cartItems.length; i++) {
            if (cartItems[i][0]==a) {
              currentQ = cartItems[i][3];
-             newQ = parseInt(currentQ) + 1;
+             newQ = parseFloat(currentQ) + 1;
              if (newQ <= cartItems[i][5]) {
                cartItems[i][3] = newQ;
              }else {
@@ -1061,7 +1061,7 @@ function selectSeller(selection) {
            if (cartItems[i][0]==a) {
              currentQ = cartItems[i][3];
              if (currentQ > 1) {
-               newQ = parseInt(currentQ) - 1;
+               newQ = parseFloat(currentQ) - 1;
                cartItems[i][3] = newQ;
              }else {
                alert('Quantity cannot be below 1');
@@ -1809,10 +1809,11 @@ function saveOrderToday(idx){
   var date = $(`#date_Today${id}`).val();
   var returned = $(`#returned_Today${id}`).val();
   var banked = $(`#banked_Today${id}`).val();
+  var invoice = $(`#invoice_Today${id}`).val();
   var slip = $(`#slip_Today${id}`).val();
   var banker = $(`#banked_By_Today${id}`).val();
   var where = 'orders';
-  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,banker:banker,where:where},
+  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,invoice:invoice,slip:slip,banker:banker,where:where},
   function(result){
     if (result == 'Unavailable') {
       alert("Quantity Entered Unavailable");
@@ -1835,9 +1836,10 @@ function saveOrderToday(idx){
   var returned = $(`#returned_Tomorrow${id}`).val();
   var banked = $(`#banked_Tomorrow${id}`).val();
   var slip = $(`#slip_Tomorrow${id}`).val();
+  var invoice = $(`#invoice_Tomorrow${id}`).val();
   var banker = $(`#banked_By_Tomorrow${id}`).val();
   var where = 'orders';
-  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,banker:banker,where:where},
+  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,invoice:invoice,banker:banker,where:where},
   function(result){
     if (result == 'Unavailable') {
       alert("Quantity Entered Unavailable");
@@ -1860,9 +1862,10 @@ function saveOrderToday(idx){
   var returned = $(`#returned_LastMonth${id}`).val();
   var banked = $(`#banked_LastMonth${id}`).val();
   var slip = $(`#slip_LastMonth${id}`).val();
+  var invoice = $(`#invoice_LastMonth${id}`).val();
   var banker = $(`#banked_By_LastMonth${id}`).val();
   var where = 'orders';
-  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,banker:banker,where:where},
+  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,invoice:invoice,banker:banker,where:where},
   function(result){
     if (result == 'Unavailable') {
       alert("Quantity Entered Unavailable");
@@ -1885,9 +1888,10 @@ function saveOrderToday(idx){
   var returned = $(`#returned_NextMonth${id}`).val();
   var banked = $(`#banked_NextMonth${id}`).val();
   var slip = $(`#slip_NextMonth${id}`).val();
+  var invoice = $(`#invoice_NextMonth${id}`).val();
   var banker = $(`#banked_By_NextMonth${id}`).val();
   var where = 'orders';
-  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,banker:banker,where:where},
+  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,invoice:invoice,banker:banker,where:where},
   function(result){
     if (result == 'Unavailable') {
       alert("Quantity Entered Unavailable");
@@ -1910,9 +1914,10 @@ function saveOrderToday(idx){
   var returned = $(`#returned_Yesterday${id}`).val();
   var banked = $(`#banked_Yesterday${id}`).val();
   var slip = $(`#slip_Yesterday${id}`).val();
+  var invoice = $(`#invoice_Yesterday${id}`).val();
   var banker = $(`#banked_By_Yesterday${id}`).val();
   var where = 'orders';
-  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,banker:banker,where:where},
+  $.post("../save.php",{id:id,qty:qty,mpesa:mpesa,cash:cash,date:date,banked:banked,returned:returned,slip:slip,invoice:invoice,banker:banker,where:where},
   function(result){
     if (result == 'Unavailable') {
       alert("Quantity Entered Unavailable");

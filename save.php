@@ -52,6 +52,7 @@ $cash = $_POST['cash'];
 $date = $_POST['date'];
 $banked = $_POST['banked'];
 $slip = $_POST['slip'];
+$invoice = $_POST['invoice'];
 $banker = $_POST['banker'];
 $returned = $_POST['returned'];
 $result2 = mysqli_query($connection,"select Stock_id, Debt, Fine,Quantity as Qty,Returned from  orders where id='".$id."';")or die($connection->error);
@@ -134,10 +135,10 @@ $result1 = mysqli_query($connection,"SELECT Customer_id,Quantity,Balance FROM or
       exit();
     }
      if ($view == 'Software') {
-      mysqli_query($connection,"UPDATE `orders`  SET `Quantity` = '".$qty."',`Balance` = '".$newBalance."',`MPesa` = '".$mpesa."',`Cash` = '".$cash."',`Delivery_time` = '".$date."',`Returned` = '".$Returned."',`Banked` = '".$banked."',`Slip_Number` = '".$slip."',`Banked_By` = '".$banker."' WHERE `id` = '".$id."'")or die($connection->error);
+      mysqli_query($connection,"UPDATE `orders`  SET `Quantity` = '".$qty."',`Balance` = '".$newBalance."',`MPesa` = '".$mpesa."',`Cash` = '".$cash."',`Delivery_time` = '".$date."',`Returned` = '".$Returned."',`Banked` = '".$banked."',`Slip_Number` = '".$slip."',`Invoice_Number` = '".$invoice."',`Banked_By` = '".$banker."' WHERE `id` = '".$id."'")or die($connection->error);
        }
     else{ 
-      mysqli_query($connection,"UPDATE `orders`  SET `Quantity` = '".$old_Qty."',`Balance` = '".$newBalance."',`MPesa` = '".$mpesa."',`Cash` = '".$cash."',`Delivery_time` = '".$date."',`Returned` = '".$Returned."',`Banked` = '".$banked."',`Slip_Number` = '".$slip."',`Banked_By` = '".$banker."' WHERE `id` = '".$id."'")or die($connection->error);
+      mysqli_query($connection,"UPDATE `orders`  SET `Quantity` = '".$old_Qty."',`Balance` = '".$newBalance."',`MPesa` = '".$mpesa."',`Cash` = '".$cash."',`Delivery_time` = '".$date."',`Returned` = '".$Returned."',`Banked` = '".$banked."',`Slip_Number` = '".$slip."',`Invoice_Number` = '".$invoice."',`Banked_By` = '".$banker."' WHERE `id` = '".$id."'")or die($connection->error);
      }
       mysqli_query($connection,"update stock set Quantity= Quantity +".$Returned." WHERE `id` = '".$stock_id."'")or die($connection->error);
       $product = mysqli_query($connection,"SELECT Name,Category_Name  FROM `stock` inner join category on stock.Category_id = category.id WHERE stock.id = '".$stock_id."'")or die($connection->error);

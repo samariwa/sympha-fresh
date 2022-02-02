@@ -53,11 +53,11 @@
     <tr>
       <th scope="row"><?php echo $id; ?></th>
       <td ><?php echo $name; ?></td>
-      <td ><?php echo $sum1; ?></td>
-      <td ><?php echo $sum2; ?></td>
-      <td ><?php echo $sum3; ?></td>
-      <td ><?php echo $sum4; ?></td>
-      <td ><?php echo $sum5; ?></td>
+      <td ><?php echo round($sum1,2); ?></td>
+      <td ><?php echo round($sum2,2); ?></td>
+      <td ><?php echo round($sum3,2); ?></td>
+      <td ><?php echo round($sum4,2); ?></td>
+      <td ><?php echo round($sum5,2); ?></td>
     </tr>
     <?php
     }

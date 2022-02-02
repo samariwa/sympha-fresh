@@ -71,6 +71,7 @@
       $mode = 'M-Pesa';
     }
     $vat = 0.16 * $total;
+    $subtotal = $total - $vat;
  $pdf .=  '
  <tr class="spaceUnder">
  <td>================</td>
@@ -85,16 +86,22 @@
  <td style="text-align:center"><b>'.count($order).'</b></td>
  </tr>
  <tr class="spaceUnder">
- <td style="text-align:center"><b>VAT inclusive (16%):</b></td>
- <td style="text-align:center"></td>
- <td style="text-align:center"></td>
- <td style="text-align:center"><b>'.number_format($vat,2).'</b></td>
- </tr>
- <tr class="spaceUnder">
  <td style="text-align:center"><b>Discount:</b></td>
  <td style="text-align:center"></td>
  <td style="text-align:center"></td>
  <td style="text-align:center"><b>'.number_format($total_discount,2).'</b></td>
+ </tr>
+ <tr class="spaceUnder">
+ <td style="text-align:center"><b>Sub Total:</b></td>
+ <td style="text-align:center"></td>
+ <td style="text-align:center"></td>
+ <td style="text-align:center"><b>'.number_format($subtotal,2).'</b></td>
+ </tr>
+ <tr class="spaceUnder">
+ <td style="text-align:center"><b>VAT(16%):</b></td>
+ <td style="text-align:center"></td>
+ <td style="text-align:center"></td>
+ <td style="text-align:center"><b>'.number_format($vat,2).'</b></td>
  </tr>
  <tr class="spaceUnder">
  <td style="text-align:center"><b>Total:</b></td>

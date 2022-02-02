@@ -85,13 +85,21 @@
   <thead class="thead-dark">
     <tr>
     <th scope="col" width="3%">#</th>
+    <th scope="col"width="10%"></th>
       <th scope="col" width="20%">Name</th>
+      <th scope="col"width="10%"></th>
       <th scope="col" width="25%">Product</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Quantity</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Unit Price</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Cost</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Balance</th>
-      <th scope="col"width="40%"></th>
+      <th scope="col"width="10%"></th>
+      <th scope="col"width="20%"></th>
+      <th scope="col"width="10%"></th>
     </tr>
   </thead>
   <tbody >
@@ -127,6 +135,7 @@
         $returned = $row['Returned'];
         $banked = $row['Banked'];
         $slip = $row['Slip_Number'];
+        $invoice = $row['Invoice_Number'];
         $banked_by = $row['Banked_By'];
         if ($balance == "0.0" ) {
           $name_color = "#2ECC71";
@@ -143,14 +152,22 @@
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idLastMonth<?php echo $count; ?>"><?php echo $id; ?></th>
+      <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameLastMonth<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td class="uneditable" ></td>
       <td class="uneditable" id="productLastMonth<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyLastMonth<?php echo $count; ?>"><?php echo $qty; ?></td>
-      <td class="uneditable" id="priceLastMonth<?php echo $id; ?>"><?php echo $price; ?></td>
-      <td class="uneditable" id="costLastMonth<?php echo $id; ?>"><?php echo $cost; ?></td>
-      <td class="uneditable" id="balanceLastMonth<?php echo $id; ?>"><?php echo $balance; ?></td>
+      <td class="uneditable" ></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyLastMonth<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="priceLastMonth<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="costLastMonth<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="balanceLastMonth<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerLastMonth" onclick="fineCustomerLastMonth(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+       </td>
+        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderLastMonth<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderLastMonth" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderLastMonth<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
@@ -173,11 +190,11 @@
                         </div>
                         <div class="col-4">
                             <label for="qtyLastMonth">Quantity: </label>
-                            <input type="number" name="qtyLastMonth" id="qty_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo $qty; ?>" required>
+                            <input type="number" name="qtyLastMonth" id="qty_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyLastMonth">Returned: </label>
-                            <input type="number" name="returnedLastMonth" id="returned_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo $returned; ?>" required>
+                            <input type="number" name="returnedLastMonth" id="returned_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -186,17 +203,17 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo $price; ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyLastMonth">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountLastMonth" id="discount_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo $discount; ?>" required>
+                           <input type="number" name="discountLastMonth" id="discount_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo $fine; ?></p>
+                            <p>Fine: <?php echo round($fine,2); ?></p>
                         </div>
                         <div class="col-3">
-                            <p>Net Cost: Ksh. <?php echo $cost; ?></p>
+                            <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -205,18 +222,18 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo $debt; ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaLastMonth">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaLastMonth" id="mpesa_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo $mpesa; ?>" required>
+                           <input type="number" name="mpesaLastMonth" id="mpesa_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashLastMonth">Cash (Ksh.): </label>
-                           <input type="number" name="cashLastMonth" id="cash_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo $cash; ?>" required>
+                           <input type="number" name="cashLastMonth" id="cash_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
                         </div>
                         <div class="col-4">
-                            <p>New Balance: Ksh. <?php echo $balance; ?></p>
+                            <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -228,12 +245,22 @@
                       </div>
                       <br>
                       <div class="row">
+                          <p class="ml-4"><b><i>Invoice Details</i></b></p>
+                      </div>
+                      <div class="row">
+                        <div class="col-10">
+                        <label for="invoiceLastMonth" class="ml-5">Invoice #: </label>
+                          <input type="text" name="invoiceLastMonth" id="invoice_LastMonth<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                        </div>
+                      </div>  
+                      <br>
+                      <div class="row">
                           <p class="ml-4"><b><i>Banking Details</i></b></p>
                       </div>
                       <div class="row">
                       <div class="col-4">
                       <label for="cashLastMonth">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedLastMonth" id="banked_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo $banked; ?>" required>
+                          <input type="number" name="bankedLastMonth" id="banked_LastMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashLastMonth">Bank Slip #: </label>
@@ -252,15 +279,17 @@
               </div>
             </div>
           </div>
+      </td>
           <?php
        if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
 
         ?>
+           <td>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderLastMonth" role="button" aria-pressed="true" onclick="deleteOrderLastMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          </td>
           <?php
           }
           ?>
-       </td>
     </tr>
     <?php
     }
@@ -282,13 +311,21 @@
   <thead class="thead-dark">
     <tr>
     <th scope="col" width="5%">#</th>
-      <th scope="col" width="20%">Name</th>
+    <th scope="col"width="10%"></th>
+      <th scope="col" width="15%">Name</th>
+      <th scope="col"width="10%"></th>
       <th scope="col" width="25%">Product</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Quantity</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Unit Price</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Cost</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Balance</th>
-      <th scope="col"width="40%"></th>
+      <th scope="col"width="10%"></th>
+      <th scope="col"width="20%"></th>
+      <th scope="col"width="10%"></th>
     </tr>
   </thead>
   <tbody >
@@ -324,6 +361,7 @@
         $returned = $row['Returned'];
         $banked = $row['Banked'];
         $slip = $row['Slip_Number'];
+        $invoice = $row['Invoice_Number'];
         $banked_by = $row['Banked_By'];
         if ($balance == "0.0" ) {
           $name_color = "#2ECC71";
@@ -340,14 +378,22 @@
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $id; ?></th>
+      <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameYesterdayMonth<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td class="uneditable" ></td>
       <td class="uneditable" id="productYesterday<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyYesterday<?php echo $count; ?>"><?php echo $qty; ?></td>
-      <td class="uneditable" id="priceYesterday<?php echo $id; ?>"><?php echo $price; ?></td>
-      <td class="uneditable" id="costYesterday<?php echo $id; ?>"><?php echo $cost; ?></td> 
-      <td class="uneditable" id="balanceYesterday<?php echo $id; ?>"><?php echo $balance; ?></td>
+      <td class="uneditable" ></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyYesterday<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="priceYesterday<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="costYesterday<?php echo $id; ?>"><?php echo round($cost,2); ?></td> 
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="balanceYesterday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerYesterday" onclick="fineCustomerYesterday(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+      </td>
+      <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderYesterday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderYesterday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderYesterday<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
@@ -370,11 +416,11 @@
                         </div>
                         <div class="col-4">
                             <label for="qtyYesterday">Quantity: </label>
-                            <input type="number" name="qtyYesterday" id="qty_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo $qty; ?>" required>
+                            <input type="number" name="qtyYesterday" id="qty_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyYesterday">Returned: </label>
-                            <input type="number" name="returnedYesterday" id="returned_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo $returned; ?>" required>
+                            <input type="number" name="returnedYesterday" id="returned_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -383,17 +429,17 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo $price; ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyYesterday">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountYesterday" id="discount_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo $discount; ?>" required>
+                           <input type="number" name="discountYesterday" id="discount_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo $fine; ?></p>
+                            <p>Fine: <?php echo round($fine,2); ?></p>
                         </div>
                         <div class="col-3">
-                            <p>Net Cost: Ksh. <?php echo $cost; ?></p>
+                            <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -402,18 +448,18 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo $debt; ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaYesterday">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaYesterday" id="mpesa_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo $mpesa; ?>" required>
+                           <input type="number" name="mpesaYesterday" id="mpesa_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashYesterday">Cash (Ksh.): </label>
-                           <input type="number" name="cashYesterday" id="cash_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo $cash; ?>" required>
+                           <input type="number" name="cashYesterday" id="cash_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
                         </div>
                         <div class="col-4">
-                            <p>New Balance: Ksh. <?php echo $balance; ?></p>
+                            <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -425,12 +471,22 @@
                       </div>
                       <br>
                       <div class="row">
+                          <p class="ml-4"><b><i>Invoice Details</i></b></p>
+                      </div>
+                      <div class="row">
+                        <div class="col-10">
+                        <label for="invoiceYesterday" class="ml-5">Invoice #: </label>
+                          <input type="text" name="invoiceYesterday" id="invoice_Yesterday<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                        </div>
+                      </div>  
+                      <br>
+                      <div class="row">
                           <p class="ml-4"><b><i>Banking Details</i></b></p>
                       </div>
                       <div class="row">
                       <div class="col-4">
                       <label for="cashYesterday">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedYesterday" id="banked_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo $banked; ?>" required>
+                          <input type="number" name="bankedYesterday" id="banked_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashYesterday">Bank Slip #: </label>
@@ -449,15 +505,18 @@
               </div>
             </div>
           </div>
+          </td>
           <?php
        if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
 
         ?>
+        <td>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          </td>
           <?php
           }
           ?>
-       </td>
+       
     </tr>
     <?php
     }
@@ -521,6 +580,7 @@
         $returned = $row['Returned'];
         $banked = $row['Banked'];
         $slip = $row['Slip_Number'];
+        $invoice = $row['Invoice_Number'];
         $banked_by = $row['Banked_By'];
         if ($balance == "0.0" ) {
           $name_color = "#2ECC71";
@@ -539,10 +599,10 @@
       <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $id; ?></th>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" id="productToday<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo $qty; ?></td>
-      <td class="uneditable" id="priceToday<?php echo $id; ?>"><?php echo $price; ?></td>
-      <td class="uneditable" id="costToday<?php echo $id; ?>"><?php echo $cost; ?></td>
-      <td class="uneditable" id="balanceToday<?php echo $id; ?>"><?php echo $balance; ?></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td class="uneditable" id="priceToday<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" id="costToday<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" id="balanceToday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerToday" onclick="fineCustomerToday(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderToday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
@@ -567,11 +627,11 @@
                         </div>
                         <div class="col-4">
                             <label for="qtyToday">Quantity: </label>
-                            <input type="number" name="qtyToday" id="qty_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo $qty; ?>" required>
+                            <input type="number" name="qtyToday" id="qty_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyToday">Returned: </label>
-                            <input type="number" name="returnedToday" id="returned_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo $returned; ?>" required>
+                            <input type="number" name="returnedToday" id="returned_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -580,17 +640,17 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo $price; ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyToday">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountToday" id="discount_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo $discount; ?>" required>
+                           <input type="number" name="discountToday" id="discount_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo $fine; ?></p>
+                            <p>Fine: <?php echo round($fine,2); ?></p>
                         </div>
                         <div class="col-3">
-                            <p>Net Cost: Ksh. <?php echo $cost; ?></p>
+                            <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -599,18 +659,18 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo $debt; ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaToday">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaToday" id="mpesa_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo $mpesa; ?>" required>
+                           <input type="number" name="mpesaToday" id="mpesa_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashToday">Cash (Ksh.): </label>
-                           <input type="number" name="cashToday" id="cash_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo $cash; ?>" required>
+                           <input type="number" name="cashToday" id="cash_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
                         </div>
                         <div class="col-4">
-                            <p>New Balance: Ksh. <?php echo $balance; ?></p>
+                            <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -622,12 +682,22 @@
                       </div>
                       <br>
                       <div class="row">
+                          <p class="ml-4"><b><i>Invoice Details</i></b></p>
+                      </div>
+                      <div class="row">
+                        <div class="col-10">
+                        <label for="invoiceToday" class="ml-5">Invoice #: </label>
+                          <input type="text" name="invoiceToday" id="invoice_Today<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                        </div>
+                      </div>  
+                      <br>
+                      <div class="row">
                           <p class="ml-4"><b><i>Banking Details</i></b></p>
                       </div>
                       <div class="row">
                       <div class="col-4">
                       <label for="cashToday">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedToday" id="banked_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo $banked; ?>" required>
+                          <input type="number" name="bankedToday" id="banked_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashToday">Bank Slip #: </label>
@@ -676,13 +746,21 @@
   <thead class="thead-dark">
     <tr>
     <th scope="col" width="3%">#</th>
+    <th scope="col"width="10%"></th>
       <th scope="col" width="18%">Name</th>
+      <th scope="col"width="10%"></th>
       <th scope="col" width="19%">Product</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Quantity</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="13%">Unit Price</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Cost</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Balance</th>
-      <th scope="col"width="40%"></th>
+      <th scope="col"width="10%"></th>
+      <th scope="col"width="20%"></th>
+      <th scope="col"width="10%"></th>
     </tr>
   </thead>
   <tbody >
@@ -718,6 +796,7 @@
         $returned = $row['Returned'];
         $banked = $row['Banked'];
         $slip = $row['Slip_Number'];
+        $invoice = $row['Invoice_Number'];
         $banked_by = $row['Banked_By'];
         if ($balance == "0.0" ) {
           $name_color = "#2ECC71";
@@ -734,14 +813,22 @@
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $id; ?></th>
+      <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameTomorrow<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td class="uneditable" ></td>
       <td class="uneditable" id="productTomorrow<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyTomorrow<?php echo $count; ?>"><?php echo $qty; ?></td>
-      <td class="uneditable" id="priceTomorrow<?php echo $id; ?>"><?php echo $price; ?></td>
-      <td class="uneditable" id="costTomorrow<?php echo $id; ?>"><?php echo $cost; ?></td>
-      <td class="uneditable" id="balanceTomorrow<?php echo $id; ?>"><?php echo $balance; ?></td>
+      <td class="uneditable" ></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyTomorrow<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="priceTomorrow<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="costTomorrow<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="balanceTomorrow<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerTomorrow" onclick="fineCustomerTomorrow(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+      </td>
+      <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderTomorrow<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderTomorrow" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderTomorrow<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
@@ -764,11 +851,11 @@
                         </div>
                         <div class="col-4">
                             <label for="qtyTomorrow">Quantity: </label>
-                            <input type="number" name="qtyTomorrow" id="qty_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo $qty; ?>" required>
+                            <input type="number" name="qtyTomorrow" id="qty_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyTomorrow">Returned: </label>
-                            <input type="number" name="returnedTomorrow" id="returned_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo $returned; ?>" required>
+                            <input type="number" name="returnedTomorrow" id="returned_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -777,17 +864,17 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo $price; ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyTomorrow">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountTomorrow" id="discount_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo $discount; ?>" required>
+                           <input type="number" name="discountTomorrow" id="discount_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo $fine; ?></p>
+                            <p>Fine: <?php echo round($fine,2); ?></p>
                         </div>
                         <div class="col-3">
-                            <p>Net Cost: Ksh. <?php echo $cost; ?></p>
+                            <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -796,18 +883,18 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo $debt; ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaTomorrow">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaTomorrow" id="mpesa_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo $mpesa; ?>" required>
+                           <input type="number" name="mpesaTomorrow" id="mpesa_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashTomorrow">Cash (Ksh.): </label>
-                           <input type="number" name="cashTomorrow" id="cash_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo $cash; ?>" required>
+                           <input type="number" name="cashTomorrow" id="cash_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
                         </div>
                         <div class="col-4">
-                            <p>New Balance: Ksh. <?php echo $balance; ?></p>
+                            <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -819,12 +906,22 @@
                       </div>
                       <br>
                       <div class="row">
+                          <p class="ml-4"><b><i>Invoice Details</i></b></p>
+                      </div>
+                      <div class="row">
+                        <div class="col-10">
+                        <label for="invoiceTomorrow" class="ml-5">Invoice #: </label>
+                          <input type="text" name="invoiceTomorrow" id="invoice_Tomorrow<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                        </div>
+                      </div>  
+                      <br>
+                      <div class="row">
                           <p class="ml-4"><b><i>Banking Details</i></b></p>
                       </div>
                       <div class="row">
                       <div class="col-4">
                       <label for="cashTomorrow">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedTomorrow" id="banked_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo $banked; ?>" required>
+                          <input type="number" name="bankedTomorrow" id="banked_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashTomorrow">Bank Slip #: </label>
@@ -843,15 +940,16 @@
               </div>
             </div>
           </div>
+      </td>
           <?php
        if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-
         ?>
+        <td>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+       </td>
           <?php
           }
           ?>
-       </td>
     </tr>
     <?php
     }
@@ -873,13 +971,21 @@
   <thead class="thead-dark">
     <tr>
     <th scope="col" width="3%">#</th>
+    <th scope="col"width="10%"></th>
       <th scope="col" width="20%">Name</th>
+      <th scope="col"width="10%"></th>
       <th scope="col" width="25%">Product</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Quantity</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Unit Price</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Cost</th>
+      <th scope="col"width="10%"></th>
       <th scope="col"width="5%">Balance</th>
-      <th scope="col"width="40%"></th>
+      <th scope="col"width="10%"></th>
+      <th scope="col"width="20%"></th>
+      <th scope="col"width="10%"></th>
     </tr>
   </thead>
   <tbody >
@@ -927,16 +1033,24 @@
         $returned = $row['Returned'];
         $banked = $row['Banked'];
         $slip = $row['Slip_Number'];
+        $invoice = $row['Invoice_Number'];
         $banked_by = $row['Banked_By'];
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $id; ?></th>
+      <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameNextMonth<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td class="uneditable" ></td>
       <td class="uneditable" id="productNextMonth<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyNextMonth<?php echo $count; ?>"><?php echo $qty; ?></td>
-      <td class="uneditable" id="priceNextMonth<?php echo $id; ?>"><?php echo $price; ?></td>
-      <td class="uneditable" id="costNextMonth<?php echo $id; ?>"><?php echo $cost; ?></td>
-      <td class="uneditable" id="balanceNextMonth<?php echo $id; ?>"><?php echo $balance; ?></td>
+      <td class="uneditable" ></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyNextMonth<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="priceNextMonth<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="costNextMonth<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" ></td>
+      <td class="uneditable" id="balanceNextMonth<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
+      <td class="uneditable" ></td>
        <td>
        <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderNextMonth<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderNextMonth" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderNextMonth<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -960,11 +1074,11 @@
                         </div>
                         <div class="col-4">
                             <label for="qtyNextMonth">Quantity: </label>
-                            <input type="number" name="qtyNextMonth" id="qty_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo $qty; ?>" required>
+                            <input type="number" name="qtyNextMonth" id="qty_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyNextMonth">Returned: </label>
-                            <input type="number" name="returnedNextMonth" id="returned_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo $returned; ?>" required>
+                            <input type="number" name="returnedNextMonth" id="returned_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -973,17 +1087,17 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo $price; ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyNextMonth">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountNextMonth" id="discount_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo $discount; ?>" required>
+                           <input type="number" name="discountNextMonth" id="discount_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo $fine; ?></p>
+                            <p>Fine: <?php echo round($fine,2); ?></p>
                         </div>
                         <div class="col-3">
-                            <p>Net Cost: Ksh. <?php echo $cost; ?></p>
+                            <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -992,18 +1106,18 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo $debt; ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaNextMonth">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaNextMonth" id="mpesa_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo $mpesa; ?>" required>
+                           <input type="number" name="mpesaNextMonth" id="mpesa_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashNextMonth">Cash (Ksh.): </label>
-                           <input type="number" name="cashNextMonth" id="cash_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo $cash; ?>" required>
+                           <input type="number" name="cashNextMonth" id="cash_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
                         </div>
                         <div class="col-4">
-                            <p>New Balance: Ksh. <?php echo $balance; ?></p>
+                            <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
                         </div>
                       </div>
                       <br>
@@ -1015,12 +1129,22 @@
                       </div>
                       <br>
                       <div class="row">
+                          <p class="ml-4"><b><i>Invoice Details</i></b></p>
+                      </div>
+                      <div class="row">
+                        <div class="col-10">
+                        <label for="invoiceNextMonth" class="ml-5">Invoice #: </label>
+                          <input type="text" name="invoiceNextMonth" id="invoice_NextMonth<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                        </div>
+                      </div>  
+                      <br>
+                      <div class="row">
                           <p class="ml-4"><b><i>Banking Details</i></b></p>
                       </div>
                       <div class="row">
                       <div class="col-4">
                       <label for="cashNextMonth">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedNextMonth" id="banked_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo $banked; ?>" required>
+                          <input type="number" name="bankedNextMonth" id="banked_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashNextMonth">Bank Slip #: </label>
@@ -1039,15 +1163,17 @@
               </div>
             </div>
           </div>
+      </td>
           <?php
        if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
 
         ?>
+        <td>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          </td>
           <?php
           }
           ?>
-       </td>
     </tr>
     <?php
     }
