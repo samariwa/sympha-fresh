@@ -361,4 +361,17 @@ elseif( $_POST['where'] == 'pagination' )
         ';
         echo $output;
 }
+elseif($_POST['where'] == 'order_id')
+{
+    $order_id = "";
+    $result = mysqli_query($connection,"SELECT Order_id FROM orders ORDER BY id DESC LIMIT 1;")or die($connection->error);
+    $row = mysqli_fetch_array($result);
+    if ( $row == TRUE) {
+        $order_id = $row['Order_id'];
+      }
+    else{
+        $order_id = 0;
+    }
+    echo $order_id;
+}
  ?>

@@ -1160,13 +1160,22 @@ $(document).on('click','.placeOrder',function(){
 
         $('.completeOrder').click(function(){
             var cleared = 0;
+            if($(`#deliveryDate`).val() == '')
+            {
+              let today = new Date().toISOString().slice(0, 10);
+              $(`#deliveryDate`).val(today);
+            }
             completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a');
         });
 
+
       function completeOrderBalance(custID,cartArr,newCust,cleared, mode){
+        $.post("../load.php",{where:'order_id'},
+          function(success){
+        var order_id = parseInt(success) + 1;
         for (var i = 0; i < cartArr.length; i++) {
           var stockID = cartArr[i][0];
-          $.post("../add.php",{where:'order',price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust, cleared: cleared, mode:mode},
+          $.post("../add.php",{where:'order', order_id:order_id, price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust, cleared: cleared, mode:mode},
           function(result){
             if (result=='success') {
                 cartArr.shift();
@@ -1178,6 +1187,7 @@ $(document).on('click','.placeOrder',function(){
             }
           });
         }
+      });
         alert("Order Successfully Added");
       }
 
@@ -1519,6 +1529,21 @@ $('#categoriesEditable').editableTableWidget();
   var qty = $(`#newDamaged${rowx}`).text();
   var where = 'damaged';
   $.post("../save.php",{id:id,qty:qty,where:where},
+  function(result){
+    location.reload(true);
+  });
+});
+
+$('#animalProductEditable').editableTableWidget();
+  $('#animalProductEditable td.uneditable').on('change', function(evt, newValue) {
+  return false;
+});
+  $('#animalProductEditable td').on('change', function(evt, newValue) {
+   var rowx = parseInt(evt.target._DT_CellIndex.row)+1;
+  var id = $(`#id${rowx}`).text();
+  var adjustment = $(`#adjustment${rowx}`).text();
+  var where = 'adjusted_unit';
+  $.post("../save.php",{id:id,adjustment:adjustment,where:where},
   function(result){
     location.reload(true);
   });
@@ -2027,6 +2052,10 @@ function saveOrderToday(idx){
         });
  }
 
+ $(document).on('click','#addAnimalProductUnit',function(){
+      formAjax('Animal Product Unit');
+  });
+
   $(document).on('click','#addCustomer',function(){
       formAjax('Customer');
   });
@@ -2249,7 +2278,10 @@ function saveOrderToday(idx){
       deleteAjax($(this).attr("id"),$(this),'expense', 'expense');
     });
 
-
+    $('.deleteAnimalProductUnit').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'animal product unit', 'animal product unit');
+    });
+    
     $('.deleteCategory').click(function(){
       deleteAjax($(this).attr("id"),$(this),'category', 'category');
     });

@@ -30,22 +30,22 @@
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Stores Manager') {
         ?>
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-2">
       <a href="addOrder.php" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Order</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a href="distribution.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true">Distribution</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="processOrders.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Process Orders</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="receipt.php" class="btn btn-secondary btn-md active" role="button" aria-pressed="true" >Print Recipt</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="gatePass.php" class="btn btn-dark btn-md active" role="button" aria-pressed="true" >Gate Pass</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="returned.php" class="btn btn-info btn-md active" role="button" aria-pressed="true">Returned Goods</a>
     </div>
     </div><br>
@@ -54,13 +54,13 @@
         else{
         ?>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-4">
       <a href="addOrder.php" class="btn btn-success btn-md active ml-3" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Order</a>
     </div>
-      <div class="col-md-4">
-      <a href="extra_sales.php" class="btn btn-primary btn-md active offset-3" role="button" aria-pressed="true" >Extra Sales</a>
+      <div class="col-4">
+      <!--<a href="extra_sales.php" class="btn btn-primary btn-md active offset-3" role="button" aria-pressed="true" >Extra Sales</a>-->
     </div>
-    <div class="col-md-4">
+    <div class="col-4">
       <a href="returned.php" class="btn btn-info btn-md active offset-6" role="button" aria-pressed="true">Returned Goods</a>
     </div>
     </div><br>
@@ -76,7 +76,7 @@
         $ordersrowcount = mysqli_num_rows($salesListLastMonth);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -108,6 +108,7 @@
         foreach($salesListLastMonth as $row){
          $count++;
          $id = $row['id'];
+         $order_id = $row['order_id'];
          $name = $row['Name'];
          if($name == 'Unregistered Customer')
          {
@@ -151,7 +152,7 @@
         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idLastMonth<?php echo $count; ?>"><?php echo $id; ?></th>
+      <th scope="row" class="uneditable" id="idLastMonth<?php echo $count; ?>"><?php echo $order_id; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameLastMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
@@ -173,7 +174,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -280,16 +281,16 @@
             </div>
           </div>
       </td>
-          <?php
-       if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-
-        ?>
            <td>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderLastMonth" role="button" aria-pressed="true" onclick="deleteOrderLastMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
-          </td>
+           <?php
+              if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+           ?>
+              <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderLastMonth" role="button" aria-pressed="true" onclick="deleteOrderLastMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
           <?php
-          }
-          ?>
+              }
+          ?>  
+        </td>
+          
     </tr>
     <?php
     }
@@ -302,7 +303,7 @@
         $ordersrowcount = mysqli_num_rows($salesListYesterday);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -334,6 +335,7 @@
         foreach($salesListYesterday as $row){
          $count++;
          $id = $row['id'];
+         $order_id = $row['order_id'];
          $name = $row['Name'];
          if($name == 'Unregistered Customer')
          {
@@ -377,7 +379,7 @@
         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $id; ?></th>
+      <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $order_id; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameYesterdayMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
@@ -399,7 +401,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -506,17 +508,15 @@
             </div>
           </div>
           </td>
-          <?php
-       if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-
-        ?>
         <td>
+        <?php
+           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+         ?>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
-          </td>
           <?php
           }
-          ?>
-       
+          ?>  
+        </td>
     </tr>
     <?php
     }
@@ -529,7 +529,7 @@
         $ordersrowcount = mysqli_num_rows($salesListToday);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -545,6 +545,7 @@
       <th scope="col"width="4%">Cost</th>
       <th scope="col"width="4%">Balance</th>
       <th scope="col"width="40%"></th>
+      <th scope="col"width="10%"></th>
     </tr>
   </thead>
   <tbody >
@@ -553,6 +554,7 @@
         foreach($salesListToday as $row){
          $count++;
          $id = $row['id'];
+         $order_id = $row['order_id'];
         $name = $row['Name'];
         if($name == 'Unregistered Customer')
         {
@@ -596,7 +598,7 @@
         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $id; ?></th>
+      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $order_id; ?></th>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" id="productToday<?php echo $count; ?>"><?php echo $product; ?></td>
       <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
@@ -610,7 +612,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -716,15 +718,18 @@
               </div>
             </div>
           </div>
+         </td>
+         
           <?php
-       if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-
-        ?>
+           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+          ?>
+          <td>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderToday" role="button" aria-pressed="true" onclick="deleteOrderToday(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          </td>
           <?php
           }
           ?>
-       </td>
+
     </tr>
     <?php
     }
@@ -737,7 +742,7 @@
         $ordersrowcount = mysqli_num_rows($salesListTomorrow);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -769,6 +774,7 @@
         foreach($salesListTomorrow as $row){
          $count++;
          $id = $row['id'];
+         $order_id = $row['order_id'];
          $name = $row['Name'];
          if($name == 'Unregistered Customer')
          {
@@ -812,7 +818,7 @@
         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $id; ?></th>
+      <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $order_id; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameTomorrow<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
@@ -834,7 +840,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -940,16 +946,16 @@
               </div>
             </div>
           </div>
-      </td>
-          <?php
-       if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-        ?>
+      </td>  
         <td>
+        <?php
+           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+        ?>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
-       </td>
           <?php
           }
           ?>
+        </td>
     </tr>
     <?php
     }
@@ -962,7 +968,7 @@
         $ordersrowcount = mysqli_num_rows($salesListNextMonth);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -994,6 +1000,7 @@
         foreach($salesListNextMonth as $row){
          $count++;
          $id = $row['id'];
+         $order_id = $row['order_id'];
          $name = $row['Name'];
          if($name == 'Unregistered Customer')
          {
@@ -1037,7 +1044,7 @@
         $banked_by = $row['Banked_By'];
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $id; ?></th>
+      <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $order_id; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameNextMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
@@ -1057,7 +1064,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -1164,16 +1171,15 @@
             </div>
           </div>
       </td>
-          <?php
-       if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-
-        ?>
         <td>
+        <?php
+           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+        ?>
           <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
-          </td>
           <?php
           }
-          ?>
+          ?>  
+        </td>
     </tr>
     <?php
     }

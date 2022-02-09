@@ -33,6 +33,15 @@ mysqli_query($connection,"Delete from `category` where id='".$id."'")or die($con
     echo 1;
     exit();
 }
+
+else if($where == 'animal product unit' )
+{  
+	$id =$_POST['id'];
+mysqli_query($connection,"Delete from `animal_product_units` where id='".$id."'")or die($connection->error);
+    echo 1;
+    exit();
+}
+
 else if($where == 'unit' )
 {  
   $id =$_POST['id'];

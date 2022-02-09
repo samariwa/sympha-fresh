@@ -39,7 +39,7 @@ include('header.php');
                                         </li>
                                         <li>
                                             <span class="title">Email</span>
-                                            <span class="desc"><?php echo Config::get('mailer/authenticator_email'); ?> <br> <?php echo Config::get('mailer/authenticator_email'); ?></span>
+                                            <span class="desc"><?php echo Config::get('organization_details/email_address'); ?></span>
                                         </li>
                                     </ul>
                                 </div>

@@ -70,11 +70,11 @@
 </table><br>
 <p style="text-align:center">If non-registered customer field name below</p>
 <div class="row">
-      <div class="input-group-prepend col-md-5" >
-           <span class="input-group-text" id="inputGroup-sizing-default" style="margin-left: 300px;">Customer Name:</span>
+      <div class="input-group-prepend col-5" >
+           <span class="input-group-text offset-9" id="inputGroup-sizing-default" >Customer Name:</span>
            </div>
-       <div class="col-md-5">
-       <input type="text" style="margin-left: 50px;" class="form-control col-md-6" name="newCustomer" id="newCustomer" aria-describedby="inputGroup-sizing-default" autofocus style="font-family: FontAwesome, Arial; font-style: normal;">
+       <div class="col-5">
+       <input type="text" class="form-control col-6 offset-2" name="newCustomer" id="newCustomer" aria-describedby="inputGroup-sizing-default" autofocus style="font-family: FontAwesome, Arial; font-style: normal;">
         </div>
         </div><br><br>
 
@@ -154,11 +154,11 @@
   
 </div><br>
     <div class="row">
-      <div class="input-group-prepend col-md-5">
-           <span class="input-group-text" id="inputGroup-sizing-default" style="margin-left: 300px;">Date of Delivery:</span>
+      <div class="input-group-prepend col-5">
+           <span class="input-group-text offset-9" id="inputGroup-sizing-default">Date of Delivery:</span>
            </div>
-       <div class="col-md-5">
-       <input type="date"  class="form-control col-md-6" style="margin-left: 50px;" name="deliveryDate" id="deliveryDate" value="" aria-describedby="inputGroup-sizing-default" required autocomplete="date" autofocus style="font-family: FontAwesome, Arial; font-style: normal;">
+       <div class="col-5">
+       <input type="date"  class="form-control col-6 offset-2" name="deliveryDate" id="deliveryDate" value="" aria-describedby="inputGroup-sizing-default" required autocomplete="date" autofocus style="font-family: FontAwesome, Arial; font-style: normal;">
         </div>
         </div><br><br>
 
@@ -185,7 +185,7 @@
                 <div class="row"><p style="margin-left: 60px" id="orderTotal">Order Cost: Ksh. 00.00</p></div>
                 <div class="row">
                   <label for="amount_paid" style="margin-left: 60px">Amount Paid</label>
-                 <input type="number" name="amount_paid" id= "amount_paid" class="form-control col-md-9" style="padding:15px;margin-left: 60px" required min="0" val="0.00">
+                 <input type="number" name="amount_paid" id= "amount_paid" class="form-control col-9" style="padding:15px;margin-left: 60px" required min="0" val="0.00">
                   </div><br>
                   <p style="margin-left: 60px;">Mode of Payment:</p> 
                   <div class="row">

@@ -138,10 +138,13 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <a href="shelf_life.php" class="btn btn-info btn-md active" role="button" aria-pressed="true">Stock Shelf Life</a>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
+      <a href="animal_products.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Animal Products</a>
+      </div>
+      <div class="col-md-2">
       <a href="damaged.php" class="btn btn-secondary btn-md active" role="button" aria-pressed="true" >Damaged Stock</a>
       </div>
       <div class="col-md-2">
@@ -155,11 +158,17 @@
           }else{
             ?>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-3">
       <a href="shelf_life.php" class="btn btn-info btn-md active  ml-2" role="button" aria-pressed="true">Stock Shelf Life</a>
     </div>
-    <div class="col-md-6">
-      <a href="categories.php" class="btn btn-primary btn-md active offset-8" role="button" aria-pressed="true">Stock Categories</a>
+    <div class="col-md-3">
+      <a href="damaged.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Damaged Stock</a>
+      </div>
+      <div class="col-md-3">
+      <a href="animal_products.php" class="btn btn-secondary btn-md active offset-4" role="button" aria-pressed="true" >Animal Products</a>
+      </div>
+    <div class="col-md-3">
+      <a href="categories.php" class="btn btn-primary btn-md active offset-4" role="button" aria-pressed="true">Stock Categories</a>
     </div>
     </div><br> 
             <?php

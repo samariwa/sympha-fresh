@@ -850,6 +850,16 @@ mysqli_query($connection,"UPDATE `suppliers` SET `Supplier_contact` = '".$contac
     $miles = str_replace(" Kms.", "", $mileage);
 mysqli_query($connection,"UPDATE `vehicles` SET `Route` = '".$route."',`Mileage` = '".$miles."' WHERE `id` = '".$id."'")or die($connection->error);
 }
+elseif ($where == 'adjusted_unit') {
+  $id = $_POST['id'];
+    $adjustment = $_POST['adjustment'];
+    $row = mysqli_query($connection,"SELECT * FROM animal_product_units WHERE id = '".$id."'")or die($connection->error);
+      $result = mysqli_fetch_array($row);
+      $stock_id = $result['stock_id'];
+      $unit_id = $result['animal_product_unit_id'];       
+mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity + '$adjustment' WHERE `id` = '".$unit_id."'") or die(mysqli_error($connection));
+mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity - '$adjustment' WHERE `id` = '".$stock_id."'") or die(mysqli_error($connection));
+}
 elseif ($where == 'deliverer') {
   $id = $_POST['id'];
     $contact = $_POST['contact'];
@@ -1107,6 +1117,7 @@ else{
 } 
 }
 }
+
 elseif ($where == 'process_order') {
   $id = $_POST['id'];
   $value = $_POST['value'];

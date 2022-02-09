@@ -11,18 +11,15 @@ $hostname = "127.0.0.1";
 $database = "sympha_fresh";
 $port = "3307";
 
-/*$username = "root";
-$password = "";
-$hostname = "localhost";
-$database = "sympha_fresh";
-$port = "3307";*/
-
 //Defining authenticator credentials
-$authenticator_email = 'symphauthenticator@gmail.com';
-$authenticator_password = 'Kenya.2030';
+$authenticator_email = 'admin@symphafresh.com';
+$authenticator_password = 'samokoth.1999';
+
+//site primary email address
+$email_address = 'info@symphafresh.com';
 
 //mail host
-$mail_host = "smtp.gmail.com";
+$mail_host = "mail.symphafresh.com";
 
 //site primary contact number
 $contact_number = "+254 797 233 726";

@@ -6713,3 +6713,119 @@ Preloader
   .error-page .backhome:hover {
     background-color: #222533;
   }
+
+
+  .comming-soon-page {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: #eff3f6;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    padding: 120px 0px;
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page {
+      padding-top: 200px;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page {
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+  }
+  .comming-soon-page .comming-soon-content h1 {
+    font-size: 36px;
+    color: #59b828;
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page .comming-soon-content h1 {
+      font-size: 46px;
+      margin-top: 20px;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page .comming-soon-content h1 {
+      font-size: 26px;
+      margin-top: 30px;
+    }
+  }
+  .comming-soon-page .comming-soon-content p {
+    font-size: 18px;
+    line-height: 30px;
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page .comming-soon-content p {
+      font-size: 22px;
+      line-height: 36px;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page .comming-soon-content p {
+      font-size: 14px;
+      line-height: 25px;
+    }
+  }
+  .comming-soon-page .countdown-container {
+    margin-bottom: 50px;
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page .countdown-container {
+      margin-bottom: 30px;
+    }
+  }
+  .comming-soon-page .countdown-container .count-item {
+    width: 160px;
+    height: 90px;
+    border-radius: 10px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.06);
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page .countdown-container .count-item {
+      height: 100px;
+      margin: 15px;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page .countdown-container .count-item {
+      width: 100px;
+      height: 70px;
+    }
+  }
+  .comming-soon-page .countdown-container .count-item .count-number {
+    font-size: 30px;
+    font-weight: 600;
+    color: #222533;
+    line-height: 1.1;
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page .countdown-container .count-item .count-number {
+      font-size: 45px;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    .comming-soon-page .countdown-container .count-item .count-number {
+      font-size: 22px;
+    }
+  }
+  .comming-soon-page .countdown-container .count-item .count-text {
+    font-size: 12px;
+    color: #59b828;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  @media only screen and (min-width: 1500px) {
+    .comming-soon-page .countdown-container .count-item .count-text {
+      font-size: 14px;
+    }
+  }

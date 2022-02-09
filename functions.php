@@ -138,6 +138,11 @@ function getStringBetween($str,$from,$to)
     return substr($sub,0,strpos($sub,$to));
 }
 
+function shuffleImage($min,$max)
+{
+  return rand($min,$max);
+}
+
 function text_limit($x, $length)
 {
   if(strlen($x)<=$length)

@@ -277,9 +277,9 @@ Preloader
             <span style="margin-left: 45px">Stores Manager</span></a>
               <?php
                }
-               else if ($view == 'Data Entry Clerk'){
+               else if ($view == 'Sales'){
                ?> 
-            <span style="margin-left: 30px">Data Entry Clerk</span></a>
+            <span style="margin-left: 70px">Sales</span></a>
               <?php
                }
                else if ($view == 'Software'){
