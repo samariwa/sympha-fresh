@@ -76,10 +76,11 @@ class User{
     {
         if (Session::exists('logged_in'))
         {
-            $userDetails = Database::getInstance()->getAll('users', array('email', '=', Session::get('email')));
+            $userDetails = $this->_db->getAll('users', array('email', '=', Session::get('email')));
             $access = $userDetails->first_result()->access;
+            $id = $userDetails->first_result()->id;
             $this->_db->update('users', 'email', Session::get('email'), array('online' => '0', 'lastActivity' => date('Y-m-d H:i:s'),  'ipAddress' => '0'));
-            $this->_db->delete('logged_devices', array('user_id' , '=', $userDetails->first_result()->id));
+            $this->_db->delete('logged_devices', array('user_id' , '=', $id));
             Session::put('logged_in', FALSE);
             session_destroy();
             session_unset();

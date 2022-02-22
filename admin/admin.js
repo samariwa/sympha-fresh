@@ -370,7 +370,7 @@ setTime();
       });
   }
 
-      google.charts.load("current", {packages:["corechart"]});
+    /*  google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawKeyCustomersChart);
       function drawKeyCustomersChart() {
         var where = 'biggestPayers';
@@ -403,7 +403,7 @@ setTime();
         var chart = new google.visualization.PieChart(document.getElementById('keyCutomersChart'));
         chart.draw(data, options);
         });
-      }
+      }*/
 
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawKeyCustomersChart);
@@ -1133,8 +1133,8 @@ $(document).on('click','.placeOrder',function(){
     $(document).on('click','#orderAndPrint',function(e){
       e.preventDefault();
       e.stopPropagation();
-      var customer = $(`#orderCustomerName`).val();
-      var paid = $(`#amount_paid`).val();
+     // var customer = $(`#orderCustomerName`).val();
+     // var paid = $(`#amount_paid`).val();
       var radios = document.getElementsByName('payment-mode');
           for (var i = 0; i < radios.length; i++) {
             if (radios[i].checked) {
@@ -1142,11 +1142,11 @@ $(document).on('click','.placeOrder',function(){
             }
          }
       var cleared = 1;
-      var orderData = JSON.stringify(cartItems);
+     /* var orderData = JSON.stringify(cartItems);
       $.post("receiptPrint.php",{customer:customer, mode:mode, paid:paid, order: orderData},
-      function(result){
+      function(result){*/
          completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared, mode);
-         var mywindow = window.open('', 'Sympha Fresh', 'height=400,width=600');
+       /*  var mywindow = window.open('', 'Sympha Fresh', 'height=400,width=600');
                       mywindow.document.write('<html><head><title></title>');
                       mywindow.document.write('</head><body>');
                       mywindow.document.write(result);
@@ -1155,7 +1155,7 @@ $(document).on('click','.placeOrder',function(){
                       mywindow.focus();
                       mywindow.print();
                       //mywindow.close();
-       });
+       });*/
     });
 
         $('.completeOrder').click(function(){
@@ -1166,6 +1166,7 @@ $(document).on('click','.placeOrder',function(){
               $(`#deliveryDate`).val(today);
             }
             completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a');
+            location.reload(true);
         });
 
 
@@ -2028,6 +2029,21 @@ function saveOrderToday(idx){
   });
 });
 
+$('#assetsEditable').editableTableWidget();
+$('#assetsEditable td.uneditable').on('change', function(evt, newValue) {
+return false;
+});
+$('#assetsEditable td').on('change', function(evt, newValue) {
+ var rowx = parseInt(evt.target._DT_CellIndex.row)+1;
+var id = $(`#id${rowx}`).text();
+var name = $(`#asset_name${rowx}`).text();
+var value = $(`#asset_value${rowx}`).text();
+var where = 'asset';
+$.post("../save.php",{id:id,name:name,value:value,where:where},
+function(result){
+});
+});
+
  function formAjax(module){
     var form_data = new FormData($('form')[0]);
     $.ajax({
@@ -2180,6 +2196,10 @@ function saveOrderToday(idx){
     formAjax('Expense');
        });
 
+       $(document).on('click','#addAsset',function(){
+        formAjax('Asset');
+           });
+
   $(document).on('click','#addSickoffApplication',function(){
         var employee = $('#employee').val();
         var reason = $('#sickoffReason').val();
@@ -2276,6 +2296,10 @@ function saveOrderToday(idx){
 
     $('.deleteExpense').click(function(){
       deleteAjax($(this).attr("id"),$(this),'expense', 'expense');
+    });
+
+    $('.deleteAsset').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'asset', 'asset');
     });
 
     $('.deleteAnimalProductUnit').click(function(){

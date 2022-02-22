@@ -24,6 +24,13 @@ class Database{
         return self::$_instance;
     }
 
+    protected function connect()
+    {
+        $pdo = new PDO('mysql:host='.Config::get('mysql/host').';port='.Config::get('mysql/port').';dbname='.Config::get('mysql/database'),Config::get('mysql/username'),Config::get('mysql/password'));
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        return $pdo;
+    }
+
     public static function getMessage()
     {
 
@@ -60,7 +67,7 @@ class Database{
     {
         if(count($where) === 3)
         {
-            $operators = array('=','>','<','>=','<=');
+            $operators = array('=','>','<','>=','<=','LIKE','!=');
             $field = $where[0];
             $operator = $where[1];
             $value = $where[2];
@@ -69,6 +76,26 @@ class Database{
             {
                $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
                if(!$this->query($sql, array($value))->error())
+               {
+                  return $this;
+               }
+            }
+        }
+        if(count($where) === 7)
+        {
+            $operators = array('=','>','<','>=','<=','LIKE','!=');
+            $logic = array('AND', 'OR', 'AND NOT');
+            $field = $where[0];
+            $operator = $where[1];
+            $value = $where[2];
+            $logical_operator = $where[3];
+            $field1 = $where[4];
+            $operator1 = $where[5];
+            $value1 = $where[6];
+            if(in_array($operator ,$operators) AND in_array($logical_operator ,$logic) AND in_array($operator1 ,$operators))
+            {
+               $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ? {$logical_operator} {$field1} {$operator1} ?";
+               if(!$this->query($sql, array($value, $value1))->error())
                {
                   return $this;
                }

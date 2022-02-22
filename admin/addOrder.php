@@ -164,11 +164,11 @@
 
           <div class="row">
           <div class="col-6 d-flex justify-content-center">
-          <button type="submit" class="btn btn-success btn-md completeOrder"><i class="fa fa-check"></i>&emsp;Complete Order</button>
+          <button type="submit" class="btn btn-success btn-md completeOrder"><!--<i class="fa fa-check"></i>&emsp;-->Complete Order (On Credit)</button>
           </form>
           </div>
           <div class="col-6 d-flex justify-content-center">
-          <a href="#" data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md placeOrder" role="button" aria-pressed="true"><i class="fa fa-print"></i>&ensp;Complete Order & Print Receipt</a>
+          <a href="#" data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md placeOrder" role="button" aria-pressed="true"><i class="fa fa-check"></i>&ensp;Complete Order (Now)<!--& Print Receipt--></a>
       <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -208,7 +208,7 @@
                   <input type="hidden" name="where" id= "where"  value="customer">
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" style="margin-right: 50px" id="orderAndPrint">Print Receipt</button>
+              <button type="submit" class="btn btn-primary" style="margin-right: 50px" id="orderAndPrint">Place Order<!--Print Receipt--></button>
             </form>
             </div>
           </div>

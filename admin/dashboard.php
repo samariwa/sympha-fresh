@@ -78,7 +78,7 @@
                 </div>
                 <!-- Card Body -->
 
-    <div id="piechart2" style="width: 310px; height: 310px;"></div>
+    <div id="piechart" style="width: 310px; height: 310px;"></div>
                   </div>
                   <div class="mt-4 text-center small">
                   </div>

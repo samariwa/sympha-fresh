@@ -176,6 +176,13 @@ mysqli_query($connection,"Delete from `users` where id='".$id."'")or die($connec
     echo 1;
     exit();
  }
+ else if($where == 'asset' )
+ {  
+     $id =$_POST['id'];
+    mysqli_query($connection,"Delete from `assets` where id='".$id."'")or die($connection->error);
+     echo 1;
+     exit();
+  }
  else if($where == 'calendar' )
 {  
    if(isset($_POST["id"]))

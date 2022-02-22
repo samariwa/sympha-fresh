@@ -1,6 +1,8 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ require_once '../core/init.php';
+ $Customer = new Customer();
  ?> 
 
         <!-- Begin Page Content -->
@@ -65,10 +67,7 @@
       </div>
        </div>
        <div class="col-md-5">
-      <?php
-        $customersrowcount = mysqli_num_rows($customersList);
-      ?>
-      <h6 class="offset-5">Total Number: <?php echo $customersrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Customer->activeCustomersCount(); ?></h6>
       </div>
       <div class="col-md-4">
       <a href="blacklisted.php" class="btn btn-dark btn-md active offset-5" role="button" aria-pressed="true" >Blacklisted Customers</a>
@@ -97,31 +96,24 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($customersList as $row){
+        foreach($Customer->fetchActiveCustomers() as $customer){
          $count++;
-         $id = $row['id'];
-         $name = $row['Name'];
-        $location = $row['Location'];
-        $number = $row['Number'];
-        $deliverer = $row['Deliverer'];
-        $status = $row['Status'];
-        $note = $row['Note'];
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $id; ?></th>
-      <td  class="editable" id="name<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="editable" id="location<?php echo $count; ?>"><?php echo $location; ?></td>
-      <td class="editable" id="number<?php echo $count; ?>"><?php echo $number; ?></td>
-      <td class="editable" id="deliverer<?php echo $count; ?>"><?php echo $deliverer; ?></td>
-      <td class="uneditable"id="status<?php echo $count; ?>"><?php echo $status; ?></td>
-      <td class="editable"id="note<?php echo $count; ?>"><?php echo $note; ?></td>
+      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $customer['id']; ?></th>
+      <td  class="editable" id="name<?php echo $count; ?>"><?php echo $customer['Name']; ?></td>
+      <td class="editable" id="location<?php echo $count; ?>"><?php echo $customer['Location']; ?></td>
+      <td class="editable" id="number<?php echo $count; ?>"><?php echo $customer['Number']; ?></td>
+      <td class="editable" id="deliverer<?php echo $count; ?>"><?php echo $customer['Deliverer']; ?></td>
+      <td class="uneditable"id="status<?php echo $count; ?>"><?php echo $customer['Status']; ?></td>
+      <td class="editable"id="note<?php echo $count; ?>"><?php echo $customer['Note']; ?></td>
         <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
 
         ?>
        <td>&emsp;&emsp;
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active blacklistCustomer" role="button" aria-pressed="true" >Blacklist</button>
-       <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteCustomer" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>Delete</button></td>
+         <button id="<?php echo $customer['id']; ?>" data_id="<?php echo $customer['id']; ?>" class="btn btn-dark btn-sm active blacklistCustomer" role="button" aria-pressed="true" >Blacklist</button>
+       <button id="<?php echo $customer['id']; ?>" data_id="<?php echo $customer['id']; ?>" class="btn btn-danger btn-sm active deleteCustomer" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>Delete</button></td>
         <?php
         }
         ?>

@@ -544,8 +544,15 @@
       <th scope="col"width="13%">Unit Price</th>
       <th scope="col"width="4%">Cost</th>
       <th scope="col"width="4%">Balance</th>
-      <th scope="col"width="40%"></th>
       <th scope="col"width="10%"></th>
+      <th scope="col"width="40%"></th>
+      <?php
+           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+          ?>
+          <th scope="col"width="20%"></th>
+          <?php
+          }
+          ?>
     </tr>
   </thead>
   <tbody >
@@ -607,6 +614,8 @@
       <td class="uneditable" id="balanceToday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
        <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerToday" onclick="fineCustomerToday(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+        </td>
+         <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderToday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderToday<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">

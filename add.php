@@ -320,6 +320,12 @@ elseif ($where == 'calendar') {
   mysqli_query($connection,"INSERT INTO event (title,User_id, start_event, end_event) VALUES ('$title','$userID', '$start_event', '$end_event')") or die(mysqli_error($connection));
 }
 }
+elseif ($where == 'asset') {
+    $name = $_POST['name'];
+    $value = $_POST['value'];
+    echo "success";
+     mysqli_query($connection,"INSERT INTO `assets` (`name`,`value`) VALUES ('$name','$value')") or die(mysqli_error($connection));
+}
 elseif ($where == 'expense') {
   $name = $_POST['heading'];
     $party = $_POST['party'];

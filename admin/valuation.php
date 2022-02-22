@@ -63,11 +63,11 @@
     <tr>
       <th scope="row"><?php echo $id; ?></th>
       <td ><?php echo $name; ?></td>
-      <td ><?php echo number_format($purchase); ?></td>
-      <td ><?php echo number_format($closing); ?></td>
-      <td ><?php echo number_format($damaged); ?></td>
-      <td ><?php echo number_format($bp); ?></td>
-      <td id="value<?php echo $count; ?>"><?php echo number_format($value); ?></td>
+      <td ><?php echo number_format($purchase,2); ?></td>
+      <td ><?php echo number_format($closing,2); ?></td>
+      <td ><?php echo number_format($damaged,2); ?></td>
+      <td ><?php echo number_format($bp,2); ?></td>
+      <td id="value<?php echo $count; ?>"><?php echo number_format($value,2); ?></td>
     </tr>
     <?php
     if ($qty > $purchase) {
@@ -84,11 +84,11 @@
       <tr>
       <th scope="row"><?php echo $id2; ?></th>
       <td ><?php echo $name2; ?></td>
-      <td ><?php echo number_format($purchase2); ?></td>
-      <td ><?php echo number_format($quantity); ?></td>
-      <td ><?php echo number_format($damaged2); ?></td>
-      <td ><?php echo number_format($bp2); ?></td>
-      <td ><?php echo number_format($value2); ?></td>
+      <td ><?php echo number_format($purchase2,2); ?></td>
+      <td ><?php echo number_format($quantity,2); ?></td>
+      <td ><?php echo number_format($damaged2,2); ?></td>
+      <td ><?php echo number_format($bp2,2); ?></td>
+      <td ><?php echo number_format($value2,2); ?></td>
     </tr>
     <?php
     }
@@ -97,7 +97,7 @@
   </tbody>
 </table>
 <br>
-<div style="text-align: center;"><b>Total Value of Stock: Ksh. <?php echo number_format($totalValue); ?></b></div>       
+<div style="text-align: center;"><b>Total Value of Stock: Ksh. <?php echo number_format($totalValue,2); ?></b></div>       
 
   <!-- Scroll to Top Button-->
   <?php include "admin_footer.php" ?> 

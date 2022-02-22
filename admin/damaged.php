@@ -57,11 +57,11 @@
     <tr>
       <th class="uneditable" scope="row"  id="id<?php echo $count; ?>"><?php echo $id; ?></th>
       <td class="uneditable" id="name<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="uneditable" id="purchased<?php echo $count; ?>"><?php echo number_format($purchased); ?></td>
-      <td class="uneditable"id="undamaged<?php echo $count; ?>"><?php echo number_format($closing); ?></td>
+      <td class="uneditable" id="purchased<?php echo $count; ?>"><?php echo number_format($purchased,2); ?></td>
+      <td class="uneditable"id="undamaged<?php echo $count; ?>"><?php echo number_format($closing,2); ?></td>
       <td  class="editable" id="newDamaged<?php echo $count; ?>">0</td>
-      <td  class="uneditable" id="damaged<?php echo $count; ?>"><?php echo number_format($damaged); ?></td>
-      <td  class="uneditable" id="value<?php echo $count; ?>"><?php echo number_format($value); ?></td>
+      <td  class="uneditable" id="damaged<?php echo $count; ?>"><?php echo number_format($damaged,2); ?></td>
+      <td  class="uneditable" id="value<?php echo $count; ?>"><?php echo number_format($value,2); ?></td>
     </tr>
     <?php
     if ($Quantity > $purchased) {

@@ -332,7 +332,7 @@ Preloader
       <br>
 
       <li class="nav-item">&emsp;
-        <a style="color: black;" href="#">
+        <a style="color: black;" href="assets.php">
         <i class="fa fa-tag"></i>
           <span>Assets</span></a>
       </li>

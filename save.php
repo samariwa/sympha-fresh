@@ -951,6 +951,12 @@ elseif ($where == 'expense') {
      $date = $_POST['date'];
 mysqli_query($connection,"UPDATE `expense_details` SET `Party` = '".$party."',`Expense_particular` = '".$particular."',`Total_amount` = '".$total."',`Paid_amount` = '".$paid."',`Due_amount` = '".$due."',`Payment_date` = '".$date."' WHERE `id` = '".$id."'")or die($connection->error);
 }
+elseif ($where == 'asset') {
+  $id = $_POST['id'];
+    $name = $_POST['name'];
+    $value = $_POST['value'];
+mysqli_query($connection,"UPDATE `assets` SET `name` = '".$name."',`value` = '".$value."' WHERE `id` = '".$id."'")or die($connection->error);
+}
 elseif ($where == 'calendar') {
    if(isset($_POST["id"]))
 {

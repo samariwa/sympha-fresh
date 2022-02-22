@@ -68,9 +68,9 @@
       <td ><?php echo $deliverer; ?></td>
       <td ><?php echo $category; ?></td>
       <td ><?php echo $stock; ?></td>
-      <td ><?php echo $initial; ?></td>
-      <td ><?php echo $ordered; ?></td>
-      <td ><?php echo $returned; ?></td>
+      <td ><?php echo number_format($initial,2); ?></td>
+      <td ><?php echo number_format($ordered,2); ?></td>
+      <td ><?php echo number_format($returned,2); ?></td>
     </tr>
     <?php
     }
@@ -79,3 +79,5 @@
 </table>
   <!-- Scroll to Top Button-->
   <?php include "admin_footer.php" ?> 
+
+
