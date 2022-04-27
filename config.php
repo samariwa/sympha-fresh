@@ -11,6 +11,12 @@ $hostname = "127.0.0.1";
 $database = "sympha_fresh";
 $port = "3307";
 
+/*$username = "symphesh_admin";
+$password = "samokoth.1999";
+$hostname = "198.57.247.209";
+$database = "symphesh_db";
+$port = "3306";*/
+
 //Defining authenticator credentials
 $authenticator_email = 'admin@symphafresh.com';
 $authenticator_password = 'samokoth.1999';
@@ -26,6 +32,9 @@ $contact_number = "+254 797 233 726";
 
 //business physical address
 $physical_address = "This address";
+
+//home delivery time limit
+$delivery_time_limit = 25;
 
 //Defining organization details
 $organization = 'Sympha Fresh';

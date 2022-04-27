@@ -1,6 +1,7 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ $Product_Units = new AnimalProducts();
  ?> 
 
         <!-- Begin Page Content -->
@@ -19,7 +20,7 @@
       <a href="animal_products.php" class="btn btn-primary btn-md active float-left" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
       <div class="col-md-7">
-      
+      <h6 class="offset-5">Total Number: <?php echo $Product_Units->productUnitsCount(); ?></h6>
     </div>
     <div class="col-md-3">   
       <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active offset-6" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Add Unit</a>
@@ -96,25 +97,19 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($animalProductUnitsList as $row){
+        foreach($Product_Units->fetchProductUnits() as $unit){
          $count++;
-         $id = $row['id'];
-         $product_unit = mysqli_query($connection,"SELECT stock.Name as unit FROM animal_product_units INNER JOIN stock ON animal_product_units.animal_product_unit_id = stock.id  WHERE animal_product_units.id = '$id';")or die($connection->error);
-         $row2 = mysqli_fetch_array($product_unit);
-         $unit = $row2['unit'];
-        $name = $row['Name'];
-
       ?>
     <tr>
-      <th class="uneditable" scope="row"  id="id"><?php echo $id; ?></th>
-      <td class="uneditable" id="name"><?php echo $name; ?></td>
-      <td class="uneditable" id="unit"><?php echo $unit; ?></td>
+      <th class="uneditable" scope="row"  id="id"><?php echo $unit['id']; ?></th>
+      <td class="uneditable" id="name"><?php echo $unit['Name']; ?></td>
+      <td class="uneditable" id="unit"><?php echo $Product_Units->fetchUnitName($unit['id']); ?></td>
       <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
 
         ?>
       <td>
-        <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteAnimalProductUnit" role="button" aria-pressed="true" ><i class="fa fa-trash"></i>&ensp;Delete</button>
+        <button id="<?php echo $unit['id']; ?>" data_id="<?php echo $unit['id']; ?>" class="btn btn-danger btn-sm active deleteAnimalProductUnit" role="button" aria-pressed="true" ><i class="fa fa-trash"></i>&ensp;Delete</button>
        </td>
        <?php
       }

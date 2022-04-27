@@ -11,6 +11,12 @@ $hostname = "127.0.0.1";
 $database = "sympha_fresh";
 $port = "3307";
 
+/*$username = "symphesh_admin";
+$password = "samokoth.1999";
+$hostname = "198.57.247.209";
+$database = "symphesh_db";
+$port = "3306";*/
+
 //Definition of canonical domain including trailing slash!:
 $domain = "http://www.xyz.com/";
 

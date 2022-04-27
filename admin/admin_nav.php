@@ -2,6 +2,7 @@
 session_start();
 require('../config.php');
 require('../functions.php');
+require_once '../core/init.php';
 $view = $_SESSION['role'];
 if (isset($_SESSION['logged_in'])) {
   if ($_SESSION['logged_in'] == TRUE) {
@@ -93,6 +94,49 @@ else{
    /*******************
 Preloader
 ********************/
+.ios-switch{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .ios-switch .switch-body{
+    background-color: #ddd;
+    border: solid 1px gray;
+    width: 48px;
+    border-radius: 24px;
+    box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .ios-switch .switch-body .toggle{
+    width: 24px;
+    height: 24px;
+    background-color:white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
+    border: solid 1px gray;
+    box-sizing: border-box;
+    transition: all 0.4s ease;
+  }
+
+  .ios-switch.active .switch-body{
+    background-color: #67BB4C;
+  }
+
+  .ios-switch.active .switch-body .toggle{
+  transform: translateX(100%)
+  }
+
+  .ios-switch label{
+  margin-top: 0;
+  margin-right: 10px;
+  }
+
+  .ios-switch input[type=checkbox]{
+    display: none;
+  }
 .preloader {
   width: 100%;
   height: 100%;

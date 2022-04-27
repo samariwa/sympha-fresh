@@ -143,16 +143,20 @@
             <div class="col-lg-3 mb-5" style="margin-left: -10px;margin-top: 50px">
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-success">Newsletter Subscribers</h6>
+                  <!--<h6 class="m-0 font-weight-bold text-success">Newsletter Subscribers</h6>-->
+                  <h6 class="m-0 font-weight-bold text-success">Today's Home Deliveries</h6>
                 </div>
                 <div class="card-body" style=" height: 200px;">  
                   <br>
-                  <i class="fa fa-envelope fa-4x" style="margin-left: 70px"></i>
+                  <i class="fa fa-truck fa-4x" style="margin-left: 70px"></i>
+                  <!--<i class="fa fa-envelope fa-4x" style="margin-left: 70px"></i>-->
                   <br><br>
                   <?php 
-                  $subscribersrowcount = mysqli_num_rows($subscribersList);
+                  $row = mysqli_fetch_array($deliveriesTodayCount);
+                  $total = $row['num'];
+                  //$subscribersrowcount = mysqli_num_rows($subscribersList);
                   ?>
-                  <p style="text-align: center;font-size: 35px"><?php echo $subscribersrowcount ?></p>
+                  <p style="text-align: center;font-size: 35px"><?php echo $total; ?></p>
                 </div>
               </div>
             </div>

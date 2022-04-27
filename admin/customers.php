@@ -1,7 +1,6 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
- require_once '../core/init.php';
  $Customer = new Customer();
  ?> 
 

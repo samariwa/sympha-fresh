@@ -87,7 +87,7 @@ $(function () {
     // CONFIG
 
     let mainClass = '.countdown';
-    let OffsetLocation = -4;
+    let OffsetLocation = 3;
 
     let runningClass = '.running'; //optinonal
     let endedClass = ".ended"; //optional

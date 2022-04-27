@@ -1,6 +1,7 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ require('config.php');
  ?> 
 
         <!-- Begin Page Content -->
@@ -96,7 +97,44 @@
   </tbody>
 </table>
 <br>
-
+<div class="row">
+<h4>Home Delivery Speed (Minutes)</h4>
+</div>
+<div class="row">
+<table  class="table table-striped table-hover" style="text-align: center;">
+  <thead class="thead-dark">
+    <tr>
+    <th scope="col" width="10%"><?php echo $yesterday3; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday2; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday1; ?></th>
+      <th scope="col"width="10%">Yesterday</th>
+      <th scope="col"width="10%">Today</th>
+    </tr>
+  </thead>
+  <tbody >
+    <?php
+         $row = mysqli_fetch_array($delivery_speed_today);
+         $speed_today = $delivery_time_limit - $row['avg'];
+         $row2 = mysqli_fetch_array($delivery_speed_yesterday);
+         $speed_yesterday = $delivery_time_limit - $row2['avg'];
+         $row3 = mysqli_fetch_array($delivery_speed_two_days_ago);
+         $speed_two_days_ago = $delivery_time_limit - $row3['avg'];
+         $row4 = mysqli_fetch_array($delivery_speed_three_days_ago);
+         $speed_three_days_ago = $delivery_time_limit - $row4['avg'];
+         $row5 = mysqli_fetch_array($delivery_speed_four_days_ago);
+         $speed_four_days_ago = $delivery_time_limit - $row5['avg'];
+      ?>
+    <tr>
+      <td ><?php echo round($speed_four_days_ago,2); ?></td>
+      <td ><?php echo round($speed_three_days_ago,2); ?></td>
+      <td ><?php echo round($speed_two_days_ago,2); ?></td>
+      <td ><?php echo round($speed_yesterday,2); ?></td>
+      <th scope="row"><?php echo round($speed_today,2); ?></th>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br>
 <div class="row">
   <div class="col-md-6">
     <h4>Product Sales Comparison</h4>
@@ -106,12 +144,8 @@
   </div>
 </div>
 <div class="row">
-  <div id="piechart" style="width: 420px; height: 400px;"></div>   
-<div id="barchart_values" style="width: 500px; height: 400px;"></div>
-</div>
-<br>
-<div class="row">
   <div id="piechart2" style="width: 420px; height: 400px;"></div>   
+<div id="barchart_values" style="width: 500px; height: 400px;"></div>
 </div>
 <br>
 <div class="row">
@@ -132,6 +166,13 @@
     <h4>Customer Type Comparison</h4>
   </div>
  <div id="customerTypeChart" style="width: 1100px; height: 500px"></div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-6">
+    <h4>Payment Mode</h4>
+  </div>
+ <div id="paymentModeChart" style="width: 1100px; height: 500px"></div>
 </div>
 <br>
 <div class="row">

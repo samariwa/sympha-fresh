@@ -1,6 +1,9 @@
 <?php
  include "admin_nav.php";
   include('../queries.php');
+  require_once '../core/init.php';
+  $Customer = new Customer();
+  $Stock = new Stock();
  ?> 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -35,7 +38,7 @@
   </thead>
   <tbody >
   <tr>
-      <td ><input type="radio" id='selectedUnregisteredCustomer' onclick="selectCustomer(this);" name="selectedCustomer" value="N/A"></td>
+      <td ><input type="radio" id='selectedUnregisteredCustomer' onclick="selectCustomer(this);" name="selectedCustomer"  value="N/A"></td>
       <th scope="row" id="id">--</th>
       <td id="customerName">Unregistered Customer</td>
       <td id="customerLocation">--</td>
@@ -45,23 +48,17 @@
     </tr>
     <?php
         $count = 0;
-        foreach($customersList as $row){
+        foreach($Customer->fetchActiveCustomers() as $customer){
          $count++;
-         $id = $row['id'];
-         $name = $row['Name'];
-        $location = $row['Location'];
-        $number = $row['Number'];
-        $deliverer = $row['Deliverer'];
-        $note = $row['Note'];
       ?>
     <tr>
-      <td ><input type="radio" id='selectedCustomer' onclick="selectCustomer(this);" name="selectedCustomer" value="<?php echo $id; ?>"></td>
-      <th scope="row" id="id<?php echo $id; ?>"><?php echo $id; ?></th>
-      <td id="customerName<?php echo $id; ?>"><?php echo $name; ?></td>
-      <td id="customerLocation<?php echo $id; ?>"><?php echo $location; ?></td>
-      <td id="customerNumber<?php echo $id; ?>"><?php echo $number; ?></td>
-      <td id="customerDeliverer<?php echo $id; ?>"><?php echo $deliverer; ?></td>
-      <td id="customerNote<?php echo $id; ?>"><?php echo $note; ?></td>
+      <td ><input type="radio" id='selectedCustomer' onclick="selectCustomer(this);" name="selectedCustomer" value="<?php echo $customer['id']; ?>"></td>
+      <th scope="row" id="id<?php echo $customer['id']; ?>"><?php echo $customer['id']; ?></th>
+      <td id="customerName<?php echo $customer['id']; ?>"><?php echo $customer['Name']; ?></td>
+      <td id="customerLocation<?php echo $customer['id']; ?>"><?php echo $customer['Location']; ?></td>
+      <td id="customerNumber<?php echo $customer['id']; ?>"><?php echo $customer['Number']; ?></td>
+      <td id="customerDeliverer<?php echo $customer['id']; ?>"><?php echo $customer['Deliverer']; ?></td>
+      <td id="customerNote<?php echo $customer['id']; ?>"><?php echo $customer['Note']; ?></td>
     </tr>
     <?php
     }
@@ -92,30 +89,24 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($stockList as $row){
+        foreach($Stock->fetchStock() as $stock){
          $count++;
-         $id = $row['id'];
-        $category = $row['Category_Name'];
-        $name = $row['Name'];
-        $selling_price = $row['Price'];
-        $discount = $row['Discount'];
-        $quantity = $row['Quantity'];
       ?>
     <tr>
-      <th scope="row" id="id<?php echo $id; ?>"><?php echo $id; ?></th>
-      <td id="category<?php echo $id; ?>"><?php echo $category; ?></td>
-      <td id="name<?php echo $id; ?>"><?php echo $name; ?></td>
-      <td id="sp<?php echo $id; ?>"><?php echo $selling_price; ?></td>
-      <td id="Discount<?php echo $id; ?>"><?php echo $discount; ?></td>
-      <td id="qty<?php echo $id; ?>"><?php echo $quantity; ?></td>
+      <th scope="row" id="id<?php echo $stock['id']; ?>"><?php echo $stock['id']; ?></th>
+      <td id="category<?php echo $stock['id']; ?>"><?php echo $stock['Category_Name']; ?></td>
+      <td id="name<?php echo $stock['id']; ?>"><?php echo $stock['Name']; ?></td>
+      <td id="sp<?php echo $stock['id']; ?>"><?php echo $stock['Price']; ?></td>
+      <td id="Discount<?php echo $stock['id']; ?>"><?php echo $stock['Discount']; ?></td>
+      <td id="qty<?php echo $stock['id']; ?>"><?php echo $stock['Quantity']; ?></td>
       <?php
-       if ($quantity > 0) {
+       if ($stock['Quantity'] > 0) {
       ?>
-      <td><button type="button" class="btn btn-warning addToCart" onclick="cartArray(<?php echo $id; ?>)" id="add_product<?php echo $id; ?>" data_id="<?php echo $id; ?>"><i class="fa fa-cart-plus" ></i>&emsp;Add To Cart</button></td>
+      <td><button type="button" class="btn btn-warning addToCart" onclick="cartArray(<?php echo $stock['id']; ?>)" id="add_product<?php echo $stock['id']; ?>" data_id="<?php echo $stock['id']; ?>"><i class="fa fa-cart-plus" ></i>&emsp;Add To Cart</button></td>
       <?php
        }else{
       ?>
-        <td><button type="button" class="btn btn-warning addToCart" disabled onclick="cartArray(<?php echo $id; ?>)" id="add_product<?php echo $id; ?>" data_id="<?php echo $id; ?>"><i class="fa fa-cart-plus" ></i>&emsp;Add To Cart</button></td>
+        <td><button type="button" class="btn btn-warning addToCart" disabled onclick="cartArray(<?php echo $stock['id']; ?>)" id="add_product<?php echo $stock['id']; ?>" data_id="<?php echo $stock['id']; ?>"><i class="fa fa-cart-plus" ></i>&emsp;Add To Cart</button></td>
       <?php
         }
       ?>
@@ -164,11 +155,11 @@
 
           <div class="row">
           <div class="col-6 d-flex justify-content-center">
-          <button type="submit" class="btn btn-success btn-md completeOrder"><!--<i class="fa fa-check"></i>&emsp;-->Complete Order (On Credit)</button>
+          <button type="submit" class="btn btn-success btn-md completeOrder" id="completeOrderLaterBtn"><!--<i class="fa fa-check"></i>&emsp;-->Complete Order (On Credit)</button>
           </form>
           </div>
           <div class="col-6 d-flex justify-content-center">
-          <a href="#" data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md placeOrder" role="button" aria-pressed="true"><i class="fa fa-check"></i>&ensp;Complete Order (Now)<!--& Print Receipt--></a>
+          <a href="#" data-toggle="modal" id="completeOrderNowBtn" data-target="#exampleModalScrollable" class="btn btn-success btn-md placeOrder" role="button" aria-pressed="true"><i class="fa fa-check"></i>&ensp;Complete Order (Now)<!--& Print Receipt--></a>
       <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -204,6 +195,17 @@
                         </label>
                   </div>
             </div><br>
+            <div class="row">
+                <div class="ios-switch ml-5">
+                <label><h6>Home Delivery</h6></label>
+                    <div class="switch-body">
+                        <div class="toggle">
+
+                        </div>
+                    </div>
+                    <input type="checkbox" name="delivery" id="home_delivery">
+            </div>
+           </div>
             <div class="row"><p style="margin-left: 60px" id="paidBalance">Balance: Ksh. 00.00</p></div>
                   <input type="hidden" name="where" id= "where"  value="customer">
             </div>
@@ -252,4 +254,12 @@
 -->
  
   <!-- Scroll to Top Button-->
+  <script Type="text/javascript">
+    var completeOrderBtn = document.getElementById(`completeOrderNowBtn`);
+    completeOrderBtn.disabled = true;
+    var completeOrderLaterBtn = document.getElementById(`completeOrderLaterBtn`);
+    completeOrderLaterBtn.disabled = true;
+    var completeOrderAndPrint = document.getElementById(`orderAndPrint`);
+    completeOrderAndPrint.disabled = true;
+  </script>
   <?php include "admin_footer.php" ?> 

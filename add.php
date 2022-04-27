@@ -8,21 +8,23 @@ $where =$_POST['where'];
 $token_verification = new Token();
 if($where == 'customer' )
 {
-   $name = $_POST['name'];
-   $location = $_POST['location'];
-   $number = $_POST['number'];
-   #$deliverer = $_POST['deliverer'];
-   $row = mysqli_query($connection,"SELECT id,Name,Location,Number,Status,Note FROM customers WHERE Name = '".$name."' OR Number = '".$number."'")or die($connection->error);
-   $result = mysqli_fetch_array($row);
-   if ( $result == TRUE) {
+  $Customer = new Customer();
+   if ($Customer->customerExists(Input::post('number')) == TRUE) 
+   {
     echo "exists";
    }
    else{
+    $Customer->create(array(
+      'Name' => sanitize(Input::post('name')),
+      'Location' => sanitize(Input::post('location')),
+      'Number' => sanitize(Input::post('number'))
+    ));
      echo "success";
-    mysqli_query($connection,"INSERT INTO `customers` (`Name`,`Location`,`Number`) VALUES ('$name','$location','$number')") or die(mysqli_error($connection));
+    //mysqli_query($connection,"INSERT INTO `customers` (`Name`,`Location`,`Number`) VALUES ('$name','$location','$number')") or die(mysqli_error($connection));
    }
 }
 elseif($where == 'stock'){
+      $Stock = new Stock();
        $unit = $_POST['unit'];
        $result2 = mysqli_query($connection,"SELECT Name FROM inventory_units WHERE id = '".$unit."';")or die($connection->error);
        $row2 = mysqli_fetch_array($result2);
@@ -53,20 +55,39 @@ elseif($where == 'stock'){
          $replenish = '0';
        }
        $restock = $_POST['restock'];
-       $row = mysqli_query($connection,"SELECT `Name` FROM stock WHERE Name = '".$name."'")or die($connection->error);
-       $result = mysqli_fetch_array($row);
-       if ( $result == TRUE) {
-         echo "exists";
-       }
+       if ($Stock->stockExists($name) == TRUE) {
+        echo "exists";
+      }
        else{
          echo "success";
-          mysqli_query($connection,"INSERT INTO `stock` (`Category_id`,`Supplier_id`,`Name`,`Unit_id`,`Subunit_id`,`Contains`,`subunit_replenish_qty`,`Restock_Level`,`Buying_price`,`Price`,`Quantity`,`Opening_stock`,`image`) VALUES ('$category','$supplier','$name','$unit','$subunit','$contains','$replenish','$restock','$bp','$sp','$qty','$qty','$path');") or die(mysqli_error($connection));
+         $Stock->create(array(
+          'Category_id' => sanitize(Input::post('category')),
+          'Supplier_id' => sanitize(Input::post('supplier')),
+          'Name' => sanitize($name),
+          'Unit_id' => sanitize(Input::post('unit')),
+          'Subunit_id' => sanitize(Input::post('subunit')),
+          'Contains' => sanitize(Input::post('contains')),
+          'subunit_replenish_qty' => sanitize($replenish),
+          'Restock_Level' => sanitize(Input::post('restock')),
+          'Buying_price' => sanitize(Input::post('bp')),
+          'Price' => sanitize(Input::post('sp')),
+          'Quantity' => sanitize(Input::post('qty')),
+          'Opening_stock' => sanitize(Input::post('qty')),
+          'image' => sanitize($path)
+        ));
+       /* $Stock->addStockFlow(array(
+          'Stock_id' => $Stock->fetchStockId($name),
+          'Expiry_date' => sanitize(Input::post('expiry')),
+          'Buying_price' => sanitize(Input::post('bp')),
+          'Selling_price' => sanitize(Input::post('sp')),
+          'Received_date' => sanitize(Input::post('received')),
+          'Purchased' => sanitize(Input::post('qty'))
+          ));*/
         $result1 = mysqli_query($connection,"SELECT * FROM stock WHERE Name = '".$name."';")or die($connection->error);
        $row1 = mysqli_fetch_array($result1);
        $Stock_id = $row1['id'];
         mysqli_query($connection,"INSERT INTO `stock_flow` (`Stock_id`,`Expiry_date`,`Buying_price`,`Selling_Price`,`Received_date`,`Purchased`) VALUES ('$Stock_id','$expiry','$bp','$sp','$received','$qty')") or die(mysqli_error($connection));
-       }
-
+       }    
 }
 else if ($where == 'categories') {
    $category = $_POST['category'];
@@ -352,6 +373,7 @@ elseif ($where=='order') {
   $price = $_POST['price'];
   $discount = $_POST['discount'];
   $quantity = $_POST['quantity'];
+  $delivery = $_POST['delivery'];
   $cleared = $_POST['cleared'];
   $customer = '1';
   $customerType = 'walk_in';
@@ -389,11 +411,11 @@ elseif ($where=='order') {
     $mode = $_POST['mode'];
     if($mode == 0)
     {
-      $sql = "INSERT INTO `orders`(`Customer_id`,`Order_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Cash`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer', '$order_id','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
+      $sql = "INSERT INTO `orders`(`Customer_id`,`Order_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`Cash`,`Balance`,`Stock_id`,`Delivery`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer', '$order_id','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$delivery','$lateOrder','$newCustomer','$customerType')";
     }
     elseif($mode == 1)
     {
-      $sql = "INSERT INTO `orders`(`Customer_id`,`Order_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`MPesa`,`Balance`,`Stock_id`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer', '$order_id','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$lateOrder','$newCustomer','$customerType')";
+      $sql = "INSERT INTO `orders`(`Customer_id`,`Order_id`,`Category_id`,`Quantity`,`Debt`,`Discount`,`MPesa`,`Balance`,`Stock_id`,`Delivery`,`Delivery_time`,`Walk_in_name`,`Customer_type`) VALUES('$customer', '$order_id','$category','$quantity','$balance','$discount','$amount_paid','$balance','$stockIDx','$delivery','$lateOrder','$newCustomer','$customerType')";
     }
   }
   else{
@@ -600,6 +622,10 @@ elseif ($where=='order') {
      mysqli_query($connection,"UPDATE `customers`  SET `Status` = 'credit' WHERE `id` = '".$customer."'")or die($connection->error);
    }
   if (mysqli_query($connection, $sql) === TRUE) {
+    if($delivery == 1)
+    {
+      mysqli_query($connection,"INSERT INTO `order_status`(`Order_id`,`delivery_time_left`,`status`) VALUES('$order_id', '$delivery_time_limit', 'pending')")or die($connection->error);
+    }
     echo 'success';
   }
   else{

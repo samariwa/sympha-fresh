@@ -1,6 +1,7 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ $Product_Units = new AnimalProducts();
  ?> 
 
         <!-- Begin Page Content -->
@@ -40,22 +41,15 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($animalProductUnitsList as $row){
+        foreach($Product_Units->fetchProductUnits() as $unit){
          $count++;
-         $id = $row['id'];
-         $product_unit = mysqli_query($connection,"SELECT stock.Name as unit, stock.Quantity as Quantity FROM animal_product_units INNER JOIN stock ON animal_product_units.animal_product_unit_id = stock.id  WHERE animal_product_units.id = '$id';")or die($connection->error);
-         $row2 = mysqli_fetch_array($product_unit);
-         $unit = $row2['unit'];
-         $unit_qty = $row2['Quantity'];
-        $name = $row['Name'];
-        $stock_qty = $row['Quantity'];
       ?>
     <tr>
-      <th class="uneditable" scope="row"  id="id<?php echo $count; ?>"><?php echo $id; ?></th>
-      <td class="uneditable" id="name"><?php echo $name; ?></td>
-      <td class="uneditable" id="stock_qty"><?php echo $stock_qty; ?></td>
-      <td class="uneditable" id="unit"><?php echo $unit; ?></td>
-      <td class="uneditable" id="unit_qty"><?php echo $unit_qty; ?></td>
+      <th class="uneditable" scope="row"  id="id<?php echo $count; ?>"><?php echo $unit['id']; ?></th>
+      <td class="uneditable" id="name"><?php echo $unit['Name']; ?></td>
+      <td class="uneditable" id="stock_qty"><?php echo $unit['Quantity']; ?></td>
+      <td class="uneditable" id="unit"><?php echo $Product_Units->fetchUnitName($unit['id']); ?></td>
+      <td class="uneditable" id="unit_qty"><?php echo round($Product_Units->fetchUnitQuantity($unit['id']),2); ?></td>
       <td  class="editable" id="adjustment<?php echo $count; ?>">0</td>
     </tr>
     <?php

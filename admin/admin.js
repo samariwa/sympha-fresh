@@ -435,6 +435,41 @@ setTime();
       }
 
       google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawPaymentModeChart);
+      function drawPaymentModeChart() {
+        var where = 'paymentMode';
+        $.post("../charts.php",{where:where},
+        function(result){
+          var data = $.parseJSON(result);
+          var data0 = data[0];
+          var data1 = data[1];
+          var data2 = data[2];
+          var data3 = data[3];
+          var data4 = data[4];
+          var data5 = data[5];
+          var data6 = data[6];
+          var data7 = data[7];
+        var data = google.visualization.arrayToDataTable([
+          ['Week', 'Cash', 'M-Pesa'],
+          ['Week 1',  parseInt(data0),  parseInt(data1)],
+          ['Week 2', parseInt(data2),   parseInt(data3)],
+          ['Week 3', parseInt(data4),    parseInt(data5)],
+          ['Week 4', parseInt(data6),    parseInt(data7)]
+        ]);
+
+        var options = {
+          title: 'Payment mode comparison for the month',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('paymentModeChart'));
+
+        chart.draw(data, options);
+      });
+      }
+
+      google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawRevenueExpenseChart);
       function drawRevenueExpenseChart() {
         var where = 'salesExpenses';
@@ -480,11 +515,10 @@ setTime();
           var data1 = data[1];
           var data2 = data[2];
           var data3 = 0;
-          var data4 = 0;
-          if (data0 > 0 && data2 > 0) {
+          if (data2 > 0) {
           var data = google.visualization.arrayToDataTable([
           ['Title', 'Amount'],
-          ['Gross Profit',  parseInt(data0)],
+          ['Income',  parseInt(data0)],
           ['Expenditure',  parseInt(data1)],
           ['Net Profit', parseInt(data2)],
         ]);
@@ -496,30 +530,13 @@ setTime();
 
         };
           }
-          else if (data0 < 0 && data2 < 0) {
-            data3 = data3 - data0;
-            data4 = parseInt(data1) + parseInt(data3);
+          else if (data2 < 0) {
+            data3 = data3 - data2;
             var data = google.visualization.arrayToDataTable([
           ['Title', 'Amount'],
-          ['Gross Loss',  parseInt(data3)],
+          ['Income',  parseInt(data0)],
           ['Expenditure',  parseInt(data1)],
-          ['Net Loss', parseInt(data4)],
-        ]);
-
-        var options = {
-          title: 'Loss for the month',
-          pieHole: 0.7,
-          pieSliceText:'none',
-
-        };
-          }
-         else if (data0 > 0 && data2 < 0) {
-            data4 = parseInt(data1) - parseInt(data0);
-            var data = google.visualization.arrayToDataTable([
-          ['Title', 'Amount'],
-          ['Gross Profit',  parseInt(data0)],
-          ['Expenditure',  parseInt(data1)],
-          ['Net Loss', parseInt(data4)],
+          ['Net Loss', parseInt(data3)],
         ]);
 
         var options = {
@@ -830,14 +847,33 @@ function selectEmployee(selection) {
                         mywindow.close();
           }); 
 }
+
+
+$('input:radio[name="payment-mode"]').change(function(){
+  if($("#amount_paid").val() != '')
+    {
+      completeOrderAndPrint.disabled = false;
+    }
+});
+
+$("input[id='amount_paid']").keyup(function() {
+  if(($('input:radio[name="payment-mode"]').is(':checked')))
+    {
+      completeOrderAndPrint.disabled = false;
+    }
+});
+
  
 $('input:radio[name="selectedCustomer"]').change(function(){
   $("#newCustomer").attr('disabled','disabled');
+  $("#newCustomer").val('');
 });
 
 $('input:radio[id="selectedUnregisteredCustomer"]').change(function(){
 $("#newCustomer").removeAttr("disabled");
-$("#newCustomer").val('');
+$("#newCustomer").val('Walk_In');
+completeOrderBtn.disabled = false;
+completeOrderLaterBtn.disabled = false;
 var name = $("#newCustomer").val();
   customerDetails = "";
         customerDetails += "<h5>Confirm Customer Details</h5>&emsp;&emsp;-";
@@ -901,6 +937,8 @@ function selectCustomer(selection) {
          number = $(`#customerNumber${id}`).text();
          deliverer = $(`#customerDeliverer${id}`).text();
         }
+        completeOrderBtn.disabled = false;
+        completeOrderLaterBtn.disabled = false;
         customerDetails = "";
         customerDetails += "<h5>Confirm Customer Details</h5>&emsp;&emsp;-";
             customerDetails += "&emsp;&emsp;Name: ";
@@ -973,7 +1011,7 @@ function selectSeller(selection) {
            <td class="uneditable">${id}</td>
             <td class="uneditable">${cartItems[i][1]}</td>
              <td class="uneditable" id="price${id}">${price}</td>
-              <td class="editable" id="quantity${id}">${qty}</td>
+              <td class="editable" id="quantity${id}">${parseFloat(qty).toFixed(2)}</td>
               <td class="editable" id="discount${id}">${discount}</td>
                <td> <button class="btn">
                <i id="upQuantity${id}" onclick="upQuantity(${id},${price},${qty})" class='fa fa-plus'></i>
@@ -984,7 +1022,7 @@ function selectSeller(selection) {
                <button id="deleteCart${id}" onclick="deleteCart(${id},this,${price},${qty})" type='button' class='btn btn-danger btn-sm deleteFromCart' >
                <i class='fa fa-times-circle'></i>&ensp;Remove</button>
                </td>
-              <td class="uneditable" id="subTotal${id}">${parseFloat(subTotal).toFixed(2)}</td>
+              <td class="editable" id="subTotal${id}">${parseFloat(subTotal).toFixed(2)}</td>
                  </tr>`;
                  $('#cartData').html(productDetails);
                  $('#cartEditable').editableTableWidget();
@@ -995,7 +1033,7 @@ function selectSeller(selection) {
             for (var i = 0; i < cartItems.length; i++) {
               var availableQty = cartItems[i][5];
                if (parseFloat($(`#quantity${cartItems[i][0]}`).html()) == newValue) {
-                if (parseFloat(newValue) <= availableQty && parseInt(newValue) > 0) {
+                if (parseFloat(newValue) <= availableQty && parseFloat(newValue) > 0) {
                   var id = cartItems[i][0];
                   var price = parseFloat($(`#price${id}`).html());
                   var discount = parseFloat($(`#discount${id}`).html());
@@ -1004,7 +1042,13 @@ function selectSeller(selection) {
                   //$(`#upQuantity${id}`).setAttribute('onclick',`upQuantity(${id},${price},${newValue})`);
                   cartItems[i][3] = newValue;
                   $(`#subTotal${id}`).html(parseFloat(newSub).toFixed(2));
-                } else{
+                }
+                else if(parseFloat(newValue) <= availableQty && parseFloat(newValue) == 0)
+                {
+                  alert('Quantity cannot be 0');
+                  return false;
+                }
+                else{
                   alert('Quantity Not Available');
                   return false;
                 }
@@ -1020,8 +1064,36 @@ function selectSeller(selection) {
                   newSub2 = parseFloat($(`#quantity${cartItems[i][0]}`).html()) * parseFloat(cost);
                   cartItems[i][4] = newValue;
                   $(`#subTotal${cartItems[i][0]}`).html(parseFloat(newSub2).toFixed(2));
-                } else {
+                }
+                else if(isNaN(parseFloat($(`#discount${cartItems[i][0]}`).html())))
+                {
+                  alert('Hi');
+                  return false;
+                }
+                else {
                   alert('Discount cannot be greater than unit price.');
+                  return false;
+                }
+              }
+
+              if (parseFloat($(`#subTotal${cartItems[i][0]}`).html()) == newValue) {
+                 var id = cartItems[i][0];
+                  var price = parseFloat($(`#price${id}`).html());
+                  var discount = parseFloat($(`#discount${id}`).html());
+                  var cost = price - discount;
+                  var availableQty = cartItems[i][5];
+                var qty = parseFloat(newValue) / parseFloat(cost);
+                if (parseFloat(qty) <= availableQty && parseFloat(qty) > 0) {
+                $(`#quantity${id}`).html(parseFloat(qty).toFixed(2));
+                cartItems[i][3] = qty;
+                }
+                else if(parseFloat(qty) <= availableQty && parseFloat(newValue) == 0)
+                {
+                  alert('Quantity cannot be 0');
+                  return false;
+                }
+                else{
+                  alert('Quantity Not Available');
                   return false;
                 }
               }
@@ -1094,8 +1166,9 @@ function selectSeller(selection) {
      });
      for (var i = 0; i < cartItems.length; i++) {
       if (cartItems[i][0]==id) {
-     var discount =  cartItems[i][4];     
-    var subTotal = (price * qty) - +discount;
+     var discount =  cartItems[i][4]; 
+     var quantity = cartItems[i][3];
+    var subTotal = (price - discount) * quantity;
      var initial = $('#cartTotal').html();
      Total = +initial - +subTotal ;
      var button = cartItems[i][6];
@@ -1104,7 +1177,7 @@ function selectSeller(selection) {
   cartItems.splice(check, 1);
    }
    }
-        $('#cartTotal').html(Total);
+       $(`#cartTotal`).html(Math.round(Total).toFixed(2));
     }
   });
 }
@@ -1133,6 +1206,7 @@ $(document).on('click','.placeOrder',function(){
     $(document).on('click','#orderAndPrint',function(e){
       e.preventDefault();
       e.stopPropagation();
+      var delivery;
      // var customer = $(`#orderCustomerName`).val();
      // var paid = $(`#amount_paid`).val();
       var radios = document.getElementsByName('payment-mode');
@@ -1142,10 +1216,20 @@ $(document).on('click','.placeOrder',function(){
             }
          }
       var cleared = 1;
+
+      if($('input[name="delivery"]:checked').val() == 'on')
+      {
+        delivery = 1;
+      }
+      else
+      {
+        delivery = 0;
+      }
      /* var orderData = JSON.stringify(cartItems);
       $.post("receiptPrint.php",{customer:customer, mode:mode, paid:paid, order: orderData},
       function(result){*/
-         completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared, mode);
+         completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared, mode, delivery);
+         location.reload(true);
        /*  var mywindow = window.open('', 'Sympha Fresh', 'height=400,width=600');
                       mywindow.document.write('<html><head><title></title>');
                       mywindow.document.write('</head><body>');
@@ -1165,18 +1249,18 @@ $(document).on('click','.placeOrder',function(){
               let today = new Date().toISOString().slice(0, 10);
               $(`#deliveryDate`).val(today);
             }
-            completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a');
+            completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a', '0');
             location.reload(true);
         });
 
 
-      function completeOrderBalance(custID,cartArr,newCust,cleared, mode){
+      function completeOrderBalance(custID,cartArr,newCust,cleared, mode, delivery){
         $.post("../load.php",{where:'order_id'},
           function(success){
         var order_id = parseInt(success) + 1;
         for (var i = 0; i < cartArr.length; i++) {
           var stockID = cartArr[i][0];
-          $.post("../add.php",{where:'order', order_id:order_id, price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust, cleared: cleared, mode:mode},
+          $.post("../add.php",{where:'order', order_id:order_id, price:cartArr[i][2],quantity:cartArr[i][3], discount:cartArr[i][4] ,customer:custID, stockid:cartArr[i][0], lateOrder:$(`#deliveryDate`).val(),newCustomer:newCust, cleared: cleared, mode:mode, delivery:delivery},
           function(result){
             if (result=='success') {
                 cartArr.shift();
@@ -1190,6 +1274,7 @@ $(document).on('click','.placeOrder',function(){
         }
       });
         alert("Order Successfully Added");
+        location.reload(true);
       }
 
         $('.completeRequisition').click(function(){
@@ -1213,6 +1298,38 @@ $(document).on('click','.placeOrder',function(){
         }
         alert("Requisition Successfully Completed");
       }
+
+      function setAsDelivery(idx){
+        var id = idx;
+           var where = 'setDelivery';
+           $.post("../save.php",{id:id,where:where},
+           function(result){
+             if(result == 1)
+             {
+                location.reload(true);
+             }
+             else if(result == 0)
+             {
+               alert("This order was already set as a home delivery")
+             }
+           });
+    }
+
+    function sendMpesaNotification(idx, contact)
+    {
+      $.post("../mpesa_processor.php",{id:idx, contact:contact},
+      function(result){
+        alert(result)
+        if(result == 1)
+        {
+           location.reload(true);
+        }
+        else if(result == 0)
+        {
+          alert("This order was already set as a home delivery")
+        }
+      });
+    }
 
       function fineCustomerLastMonth(idx){
            var id = idx;
@@ -1267,12 +1384,65 @@ $(document).on('click','.placeOrder',function(){
               });
        }
 
+       function completeDelivery(idx, el)
+       {
+           var id = idx;
+           var time_left = $(`#time_left${id}`).val();
+           var where = 'delivery';
+           $.post("../save.php",{id:id,time_left:time_left,where:where},
+              function(result){
+                if(result == 1){
+                  $(el).closest('tr').css('background','lime');
+                  $(el).closest('tr').fadeOut(800,function(){
+                    $(this).remove();
+                  });
+                }
+              });
+       }
+
+       function deleteDelivery(idx, el)
+       {
+        var id = idx;
+        var where = 'delivery';
+        bootbox.confirm('Do you really want to cancel the selected delivery?',function(result)
+        {if(result){
+        $.post("../delete.php",{id:id,where:where},
+           function(result){
+             if(result == 1){
+               $(el).closest('tr').css('background','tomato');
+               $(el).closest('tr').fadeOut(800,function(){
+                 $(this).remove();
+               });
+             }
+           });
+          }});
+       }
+
+       function cancelOrderToday(order,idx){
+        var id = idx;
+        var el = order;
+        var cost = $(`#costToday${id}`).text();
+        var where = 'cancelOrder';
+            bootbox.confirm('Do you really want to cancel the selected order?',function(result)
+        {if(result){
+          $.post("../delete.php",{id:id,cost:cost,where:where},
+        function(result){
+            if(result == 1){
+              $(el).closest('tr').css('background','tomato');
+              $(el).closest('tr').fadeOut(800,function(){
+                $(this).remove();
+              });
+            }
+        });
+      }});
+       }
+
        function deleteOrderLastMonth(order,idx){
         var id = idx;
         var el = order;
         var cost = $(`#costLastMonth${id}`).text();
         var where = 'order';
-            bootbox.confirm('Do you really want to delete the selected order?',function(result)
+            bootbox.confirm('Do you really want to return the selected order?',function(result)
         {if(result){
           $.post("../delete.php",{id:id,cost:cost,where:where},
         function(result){
@@ -1310,7 +1480,7 @@ $(document).on('click','.placeOrder',function(){
         var el = order;
         var cost = $(`#costNextMonth${id}`).text();
         var where = 'order';
-            bootbox.confirm('Do you really want to delete the selected order?',function(result)
+            bootbox.confirm('Do you really want to return the selected order?',function(result)
         {if(result){
           $.post("../delete.php",{id:id,cost:cost,where:where},
         function(result){
@@ -1329,7 +1499,7 @@ $(document).on('click','.placeOrder',function(){
         var el = order;
         var cost = $(`#costYesterday${id}`).text();
         var where = 'order';
-            bootbox.confirm('Do you really want to delete the selected order?',function(result)
+            bootbox.confirm('Do you really want to return the selected order?',function(result)
         {if(result){
           $.post("../delete.php",{id:id,cost:cost,where:where},
         function(result){
@@ -1367,7 +1537,7 @@ $(document).on('click','.placeOrder',function(){
         var el = order;
         var cost = $(`#costToday${id}`).text();
         var where = 'order';
-            bootbox.confirm('Do you really want to delete the selected order?',function(result)
+            bootbox.confirm('Do you really want to return the selected order?',function(result)
         {if(result){
           $.post("../delete.php",{id:id,cost:cost,where:where},
         function(result){
@@ -2027,6 +2197,25 @@ function saveOrderToday(idx){
   $.post("../save.php",{id:id,party:party,particular:particular,total:total,paid:paid,due:due,date:date,where:where},
   function(result){
   });
+});
+
+$('#customerDebtsEditable').editableTableWidget();
+$('#customerDebtsEditable td.uneditable').on('change', function(evt, newValue) {
+return false;
+});
+$('#customerDebtsEditable td').on('change', function(evt, newValue) {
+ var rowx = parseInt(evt.target._DT_CellIndex.row)+1;
+var id = $(`#debtId${rowx}`).text();
+var mpesa = $(`#debtMpesa${rowx}`).text();
+var cash = $(`#debtCash${rowx}`).text();
+var where = 'debtPayment';
+$.post("../save.php",{id:id,cash:cash,mpesa:mpesa,where:where},
+function(result){
+  if(result == 1)
+  {
+  location.reload(true);
+  }
+});
 });
 
 $('#assetsEditable').editableTableWidget();
@@ -2753,3 +2942,21 @@ function(result){
           }
       }
      
+      let switches = document.querySelectorAll('.ios-switch')
+
+      for(var i =0; i < switches.length; i++)
+      {
+          switches[i].addEventListener('click',
+          function(event){
+             if(this.classList.contains('active'))
+             {
+                 this.classList.remove('active');
+                 this.querySelector('input[type=checkbox').checked = false;
+             }
+             else{
+                 this.classList.add('active');
+                 this.querySelector('input[type=checkbox').checked = true;
+             }
+          })
+      }
+      

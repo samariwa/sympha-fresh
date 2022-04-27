@@ -1,6 +1,6 @@
  <?php
  $view = $_SESSION['role'];
- if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
+ if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Sales') {
 ?>
 <!-- Content Row -->
           <div class="row">

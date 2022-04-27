@@ -34,7 +34,8 @@
       <a href="addOrder.php" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Order</a>
       </div>
       <div class="col-2">
-      <a href="distribution.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true">Distribution</a>
+      <a href="customer_debts.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true">Customer Debts</a>
+      <!--<a href="distribution.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true">Distribution</a>-->
     </div>
     <div class="col-2">
       <a href="processOrders.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Process Orders</a>
@@ -58,6 +59,7 @@
       <a href="addOrder.php" class="btn btn-success btn-md active ml-3" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Order</a>
     </div>
       <div class="col-4">
+      <a href="customer_debts.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true">Customer Debts</a>
       <!--<a href="extra_sales.php" class="btn btn-primary btn-md active offset-3" role="button" aria-pressed="true" >Extra Sales</a>-->
     </div>
     <div class="col-4">
@@ -71,9 +73,11 @@
           <?php
           $name_color = '';
           ?>
+          <!--
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             <div id="menu1" class="tab-pane fade">
         <?php
-        $ordersrowcount = mysqli_num_rows($salesListLastMonth);
+       /* $ordersrowcount = mysqli_num_rows($salesListLastMonth);
       ?>
       <div class="row">
          <div class="col-12">
@@ -132,6 +136,10 @@
         $cash = $row['Cash'];
         $fine = $row['Fine'];
         $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+        {
+          $balance = 0;
+        }
         $delivery_date = $row['Delivery_time'];
         $returned = $row['Returned'];
         $banked = $row['Banked'];
@@ -285,7 +293,7 @@
            <?php
               if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
            ?>
-              <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderLastMonth" role="button" aria-pressed="true" onclick="deleteOrderLastMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+              <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderLastMonth" role="button" aria-pressed="true" onclick="deleteOrderLastMonth(this,<?php echo $id; ?>)">Return</button>
           <?php
               }
           ?>  
@@ -293,11 +301,14 @@
           
     </tr>
     <?php
-    }
+    }*/
     ?>
   </tbody>
 </table>
     </div>
+    href="../mpesa_processor.php?phone=<?php #echo $contact; ?>&amount=<?php #echo $cost; ?>"
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
     <div id="menu2" class="tab-pane fade">
         <?php
         $ordersrowcount = mysqli_num_rows($salesListYesterday);
@@ -359,6 +370,10 @@
         $cash = $row['Cash'];
         $fine = $row['Fine'];
         $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+        {
+          $balance = 0;
+        }
         $delivery_date = $row['Delivery_time'];
         $returned = $row['Returned'];
         $banked = $row['Banked'];
@@ -512,7 +527,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
          ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $id; ?>)">Return</button>
           <?php
           }
           ?>  
@@ -526,10 +541,139 @@
     </div>
     <div id="menu3" class="tab-pane fade main show active">
         <?php
-        $ordersrowcount = mysqli_num_rows($salesListToday);
+        $deliveriesrowcount = mysqli_num_rows($pendingDeliveries);
       ?>
+      <h4>Pending Deliveries</h4>
       <div class="row">
          <div class="col-12">
+      <h6 class="offset-5">Total Number: <?php echo $deliveriesrowcount; ?></h6>
+    </div>
+      </div> 
+      <table id="salesEditableToday" class="table table-striped table-hover table-responsive  paginate" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
+      <caption>Pending Deliveries - Time Limit (<?php echo $delivery_time_limit;?> minutes)</caption>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" width="3%">#</th>
+      <th scope="col" width="25%">Name</th>
+      <th scope="col"width="20%">Time Left</th>
+      <th scope="col"width="40%"></th>
+    </tr>
+  </thead>
+  <tbody >
+    <?php
+        $count = 0;
+        foreach($pendingDeliveries as $row){
+         $count++;
+         $id = $row['id'];
+         $order_id = $row['order_id'];
+        $name = $row['Name'];
+        if($name == 'Unregistered Customer')
+        {
+          $name = $row['new_name'];
+        }
+        $cust_type = $row['type'];
+        $contact = $row['Number'];
+        $created_at = $row['created_at'];
+        $deliverytime = new DateTime($created_at);
+        $deliverytime->add(new DateInterval('PT' . $delivery_time_limit . 'M'));
+        $delivery_stamp = $deliverytime->format('Y-m-d H:i');
+        $from_time = strtotime(date("Y-m-d H:i:s"));
+        $to_time = strtotime($delivery_stamp);
+        $time_diff = ($to_time - $from_time) / 60;
+        if ($time_diff > 12 ) {
+          $name_color = "#2ECC71";
+        }
+        if (($time_diff > 6) && ($time_diff < 12)) {
+          $name_color = "orange";
+        }
+        if ($time_diff < 6) {
+          $name_color = "red";
+        }
+
+
+      ?>
+    <tr>
+      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <td class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
+      <!--<td><?php //echo $time_diff; ?><td>-->
+      <input type="hidden" name="timeLeft" id="time_left<?php echo $order_id; ?>" value="<?php echo round($time_diff,2); ?>">
+      <td style = "background-color: <?php echo $name_color; ?>;color: white"><div class="countdown show" data-Date='<?php echo $delivery_stamp; ?>' data-endText="00:00">
+        <div class="running">
+            <timer class="ml-5">
+               <b><span class = "minutes ml-4"></span>:<span class = "seconds"></span></b>
+            </timer>
+        </div>
+        <div class="ended">
+            <div class="text">00:00</div>
+            <div class = "break"></div>
+        </div>
+      </td>
+      <td>
+         <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" class="btn btn-success btn-sm active completeDelivery" onclick="completeDelivery(<?php echo $order_id; ?>, this)"role="button" aria-pressed="true" ><i class="fa fa-check"></i>&ensp;Complete</button>     
+         &nbsp;&nbsp;&nbsp;
+         <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" data-toggle="modal" data-target="#viewDeliveriesToday<?php echo $order_id; ?>" role="dialog" class="btn btn-primary btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i>&ensp;View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewDeliveriesToday<?php echo $order_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Customer Tel: <?php echo $contact; ?>
+                    <div class="row">
+                          <p class="ml-4"><b><i>Order Details</i></b></p>
+                      </div>
+                      <?php
+                      $details = mysqli_query($connection,"SELECT o.id as order_id, s.Name as name, o.Quantity as qty, sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND o.Order_id = '$order_id';")or die($connection->error);
+                      foreach($details as $row)
+                      {
+                         $id = $row['order_id'];
+                         $product = $row['name'];
+                         $quantity = $row['qty'];
+                         $sp = $row['Selling_price'];
+                         $cost = $quantity * $sp;
+                      ?>
+                      <div class="row">
+                      <div class="col-3">
+                            <p><b># <?php echo $id; ?></b></p>
+                        </div>
+                        <div class="col-3">
+                            <p><b>Product:</b><br> <span id="name_Today<?php echo $id; ?>"><?php echo $product; ?></span></p>
+                        </div>
+                        <div class="col-3">
+                            <p><b>Quantity:</b><br> <?php echo round($quantity,2); ?></p>
+                        </div>
+                        <div class="col-3">
+                            <p><b>Cost:</b><br> <?php echo round($cost,2); ?></p>
+
+                        </div>
+                      </div><br>
+                      <?php
+                      }
+                      ?>
+                      <br> 
+                  </div>
+              </div>
+            </div>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" class="btn btn-danger btn-sm active deleteDelivery" role="button" aria-pressed="true" onclick="deleteDelivery(<?php echo $order_id; ?>, this)"><i class="fa fa-times"></i>&ensp;Cancel</button>
+          </td>
+    </tr>
+    <?php
+    }
+    ?>
+  </tbody>
+</table>
+<h4>Orders</h4>
+      <div class="row">
+         <div class="col-12">
+           <?php
+           $ordersrowcount = mysqli_num_rows($salesListToday);
+           ?>
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -544,15 +688,8 @@
       <th scope="col"width="13%">Unit Price</th>
       <th scope="col"width="4%">Cost</th>
       <th scope="col"width="4%">Balance</th>
-      <th scope="col"width="10%"></th>
+      <th scope="col"width="20%"></th>
       <th scope="col"width="40%"></th>
-      <?php
-           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-          ?>
-          <th scope="col"width="20%"></th>
-          <?php
-          }
-          ?>
     </tr>
   </thead>
   <tbody >
@@ -573,7 +710,7 @@
         $qty = $row['Quantity'];
         //MariaDB Only
        // $selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
-        //MySQL Only
+        //MySQL Only 
         $selling_price = mysqli_query($connection,"SELECT sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND s.name = '$product';")or die($connection->error);
          $row2 = mysqli_fetch_array($selling_price);
         $price = $row2['Selling_price'];
@@ -584,7 +721,12 @@
         $mpesa = $row['MPesa'];
         $cash = $row['Cash'];
         $fine = $row['Fine'];
+        $time = date ('H:i',strtotime($row['created_at']));
         $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+        {
+          $balance = 0;
+        }
         $delivery_date = $row['Delivery_time'];
         $returned = $row['Returned'];
         $banked = $row['Banked'];
@@ -612,9 +754,6 @@
       <td class="uneditable" id="priceToday<?php echo $id; ?>"><?php echo round($price,2); ?></td>
       <td class="uneditable" id="costToday<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
       <td class="uneditable" id="balanceToday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
-       <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerToday" onclick="fineCustomerToday(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
-        </td>
          <td>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderToday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
           <div class="modal fade bd-example-modal-lg" id="viewOrderToday<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -628,7 +767,14 @@
                   </div>
                   <div class="modal-body">
                     <form method="POST">
+                    <div class="row">
+                      <div class="col-6">
                     Customer Tel: <?php echo $contact; ?>
+                     </div>
+                     <div class="col-6">
+                    Time: <?php echo $time; ?>
+                     </div>
+                    </div>
                     <div class="row">
                           <p class="ml-4"><b><i>Order Details</i></b></p>
                       </div>
@@ -728,16 +874,27 @@
             </div>
           </div>
          </td>
-         
-          <?php
-           if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
-          ?>
           <td>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderToday" role="button" aria-pressed="true" onclick="deleteOrderToday(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
-          </td>
-          <?php
-          }
-          ?>
+          <div class="dropdown">
+            <a class="btn btn-sm btn-light" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-bars"></i>&ensp;Options
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="tel:<?php echo $contact; ?>"><i class="fa fa-phone"></i>&ensp;Call Customer</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAsDelivery(<?php echo $order_id; ?>); return false;">Set as delivery</a></li>
+              <li><a class="dropdown-item" href="#" onclick="sendMpesaNotification(<?php echo $order_id; ?>, <?php echo $contact; ?>); return false;" ><i class="fa fa-mobile"></i>&ensp;Push M-Pesa STK Notification</a></li>
+              <?php
+              if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
+              ?>
+              <li><a class="dropdown-item" href="#" onclick="fineCustomerToday(<?php echo $id; ?>); return false;"><i class="fa fa-money-bill"></i>&ensp;Fine</a></li>
+              <li><a class="dropdown-item" href="#" onclick="deleteOrderToday(this,<?php echo $id; ?>); return false;"><i class="fa fa-arrow-left"></i>&ensp;Return</a></li>
+              <?php
+              }
+              ?>
+              <li><a class="dropdown-item" href="#" onclick="cancelOrderToday(this,<?php echo $id; ?>); return false;"><i class="fa fa-times"></i>&ensp;Cancel</a></li>
+            </ul>
+          </div>
+        </td>
 
     </tr>
     <?php
@@ -807,6 +964,10 @@
         $cash = $row['Cash'];
         $fine = $row['Fine'];
         $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+        {
+          $balance = 0;
+        }
         $delivery_date = $row['Delivery_time'];
         $returned = $row['Returned'];
         $banked = $row['Banked'];
@@ -960,7 +1121,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
         ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $id; ?>)">Return</button>
           <?php
           }
           ?>
@@ -1020,18 +1181,6 @@
         $product = $row['name'];
         $qty = $row['Quantity'];
         $discount = $row['Discount'];
-        if ($balance == "0.0" ) {
-          $name_color = "#2ECC71";
-        }
-        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-          $name_color = "grey";
-        }
-        if ($balance > "0.0" ) {
-          $name_color = "orange";
-        }
-        if ($balance < "-100.0" ) {
-          $name_color = "red";
-        }
         //MariaDB Only
         //$selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
         //MySQL Only
@@ -1045,6 +1194,22 @@
         $cash = $row['Cash'];
         $fine = $row['Fine'];
         $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+        {
+          $balance = 0;
+        }
+        if ($balance == "0.0" ) {
+          $name_color = "#2ECC71";
+        }
+        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
+          $name_color = "grey";
+        }
+        if ($balance > "0.0" ) {
+          $name_color = "orange";
+        }
+        if ($balance < "-100.0" ) {
+          $name_color = "red";
+        }
         $delivery_date = $row['Delivery_time'];
         $returned = $row['Returned'];
         $banked = $row['Banked'];
@@ -1184,7 +1349,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
         ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $id; ?>)"><i class="fa fa-trash"></i>&ensp;Delete</button>
+          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $id; ?>)">Return</button>
           <?php
           }
           ?>  

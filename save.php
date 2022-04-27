@@ -839,6 +839,41 @@ elseif ($where == 'fine') {
 	echo json_encode($x);
 }
 
+elseif($where == 'debtPayment')
+{
+   $id = $_POST['id'];
+   $mpesa = $_POST['mpesa'];
+   $cash = $_POST['cash'];
+   $total = $mpesa + $cash;
+   mysqli_query($connection,"UPDATE `orders` SET balance = balance + '$total' ,mpesa = mpesa + '$mpesa', cash = cash + '$cash' WHERE `id` = '".$id."'")or die($connection->error);
+   echo 1;
+}
+
+elseif($where == 'delivery')
+{
+   $id = $_POST['id'];
+   $time_left = $_POST['time_left'];
+   mysqli_query($connection,"UPDATE `order_status` SET `status` = 'delivered', delivery_time_left = '$time_left' WHERE `Order_id` = '".$id."'")or die($connection->error);
+   mysqli_query($connection,"UPDATE `orders` SET `Delivery` = '0' WHERE `Order_id` = '".$id."'")or die($connection->error);
+   echo 1;
+}
+
+elseif($where == 'setDelivery')
+{
+   $id = $_POST['id'];
+   $delivery_exists = mysqli_query($connection,"SELECT * FROM order_status WHERE Order_id = '".$id."%'")or die($connection->error);
+     $result_existence = mysqli_fetch_array($delivery_exists);
+     if ( $result_existence == FALSE) {
+      mysqli_query($connection,"INSERT INTO `order_status`(`Order_id`,`delivery_time_left`,`status`) VALUES('$id', '$delivery_time_limit', 'pending')")or die($connection->error);
+      mysqli_query($connection,"UPDATE `orders` SET `Delivery` = '1' WHERE `Order_id` = '".$id."'")or die($connection->error);
+      echo 1;
+     }
+     else{
+       echo 0;
+     }
+   
+}
+
 elseif ($where == 'suppliers') {
   $id = $_POST['id'];
     $contact = $_POST['contact'];
@@ -852,7 +887,7 @@ mysqli_query($connection,"UPDATE `vehicles` SET `Route` = '".$route."',`Mileage`
 }
 elseif ($where == 'adjusted_unit') {
   $id = $_POST['id'];
-    $adjustment = $_POST['adjustment'];
+    $adjustment = round($_POST['adjustment'],2);
     $row = mysqli_query($connection,"SELECT * FROM animal_product_units WHERE id = '".$id."'")or die($connection->error);
       $result = mysqli_fetch_array($row);
       $stock_id = $result['stock_id'];

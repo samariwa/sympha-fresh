@@ -70,28 +70,42 @@ else if($where == 'salesTotal')
        $salesTotal = array();
         $row1 = mysqli_fetch_array($salesWk1);
         $total1 = $row1['sum'];
-        $Total1 = $total1;
         $row2 = mysqli_fetch_array($salesWk2);
         $total2 = $row2['sum'];
-        $Total2 = $total2;
         $row3 = mysqli_fetch_array($salesWk3);
         $total3 = $row3['sum'];
-        $Total3 = $total3;
         $row4 = mysqli_fetch_array($salesWk4);
         $total4 = $row4['sum'];
-        $Total4 = $total4;
-        array_push($salesTotal, $Total1);
-        array_push($salesTotal, $Total2);
-        array_push($salesTotal, $Total3);
-        array_push($salesTotal, $Total4);
+        array_push($salesTotal, $total1);
+        array_push($salesTotal, $total2);
+        array_push($salesTotal, $total3);
+        array_push($salesTotal, $total4);
        $array = json_encode($salesTotal);
+        echo $array;
+}
+else if($where == 'paymentMode')
+{   
+       $modeTotal = array();
+        $row1 = mysqli_fetch_array($paymentModeWk1);
+        array_push($modeTotal, $row1['cash']);
+        array_push($modeTotal, $row1['mpesa']);
+        $row2 = mysqli_fetch_array($paymentModeWk2);
+        array_push($modeTotal, $row2['cash']);
+        array_push($modeTotal, $row2['mpesa']);
+        $row3 = mysqli_fetch_array($paymentModeWk3);
+        array_push($modeTotal, $row3['cash']);
+        array_push($modeTotal, $row3['mpesa']);
+        $row4 = mysqli_fetch_array($paymentModeWk4); 
+        array_push($modeTotal, $row4['cash']);
+        array_push($modeTotal, $row4['mpesa']);
+       $array = json_encode($modeTotal);
         echo $array;
 }
 else if($where == 'profit/loss')
 {   
        $values = array();
-        $row1 = mysqli_fetch_array($monthSalesValue);
-        $sales = $row1['sum'];
+        /*$row1 = mysqli_fetch_array($monthSalesValue);
+        $sales = $row1['sum'];*/
         $row2 = mysqli_fetch_array($monthIncomeValue);
         $income = $row2['sum'];
         $row3 = mysqli_fetch_array($monthExpenseValue);
@@ -99,9 +113,8 @@ else if($where == 'profit/loss')
         $row4 = mysqli_fetch_array($salariesTotal);
         $salaries = $row4['salaries'];
         $expenses = $expenses + $salaries;
-        $gross = $income  - $sales;
-        $net = $gross - $expenses ;
-        array_push($values, $gross);
+        $net = $income - $expenses ;
+        array_push($values, $income);
         array_push($values, $expenses);
         array_push($values, $net);
        $array = json_encode($values);
@@ -110,26 +123,14 @@ else if($where == 'profit/loss')
 else if($where == 'salesExpenses')
 {   
        $salesExpensesTotal = array();
-        $row1 = mysqli_fetch_array($salesWk1);
+        $row1 = mysqli_fetch_array($incomeWk1);
         $total1 = $row1['sum'];
-        $row5 = mysqli_fetch_array($extraSalesWk1);
-        $total5 = $row5['sum'];
-        $Total1 = $total1 + $total5;
-        $row2 = mysqli_fetch_array($salesWk2);
+        $row2 = mysqli_fetch_array($incomeWk2);
         $total2 = $row2['sum'];
-        $row6 = mysqli_fetch_array($extraSalesWk2);
-        $total6 = $row6['sum'];
-        $Total2 = $total2 + $total6;
-        $row3 = mysqli_fetch_array($salesWk3);
+        $row3 = mysqli_fetch_array($incomeWk3);
         $total3 = $row3['sum'];
-        $row7 = mysqli_fetch_array($extraSalesWk3);
-        $total7 = $row7['sum'];
-        $Total3 = $total3 + $total7;
-        $row4 = mysqli_fetch_array($salesWk4);
+        $row4 = mysqli_fetch_array($incomeWk4);
         $total4 = $row4['sum'];
-        $row8 = mysqli_fetch_array($extraSalesWk4);
-        $total8 = $row8['sum'];
-        $Total4 = $total4 + $total8;
         $row5 = mysqli_fetch_array($expensesWk1);
         $total5 = $row5['sum'];
         $row6 = mysqli_fetch_array($expensesWk2);
@@ -138,13 +139,13 @@ else if($where == 'salesExpenses')
         $total7 = $row7['sum'];
         $row8 = mysqli_fetch_array($expensesWk4);
         $total8 = $row8['sum'];
-        array_push($salesExpensesTotal, $Total1);
+        array_push($salesExpensesTotal, $total1);
         array_push($salesExpensesTotal, $total5);
-        array_push($salesExpensesTotal, $Total2);
+        array_push($salesExpensesTotal, $total2);
         array_push($salesExpensesTotal, $total6);
-        array_push($salesExpensesTotal, $Total3);
+        array_push($salesExpensesTotal, $total3);
         array_push($salesExpensesTotal, $total7);
-        array_push($salesExpensesTotal, $Total4);
+        array_push($salesExpensesTotal, $total4);
         array_push($salesExpensesTotal, $total8);
        $array = json_encode($salesExpensesTotal);
         echo $array;

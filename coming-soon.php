@@ -32,7 +32,7 @@
             <br>
             <p>Our e-commerce site will launch very soon</p>
             <br>
-            <div class="countdown-container countdown show d-flex justify-content-center" data-Date='2022/06/10 13:37:53'>
+            <div class="countdown-container countdown show d-flex justify-content-center" data-Date='2022/07/06 09:21:53'>
                 <div class="running">
                     <timer class="d-flex flex-wrap justify-content-center">
                         <div class="count-item">

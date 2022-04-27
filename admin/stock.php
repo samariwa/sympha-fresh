@@ -1,6 +1,8 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ $Stock = new Stock();
+ $Categories = new Categories();
  ?> 
 
         <!-- Begin Page Content -->
@@ -9,7 +11,8 @@
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Dashboard <span style="font-size: 18px;">/Stock</span></h1>
-            <h6 class="h6 mb-0 text-gray-600 " style="margin-left: 450px;">Time: <span id="time"></span></h6>
+            <h6 class="h6 mb-0 text-gray-600 " style="margin-left: 380px;">Time: <span id="time"></span></h6>
+            <a <?php if ($view == 'Software' || $view == 'Director' || $view == 'CEO' ) { ?> href="meals.php" <?php }else{ ?> href = "#" <?php } ?> class="btn btn-light btn-md mr-1 active" role="button" aria-pressed="true">Meals</a>
             <a <?php if ($view == 'Software' || $view == 'Director' || $view == 'CEO' ) { ?> href="stock_settings.php" <?php }else{ ?> href = "#" <?php } ?> class="btn btn-light btn-md mr-1 active" role="button" aria-pressed="true"><i class="fa fa-cogs"></i>&ensp;Settings</a>
             <button class="btn btn-light btn-md active printStock mr-1" role="button" aria-pressed="true" ><i class="fa fa-print"></i>&ensp;Print</button>
           </div>
@@ -38,12 +41,10 @@
                   <option value="" selected="selected" disabled>Category...</option>
                   <?php
                     $count = 0;
-                    foreach($categoriesList as $row){
+                    foreach($Categories->fetchStockCategories() as $category){
                      $count++;
-                     $category_id = $row['id'];
-                    $category = $row['Category_Name'];
                   ?>
-                   <option value="<?php echo $category_id; ?>"><?php echo $category; ?></option>
+                   <option value="<?php echo $category['id']; ?>"><?php echo $category['Category_Name']; ?></option>
                   <?php
                     }
                   ?>
@@ -173,9 +174,8 @@
     </div><br> 
             <?php
           }
-        $stockrowcount = mysqli_num_rows($stockList);
       ?>
-      <div class="offset-2"><h6 class="offset-4">Total Number: <?php echo $stockrowcount; ?></h6></div>
+      <div class="offset-2"><h6 class="offset-4">Total Number: <?php echo $Stock->stockCount(); ?></h6></div>
       <table id="stockEditable" class="table table-striped table-hover paginate " style="display:block;overflow-y:scroll;text-align: center;">
   <thead class="thead-dark">
   <tr>
@@ -211,53 +211,45 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($stockList as $row){
+        foreach($Stock->fetchStock() as $stock){
          $count++;
-         $id = $row['id'];
-        $category = $row['Category_Name'];
-        $name = $row['Name'];
-        $buying_price = $row['Buying_price'];
-        $discount = $row['Discount'];
-        $selling_price = $row['Price'];
-        $quantity = $row['Quantity'];
-        $restock_Level = $row['Restock_Level'];
       ?>
     <tr>
       <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
 
         ?>
-      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $id; ?></th>
-      <td class="editable" id="category<?php echo $count; ?>"><?php echo $category; ?></td>
-      <td class="editable" id="name<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="editable" id="bprice<?php echo $count; ?>"><?php echo $buying_price; ?></td> 
-      <td class="editable" id="discount<?php echo $count; ?>"><?php echo $discount; ?></td> 
-      <td class="editable" id="sprice<?php echo $count; ?>"><?php echo $selling_price; ?></td>
-      <td class="uneditable" id="qty<?php echo $count; ?>"><?php echo $quantity; ?></td>
+      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $stock['id']; ?></th>
+      <td class="editable" id="category<?php echo $count; ?>"><?php echo $stock['Category_Name']; ?></td>
+      <td class="editable" id="name<?php echo $count; ?>"><?php echo $stock['Name']; ?></td>
+      <td class="editable" id="bprice<?php echo $count; ?>"><?php echo $stock['Buying_price']; ?></td> 
+      <td class="editable" id="discount<?php echo $count; ?>"><?php echo $stock['Discount']; ?></td> 
+      <td class="editable" id="sprice<?php echo $count; ?>"><?php echo $stock['Price']; ?></td>
+      <td class="uneditable" id="qty<?php echo $count; ?>"><?php echo $stock['Quantity']; ?></td>
       <?php
         }else{
         ?>
-        <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $id; ?></th>
-      <td class="uneditable" id="category<?php echo $count; ?>"><?php echo $category; ?></td>
-      <td class="uneditable" id="name<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="uneditable" id="sprice<?php echo $count; ?>"><?php echo $selling_price; ?></td>
-      <td class="uneditable" id="qty<?php echo $count; ?>"><?php echo $quantity; ?></td>
+        <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $stock['id']; ?></th>
+      <td class="uneditable" id="category<?php echo $count; ?>"><?php echo $stock['Category_Name']; ?></td>
+      <td class="uneditable" id="name<?php echo $count; ?>"><?php echo $stock['Name']; ?></td>
+      <td class="uneditable" id="sprice<?php echo $count; ?>"><?php echo $stock['Price']; ?></td>
+      <td class="uneditable" id="qty<?php echo $count; ?>"><?php echo $stock['Quantity']; ?></td>
       <?php
        }
-       if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Stores Manager' || $view == 'Stores Supervisor') {
+       if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Stores Manager' || $view == 'Stores Supervisor' || $view == 'Sales') {
         ?>
-        <td class="editable" id="restock_Level<?php echo $count; ?>"><?php echo $restock_Level; ?></td>
+        <td class="editable" id="restock_Level<?php echo $count; ?>"><?php echo $stock['Restock_Level']; ?></td>
         <?php
         }
-        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
+        if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Sales') {
         ?>
         <td>  
-        <button data-toggle="modal" data-target="#exampleModalScrollable<?php echo $id; ?>" id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-light btn-sm active restock" role="button" aria-pressed="true" ><i class="fa fa-plus"></i>&ensp;Restock</button>
-        <div class="modal fade" id="exampleModalScrollable<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <button data-toggle="modal" data-target="#exampleModalScrollable<?php echo $stock['id']; ?>" id="<?php echo $stock['id']; ?>" data_id="<?php echo $stock['id']; ?>" class="btn btn-light btn-sm active restock" role="button" aria-pressed="true" ><i class="fa fa-plus"></i>&ensp;Restock</button>
+        <div class="modal fade" id="exampleModalScrollable<?php echo $stock['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> restock</h5>
+              <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $stock['Name']; ?> restock</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -266,31 +258,31 @@
               <form method="POST">
                  <div class="row">
                   <label for="expiry" style="margin-left: 60px;">Date Received:</label>
-                 <input type="date" name="received" id="received<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Date Received..." required>
+                 <input type="date" name="received" id="received<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Date Received..." required>
                   </div><br>
                   <div class="row">
-                 <input type="number" name="qty" id="quantity<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Quantity Purchased..." required min="1" oninput="validity.valid||(value='');">
+                 <input type="number" name="qty" id="quantity<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Quantity Purchased..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="bp" id="bp<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Buying Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
+                 <input type="number" name="bp" id="bp<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Buying Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="sp" id="sp<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Selling Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
+                 <input type="number" name="sp" id="sp<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Selling Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
                     <label for="expiry" style="margin-left: 60px;">Expiration Date:</label>
-                 <input type="date" name="expiry" id="expiry<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Expiry Date..." required>
+                 <input type="date" name="expiry" id="expiry<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Expiry Date..." required>
                   </div>
             </div>
              <div class="modal-footer">
-              <button type="submit" class="btn btn-primary addPurchase" style="margin-right: 50px" id="<?php echo $id; ?>">Add Purchase</button>
+              <button type="submit" class="btn btn-primary addPurchase" style="margin-right: 50px" id="<?php echo $stock['id']; ?>">Add Purchase</button>
             </form>
             </div>
           </div>
         </div>
       </div>
      </div>
-        <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteStock" role="button" aria-pressed="true" ><i class="fa fa-trash"></i>&ensp;Delete</button></td>
+        <button id="<?php echo $stock['id']; ?>" data_id="<?php echo $stock['id']; ?>" class="btn btn-danger btn-sm active deleteStock" role="button" aria-pressed="true" ><i class="fa fa-trash"></i>&ensp;Delete</button></td>
        <?php
         }
         ?>
