@@ -77,19 +77,12 @@
     <tr>
       <th scope="col" width="3%">#</th>
       <th scope="col" width="14%">Name</th>
-      <th scope="col" width="10%">Location</th>
+      <th scope="col" width="12%">Location</th>
       <th scope="col" width="17%">Contact Number</th>
-      <th scope="col" width="8%">Deliverer</th>
+      <!--<th scope="col" width="8%">Deliverer</th>-->
       <th scope="col"width="10%">Status</th>
-      <th scope="col"width="10%">Note</th>
-       <?php
-       if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
-
-        ?>
-      <th scope="col"width="22%"></th>
-      <?php
-        }
-        ?>
+      <th scope="col"width="19%">Note</th>
+      <th scope="col"width="30%"></th>
     </tr>
   </thead>
   <tbody >
@@ -103,19 +96,13 @@
       <td  class="editable" id="name<?php echo $count; ?>"><?php echo $customer['Name']; ?></td>
       <td class="editable" id="location<?php echo $count; ?>"><?php echo $customer['Location']; ?></td>
       <td class="editable" id="number<?php echo $count; ?>"><?php echo $customer['Number']; ?></td>
-      <td class="editable" id="deliverer<?php echo $count; ?>"><?php echo $customer['Deliverer']; ?></td>
+      <!--<td class="editable" id="deliverer<?php #echo $count; ?>"><?php #echo $customer['Deliverer']; ?></td>-->
       <td class="uneditable"id="status<?php echo $count; ?>"><?php echo $customer['Status']; ?></td>
       <td class="editable"id="note<?php echo $count; ?>"><?php echo $customer['Note']; ?></td>
-        <?php
-       if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
-
-        ?>
-       <td>&emsp;&emsp;
+       <td>
+       <a class="btn btn-sm btn-light" href="tel:<?php echo $customer['Number']; ?>" role="button" aria-expanded="false"><i class="fa fa-phone"></i>&ensp;Call</a>
          <button id="<?php echo $customer['id']; ?>" data_id="<?php echo $customer['id']; ?>" class="btn btn-dark btn-sm active blacklistCustomer" role="button" aria-pressed="true" >Blacklist</button>
-       <button id="<?php echo $customer['id']; ?>" data_id="<?php echo $customer['id']; ?>" class="btn btn-danger btn-sm active deleteCustomer" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>Delete</button></td>
-        <?php
-        }
-        ?>
+       <button id="<?php echo $customer['id']; ?>" data_id="<?php echo $customer['id']; ?>" class="btn btn-danger btn-sm active deleteCustomer" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>&ensp;Delete</button></td>
     </tr>
     <?php
     }
