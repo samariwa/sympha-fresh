@@ -1716,6 +1716,14 @@ $('#animalProductEditable').editableTableWidget();
   var where = 'adjusted_unit';
   $.post("../save.php",{id:id,adjustment:adjustment,where:where},
   function(result){
+    if(result == 1)
+    {
+       alert('Stock adjustment greater than the parent product quantity. Operation not complete.');
+    }
+    else if(result == 2)
+    {
+      alert('Stock adjustment greater than the child product quantity. Operation not complete.');
+    }
     location.reload(true);
   });
 });
@@ -1828,6 +1836,25 @@ $('#vehiclesEditable').editableTableWidget();
   var where = 'cook';
   $.post("../save.php",{id:id,contact:contact,staffId:staffId,nationalId:nationalId,kra:kra,nssf:nssf,nhif:nhif,salary:salary,where:where},
   function(result){});
+});
+
+$('#butcherEditable').editableTableWidget();
+$('#butcherEditable td.uneditable').on('change', function(evt, newValue) {
+return false;
+});
+$('#butcherEditable td').on('change', function(evt, newValue) {
+ var rowx = parseInt(evt.target._DT_CellIndex.row)+1;
+var id = $(`#id${rowx}`).text();
+var contact = $(`#contact${rowx}`).text();
+var staffId = $(`#staffId${rowx}`).text();
+var nationalId = $(`#nationalId${rowx}`).text();
+var kra = $(`#kra${rowx}`).text();
+var nssf = $(`#nssf${rowx}`).text();
+var nhif = $(`#nhif${rowx}`).text();
+var salary = $(`#salary${rowx}`).text();
+var where = 'butcher';
+$.post("../save.php",{id:id,contact:contact,staffId:staffId,nationalId:nationalId,kra:kra,nssf:nssf,nhif:nhif,salary:salary,where:where},
+function(result){});
 });
 
   $('#cleanersEditable').editableTableWidget();
@@ -2444,6 +2471,10 @@ function(result){
     formAjax('Cook');
        });
 
+  $(document).on('click','#addButcher',function(){
+  formAjax('Butcher');
+      });     
+
   $(document).on('click','#addCleaner',function(){
     formAjax('Cleaner');
        });
@@ -2517,6 +2548,10 @@ function(result){
 
     $('.deleteCook').click(function(){
       deleteAjax($(this).attr("id"),$(this),'cook', 'cook');
+    });
+
+    $('.deleteButcher').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'butcher', 'butcher');
     });
 
     $('.deleteOffice').click(function(){
@@ -2959,4 +2994,18 @@ function(result){
              }
           })
       }
+
+      function addTask(e)
+      {
+        if($('#taskInput').val() != '')
+        {
+          alert('hi')
+        }
+      }
+      $('#taskAddBtn').click(function(){
+        if($('#taskInput').val() != '')
+        {
+          alert('hi')
+        }
+      });
       

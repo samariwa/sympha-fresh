@@ -1,6 +1,7 @@
 <?php
  include "admin_nav.php";
  include('../queries.php');
+ $Sales = new Sales();
  ?>
 
         <!-- Begin Page Content -->
@@ -310,12 +311,9 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
   -->
     <div id="menu2" class="tab-pane fade">
-        <?php
-        $ordersrowcount = mysqli_num_rows($salesListYesterday);
-      ?>
       <div class="row">
          <div class="col-12">
-      <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Sales->ordersYesterdayCount(); ?></h6>
     </div>
       </div> 
       <table id="salesEditableYesterday" class="table table-striped table-hover table-responsive  paginate" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -343,101 +341,84 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($salesListYesterday as $row){
+        foreach($Sales->fetchOrdersYesterday() as $salesYesterday){
          $count++;
-         $id = $row['id'];
-         $order_id = $row['order_id'];
-         $name = $row['Name'];
+         $name = $salesYesterday['Name'];
          if($name == 'Unregistered Customer')
          {
-           $name = $row['new_name'];
+           $name = $salesYesterday['new_name'];
          }
-         $cust_type = $row['type'];
-        $contact = $row['Number'];
-        $product = $row['name'];
-        //MariaDB Only
-        //$selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
-        //MySQL Only
-        $selling_price = mysqli_query($connection,"SELECT sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND s.name = '$product';")or die($connection->error);
-         $row2 = mysqli_fetch_array($selling_price);
-        $price = $row2['Selling_price'];
-        $qty = $row['Quantity'];
-        $discount = $row['Discount'];
-        $newCost = $price - $discount;
-        $cost = $qty * $newCost; 
-        $debt = $row['Debt'];
-        $mpesa = $row['MPesa'];
-        $cash = $row['Cash'];
-        $fine = $row['Fine'];
-        $balance = ($mpesa + $cash) + $debt - $cost + $fine;
-        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
-        {
-          $balance = 0;
-        }
-        $delivery_date = $row['Delivery_time'];
-        $returned = $row['Returned'];
-        $banked = $row['Banked'];
-        $slip = $row['Slip_Number'];
-        $invoice = $row['Invoice_Number'];
-        $banked_by = $row['Banked_By'];
-        if ($balance == "0.0" ) {
-          $name_color = "#2ECC71";
-        }
-        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-          $name_color = "grey";
-        }
-        if ($balance > "0.0" ) {
-          $name_color = "orange";
-        }
-        if ($balance < "-100.0" ) {
-          $name_color = "red";
-        }
+         $cost = $salesYesterday['Quantity'] * ($Sales->fetchSellingPrice($salesYesterday['name']) - $salesYesterday['Discount']);
+         $balance = ($salesYesterday['MPesa'] + $salesYesterday['Cash']) + $salesYesterday['Debt'] - $salesYesterday['Quantity'] * $cost + $salesYesterday['Fine'];
+         if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+         {
+           $balance = 0;
+         }
+         if ($balance == "0.0" ) {
+           $name_color = "#2ECC71";
+         }
+         if ($balance  < "0.0" && $balance  >= "-100.0" ) {
+           $name_color = "grey";
+         }
+         if ($balance > "0.0" ) {
+           $name_color = "orange";
+         }
+         if ($balance < "-100.0" ) {
+           $name_color = "red";
+         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $salesYesterday['order_id']; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameYesterdayMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="productYesterday<?php echo $count; ?>"><?php echo $product; ?></td>
+      <td class="uneditable" id="productYesterday<?php echo $count; ?>"><?php echo $salesYesterday['name']; ?></td>
       <td class="uneditable" ></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyYesterday<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyYesterday<?php echo $count; ?>"><?php echo round($salesYesterday['Quantity'],2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="priceYesterday<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" id="priceYesterday<?php echo $salesYesterday['id']; ?>"><?php echo round($Sales->fetchSellingPrice($salesYesterday['name']),2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="costYesterday<?php echo $id; ?>"><?php echo round($cost,2); ?></td> 
+      <td class="uneditable" id="costYesterday<?php echo $salesYesterday['id']; ?>"><?php echo round($cost,2); ?></td> 
       <td class="uneditable" ></td>
-      <td class="uneditable" id="balanceYesterday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
+      <td class="uneditable" id="balanceYesterday<?php echo $salesYesterday['id']; ?>"><?php echo round($balance,2); ?></td>
        <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerYesterday" onclick="fineCustomerYesterday(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+         <button id="<?php echo $salesYesterday['id']; ?>" data_id="<?php echo $salesYesterday['id']; ?>" class="btn btn-dark btn-sm active fineCustomerYesterday" onclick="fineCustomerYesterday(<?php echo $salesYesterday['id']; ?>)"role="button" aria-pressed="true" >Fine</button>
       </td>
       <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderYesterday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderYesterday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
-          <div class="modal fade bd-example-modal-lg" id="viewOrderYesterday<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <button id="<?php echo $salesYesterday['id']; ?>" data_id="<?php echo $salesYesterday['id']; ?>" data-toggle="modal" data-target="#viewOrderYesterday<?php echo $salesYesterday['id']; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderYesterday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewOrderYesterday<?php echo $salesYesterday['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $salesYesterday['order_id']; ?> - <?php echo $salesYesterday['type']; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <form method="POST">
-                    Customer Tel: <?php echo $contact; ?>
+                    <div class="row">
+                      <div class="col-6">
+                    Customer Tel: <?php echo $salesYesterday['Number']; ?>
+                     </div>
+                     <div class="col-6">
+                    Time: <?php echo date('H:i',strtotime($salesYesterday['created_at'])); ?>
+                     </div>
+                    </div>
                     <div class="row">
                           <p class="ml-4"><b><i>Order Details</i></b></p>
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>Product: <span id="name_Yesterday<?php echo $id; ?>"><?php echo $product; ?></span></p>
+                            <p>Product: <span id="name_Yesterday<?php echo $salesYesterday['id']; ?>"><?php echo $salesYesterday['name']; ?></span></p>
                         </div>
                         <div class="col-4">
                             <label for="qtyYesterday">Quantity: </label>
-                            <input type="number" name="qtyYesterday" id="qty_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
+                            <input type="number" name="qtyYesterday" id="qty_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($salesYesterday['Quantity'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyYesterday">Returned: </label>
-                            <input type="number" name="returnedYesterday" id="returned_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
+                            <input type="number" name="returnedYesterday" id="returned_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($salesYesterday['Returned'],2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -446,14 +427,14 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($Sales->fetchSellingPrice($salesYesterday['name']),2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyYesterday">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountYesterday" id="discount_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
+                           <input type="number" name="discountYesterday" id="discount_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($salesYesterday['Discount'],2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo round($fine,2); ?></p>
+                            <p>Fine: <?php echo round($salesYesterday['Fine'],2); ?></p>
                         </div>
                         <div class="col-3">
                             <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
@@ -465,15 +446,15 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($salesYesterday['Debt'],2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaYesterday">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaYesterday" id="mpesa_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
+                           <input type="number" name="mpesaYesterday" id="mpesa_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($salesYesterday['MPesa'],2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashYesterday">Cash (Ksh.): </label>
-                           <input type="number" name="cashYesterday" id="cash_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
+                           <input type="number" name="cashYesterday" id="cash_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($salesYesterday['Cash'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
@@ -483,7 +464,7 @@
                       <div class="row">
                       <label for="dateYesterday" class="ml-5">Order Expected On: </label>
                       <div class="col-10">
-                          <input type="date" name="dateYesterday" id="date_Yesterday<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $delivery_date; ?>" required>
+                          <input type="date" name="dateYesterday" id="date_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $salesYesterday['Delivery_time']; ?>" required>
                      </div>
                       </div>
                       <br>
@@ -493,7 +474,7 @@
                       <div class="row">
                         <div class="col-10">
                         <label for="invoiceYesterday" class="ml-5">Invoice #: </label>
-                          <input type="text" name="invoiceYesterday" id="invoice_Yesterday<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                          <input type="text" name="invoiceYesterday" id="invoice_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $salesYesterday['Invoice_Number']; ?>" required>
                         </div>
                       </div>  
                       <br>
@@ -503,20 +484,20 @@
                       <div class="row">
                       <div class="col-4">
                       <label for="cashYesterday">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedYesterday" id="banked_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
+                          <input type="number" name="bankedYesterday" id="banked_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($salesYesterday['Banked'],2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashYesterday">Bank Slip #: </label>
-                          <input type="text" name="slipYesterday" id="slip_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $slip; ?>" required>
+                          <input type="text" name="slipYesterday" id="slip_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $salesYesterday['Slip_Number']; ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashYesterday">Banked By: </label>
-                          <input type="text" name="bankedByYesterday" id="banked_By_Yesterday<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $banked_by; ?>" required>
+                          <input type="text" name="bankedByYesterday" id="banked_By_Yesterday<?php echo $salesYesterday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $salesYesterday['Banked_By']; ?>" required>
                         </div>
                       </div>  
                   </div>
                   <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderYesterday(<?php echo $id; ?>)" id="<?php echo $id; ?>">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderYesterday(<?php echo $salesYesterday['id']; ?>)" id="<?php echo $salesYesterday['id']; ?>">Save Changes</button>
                   </form>
                   </div>
               </div>
@@ -527,7 +508,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
          ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $id; ?>)">Return</button>
+          <button id="<?php echo $salesYesterday['id']; ?>" data_id="<?php echo $salesYesterday['id']; ?>" class="btn btn-secondary btn-sm active deleteOrderYesterday" role="button" aria-pressed="true" onclick="deleteOrderYesterday(this,<?php echo $salesYesterday['id']; ?>)">Return</button>
           <?php
           }
           ?>  
@@ -671,10 +652,7 @@
 <h4>Orders</h4>
       <div class="row">
          <div class="col-12">
-           <?php
-           $ordersrowcount = mysqli_num_rows($salesListToday);
-           ?>
-      <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Sales->ordersTodayCount(); ?></h6>
     </div>
       </div> 
       <table id="salesEditableToday" class="table table-striped table-hover table-responsive  paginate" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -695,44 +673,19 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($salesListToday as $row){
+        foreach($Sales->fetchOrdersToday() as $salesToday){
          $count++;
-         $id = $row['id'];
-         $order_id = $row['order_id'];
-        $name = $row['Name'];
+        $name = $salesToday['Name'];
         if($name == 'Unregistered Customer')
         {
-          $name = $row['new_name'];
+          $name = $salesToday['new_name'];
         }
-        $cust_type = $row['type'];
-        $contact = $row['Number'];
-        $product = $row['name'];
-        $qty = $row['Quantity'];
-        //MariaDB Only
-       // $selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
-        //MySQL Only 
-        $selling_price = mysqli_query($connection,"SELECT sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND s.name = '$product';")or die($connection->error);
-         $row2 = mysqli_fetch_array($selling_price);
-        $price = $row2['Selling_price'];
-        $discount = $row['Discount'];
-        $newCost = $price - $discount;
-        $cost = $qty * $newCost; 
-        $debt = $row['Debt'];
-        $mpesa = $row['MPesa'];
-        $cash = $row['Cash'];
-        $fine = $row['Fine'];
-        $time = date ('H:i',strtotime($row['created_at']));
-        $balance = ($mpesa + $cash) + $debt - $cost + $fine;
+        $cost = $salesToday['Quantity'] * ($Sales->fetchSellingPrice($salesToday['name']) - $salesToday['Discount']);
+        $balance = ($salesToday['MPesa'] + $salesToday['Cash']) + $salesToday['Debt'] - $salesToday['Quantity'] * $cost + $salesToday['Fine'];
         if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
         {
           $balance = 0;
         }
-        $delivery_date = $row['Delivery_time'];
-        $returned = $row['Returned'];
-        $banked = $row['Banked'];
-        $slip = $row['Slip_Number'];
-        $invoice = $row['Invoice_Number'];
-        $banked_by = $row['Banked_By'];
         if ($balance == "0.0" ) {
           $name_color = "#2ECC71";
         }
@@ -747,20 +700,20 @@
         }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $salesToday['order_id']; ?></th>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="uneditable" id="productToday<?php echo $count; ?>"><?php echo $product; ?></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
-      <td class="uneditable" id="priceToday<?php echo $id; ?>"><?php echo round($price,2); ?></td>
-      <td class="uneditable" id="costToday<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
-      <td class="uneditable" id="balanceToday<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
+      <td class="uneditable" id="productToday<?php echo $count; ?>"><?php echo $salesToday['name']; ?></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo round($salesToday['Quantity'],2); ?></td>
+      <td class="uneditable" id="priceToday<?php echo $salesToday['id']; ?>"><?php echo round($Sales->fetchSellingPrice($salesToday['name']),2); ?></td>
+      <td class="uneditable" id="costToday<?php echo $salesToday['id']; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" id="balanceToday<?php echo $salesToday['id']; ?>"><?php echo round($balance,2); ?></td>
          <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderToday<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
-          <div class="modal fade bd-example-modal-lg" id="viewOrderToday<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <button id="<?php echo $salesToday['id']; ?>" data_id="<?php echo $salesToday['id']; ?>" data-toggle="modal" data-target="#viewOrderToday<?php echo $salesToday['id']; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewOrderToday<?php echo $salesToday['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $salesToday['order_id']; ?> - <?php echo $salesToday['type']; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -769,10 +722,10 @@
                     <form method="POST">
                     <div class="row">
                       <div class="col-6">
-                    Customer Tel: <?php echo $contact; ?>
+                    Customer Tel: <?php echo $salesToday['Number']; ?>
                      </div>
                      <div class="col-6">
-                    Time: <?php echo $time; ?>
+                    Time: <?php echo date('H:i',strtotime($salesToday['created_at'])); ?>
                      </div>
                     </div>
                     <div class="row">
@@ -780,15 +733,15 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>Product: <span id="name_Today<?php echo $id; ?>"><?php echo $product; ?></span></p>
+                            <p>Product: <span id="name_Today<?php echo $salesToday['id']; ?>"><?php echo $salesToday['name']; ?></span></p>
                         </div>
                         <div class="col-4">
                             <label for="qtyToday">Quantity: </label>
-                            <input type="number" name="qtyToday" id="qty_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
+                            <input type="number" name="qtyToday" id="qty_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($salesToday['Quantity'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyToday">Returned: </label>
-                            <input type="number" name="returnedToday" id="returned_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
+                            <input type="number" name="returnedToday" id="returned_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($salesToday['Returned'],2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -797,14 +750,14 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($Sales->fetchSellingPrice($salesToday['name']) ,2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyToday">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountToday" id="discount_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
+                           <input type="number" name="discountToday" id="discount_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($salesToday['Discount'],2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo round($fine,2); ?></p>
+                            <p>Fine: <?php echo round($salesToday['Fine'],2); ?></p>
                         </div>
                         <div class="col-3">
                             <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
@@ -816,15 +769,15 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($salesToday['Debt'],2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaToday">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaToday" id="mpesa_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
+                           <input type="number" name="mpesaToday" id="mpesa_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($salesToday['MPesa'],2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashToday">Cash (Ksh.): </label>
-                           <input type="number" name="cashToday" id="cash_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
+                           <input type="number" name="cashToday" id="cash_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($salesToday['Cash'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
@@ -834,7 +787,7 @@
                       <div class="row">
                       <label for="dateToday" class="ml-5">Order Expected On: </label>
                       <div class="col-10">
-                          <input type="date" name="dateToday" id="date_Today<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $delivery_date; ?>" required>
+                          <input type="date" name="dateToday" id="date_Today<?php echo $salesToday['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $salesToday['Delivery_time']; ?>" required>
                      </div>
                       </div>
                       <br>
@@ -844,7 +797,7 @@
                       <div class="row">
                         <div class="col-10">
                         <label for="invoiceToday" class="ml-5">Invoice #: </label>
-                          <input type="text" name="invoiceToday" id="invoice_Today<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                          <input type="text" name="invoiceToday" id="invoice_Today<?php echo $salesToday['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $salesToday['Invoice_Number']; ?>" required>
                         </div>
                       </div>  
                       <br>
@@ -854,20 +807,20 @@
                       <div class="row">
                       <div class="col-4">
                       <label for="cashToday">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedToday" id="banked_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
+                          <input type="number" name="bankedToday" id="banked_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($salesToday['Banked'],2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashToday">Bank Slip #: </label>
-                          <input type="text" name="slipToday" id="slip_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $slip; ?>" required>
+                          <input type="text" name="slipToday" id="slip_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $salesToday['Slip_Number']; ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashToday">Banked By: </label>
-                          <input type="text" name="bankedByToday" id="banked_By_Today<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $banked_by; ?>" required>
+                          <input type="text" name="bankedByToday" id="banked_By_Today<?php echo $salesToday['id']; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $salesToday['Banked_By']; ?>" required>
                         </div>
                       </div>  
                   </div>
                   <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderToday(<?php echo $id; ?>)" id="<?php echo $id; ?>">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderToday(<?php echo $salesToday['id']; ?>)" id="<?php echo $salesToday['id']; ?>">Save Changes</button>
                   </form>
                   </div>
               </div>
@@ -877,21 +830,21 @@
           <td>
           <div class="dropdown">
             <a class="btn btn-sm btn-light" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-bars"></i>&ensp;Options
+            <img src="bars-icon.svg" alt="icon">&ensp;Options
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" href="tel:<?php echo $contact; ?>"><i class="fa fa-phone"></i>&ensp;Call Customer</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAsDelivery(<?php echo $order_id; ?>); return false;">Set as delivery</a></li>
-              <li><a class="dropdown-item" href="#" onclick="sendMpesaNotification(<?php echo $order_id; ?>, <?php echo $contact; ?>); return false;" ><i class="fa fa-mobile"></i>&ensp;Push M-Pesa STK Notification</a></li>
+            <li><a class="dropdown-item" href="tel:<?php echo $salesToday['Number']; ?>"><i class="fa fa-phone"></i>&ensp;Call Customer</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAsDelivery(<?php echo $salesToday['order_id']; ?>); return false;">Set as delivery</a></li>
+              <li><a class="dropdown-item" href="#" onclick="sendMpesaNotification(<?php echo $salesToday['order_id']; ?>, <?php echo $salesToday['Number']; ?>); return false;" ><i class="fa fa-mobile"></i>&ensp;Push M-Pesa STK Notification</a></li>
               <?php
               if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
               ?>
-              <li><a class="dropdown-item" href="#" onclick="fineCustomerToday(<?php echo $id; ?>); return false;"><i class="fa fa-money-bill"></i>&ensp;Fine</a></li>
-              <li><a class="dropdown-item" href="#" onclick="deleteOrderToday(this,<?php echo $id; ?>); return false;"><i class="fa fa-arrow-left"></i>&ensp;Return</a></li>
+              <li><a class="dropdown-item" href="#" onclick="fineCustomerToday(<?php echo $salesToday['id']; ?>); return false;"><i class="fa fa-money-bill"></i>&ensp;Fine</a></li>
+              <li><a class="dropdown-item" href="#" onclick="deleteOrderToday(this,<?php echo $salesToday['id']; ?>); return false;"><i class="fa fa-arrow-left"></i>&ensp;Return</a></li>
               <?php
               }
               ?>
-              <li><a class="dropdown-item" href="#" onclick="cancelOrderToday(this,<?php echo $id; ?>); return false;"><i class="fa fa-times"></i>&ensp;Cancel</a></li>
+              <li><a class="dropdown-item" href="#" onclick="cancelOrderToday(this,<?php echo $salesToday['id']; ?>); return false;"><i class="fa fa-times"></i>&ensp;Cancel</a></li>
             </ul>
           </div>
         </td>
@@ -904,12 +857,9 @@
 </table>
     </div>
     <div id="menu4" class="tab-pane fade">
-        <?php
-        $ordersrowcount = mysqli_num_rows($salesListTomorrow);
-      ?>
       <div class="row">
          <div class="col-12">
-      <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Sales->ordersTomorrowCount(); ?></h6>
     </div>
       </div> 
       <table id="salesEditableTomorrow" class="table table-striped table-hover table-responsive  paginate" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -937,101 +887,77 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($salesListTomorrow as $row){
-         $count++;
-         $id = $row['id'];
-         $order_id = $row['order_id'];
-         $name = $row['Name'];
-         if($name == 'Unregistered Customer')
-         {
-           $name = $row['new_name'];
-         }
-         $cust_type = $row['type'];
-        $contact = $row['Number'];
-        $product = $row['name'];
-        $qty = $row['Quantity'];
-        $discount = $row['Discount'];
-        //MariaDB Only
-        //$selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
-        //MySQL Only
-        $selling_price = mysqli_query($connection,"SELECT sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND s.name = '$product';")or die($connection->error);
-         $row2 = mysqli_fetch_array($selling_price);
-        $price = $row2['Selling_price'];
-        $newCost = $price - $discount;
-        $cost = $qty * $newCost; 
-        $debt = $row['Debt'];
-        $mpesa = $row['MPesa'];
-        $cash = $row['Cash'];
-        $fine = $row['Fine'];
-        $balance = ($mpesa + $cash) + $debt - $cost + $fine;
-        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
-        {
-          $balance = 0;
-        }
-        $delivery_date = $row['Delivery_time'];
-        $returned = $row['Returned'];
-        $banked = $row['Banked'];
-        $slip = $row['Slip_Number'];
-        $invoice = $row['Invoice_Number'];
-        $banked_by = $row['Banked_By'];
-        if ($balance == "0.0" ) {
-          $name_color = "#2ECC71";
-        }
-        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-          $name_color = "grey";
-        }
-        if ($balance > "0.0" ) {
-          $name_color = "orange";
-        }
-        if ($balance < "-100.0" ) {
-          $name_color = "red";
-        }
+        foreach($Sales->fetchOrdersTomorrow() as $salesTomorrow){
+          $count++;
+          $name = $salesTomorrow['Name'];
+          if($name == 'Unregistered Customer')
+          {
+            $name = $salesTomorrow['new_name'];
+          }
+          $cost = $salesTomorrow['Quantity'] * ($Sales->fetchSellingPrice($salesTomorrow['name']) - $salesTomorrow['Discount']);
+          $balance = ($salesTomorrow['MPesa'] + $salesTomorrow['Cash']) + $salesTomorrow['Debt'] - $salesTomorrow['Quantity'] * $cost + $salesTomorrow['Fine'];
+          if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+          {
+            $balance = 0;
+          }
+          if ($balance == "0.0" ) {
+            $name_color = "#2ECC71";
+          }
+          if ($balance  < "0.0" && $balance  >= "-100.0" ) {
+            $name_color = "grey";
+          }
+          if ($balance > "0.0" ) {
+            $name_color = "orange";
+          }
+          if ($balance < "-100.0" ) {
+            $name_color = "red";
+          }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $salesTomorrow['order_id']; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameTomorrow<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="productTomorrow<?php echo $count; ?>"><?php echo $product; ?></td>
+      <td class="uneditable" id="productTomorrow<?php echo $count; ?>"><?php echo $salesTomorrow['name'];?></td>
       <td class="uneditable" ></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyTomorrow<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyTomorrow<?php echo $count; ?>"><?php echo round($salesTomorrow['Quantity'],2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="priceTomorrow<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" id="priceTomorrow<?php echo $salesTomorrow['id']; ?>"><?php echo round($Sales->fetchSellingPrice($salesTomorrow['name']),2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="costTomorrow<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" id="costTomorrow<?php echo $salesTomorrow['id']; ?>"><?php echo round($cost,2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="balanceTomorrow<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
+      <td class="uneditable" id="balanceTomorrow<?php echo $salesTomorrow['id']; ?>"><?php echo round($balance,2); ?></td>
        <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-dark btn-sm active fineCustomerTomorrow" onclick="fineCustomerTomorrow(<?php echo $id; ?>)"role="button" aria-pressed="true" >Fine</button>
+         <button id="<?php echo $id; ?>" data_id="<?php echo $salesTomorrow['id']; ?>" class="btn btn-dark btn-sm active fineCustomerTomorrow" onclick="fineCustomerTomorrow(<?php echo $salesTomorrow['id']; ?>)"role="button" aria-pressed="true" >Fine</button>
       </td>
       <td>
-         <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderTomorrow<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderTomorrow" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
-          <div class="modal fade bd-example-modal-lg" id="viewOrderTomorrow<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <button id="<?php echo $id; ?>" data_id="<?php echo $salesTomorrow['id']; ?>" data-toggle="modal" data-target="#viewOrderTomorrow<?php echo $salesTomorrow['id']; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderTomorrow" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewOrderTomorrow<?php echo $salesTomorrow['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $salesTomorrow['order_id']; ?> - <?php echo $salesTomorrow['type']; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <form method="POST">
-                    Customer Tel: <?php echo $contact; ?>
+                    Customer Tel: <?php echo $salesTomorrow['Number']; ?>
                     <div class="row">
                           <p class="ml-4"><b><i>Order Details</i></b></p>
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>Product: <span id="name_Tomorrow<?php echo $id; ?>"><?php echo $product; ?></span></p>
+                            <p>Product: <span id="name_Tomorrow<?php echo $salesTomorrow['id']; ?>"><?php echo $salesTomorrow['name']; ?></span></p>
                         </div>
                         <div class="col-4">
                             <label for="qtyTomorrow">Quantity: </label>
-                            <input type="number" name="qtyTomorrow" id="qty_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
+                            <input type="number" name="qtyTomorrow" id="qty_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($salesTomorrow['Quantity'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyTomorrow">Returned: </label>
-                            <input type="number" name="returnedTomorrow" id="returned_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
+                            <input type="number" name="returnedTomorrow" id="returned_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($salesTomorrow['Returned'],2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -1040,14 +966,14 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($Sales->fetchSellingPrice($salesTomorrow['name']),2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyTomorrow">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountTomorrow" id="discount_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
+                           <input type="number" name="discountTomorrow" id="discount_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($salesTomorrow['Discount'],2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo round($fine,2); ?></p>
+                            <p>Fine: <?php echo round($salesTomorrow['Fine'],2); ?></p>
                         </div>
                         <div class="col-3">
                             <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
@@ -1059,15 +985,15 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($salesTomorrow['Debt'],2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaTomorrow">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaTomorrow" id="mpesa_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
+                           <input type="number" name="mpesaTomorrow" id="mpesa_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($salesTomorrow['MPesa'],2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashTomorrow">Cash (Ksh.): </label>
-                           <input type="number" name="cashTomorrow" id="cash_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
+                           <input type="number" name="cashTomorrow" id="cash_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($salesTomorrow['Cash'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
@@ -1077,7 +1003,7 @@
                       <div class="row">
                       <label for="dateTomorrow" class="ml-5">Order Expected On: </label>
                       <div class="col-10">
-                          <input type="date" name="dateTomorrow" id="date_Tomorrow<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $delivery_date; ?>" required>
+                          <input type="date" name="dateTomorrow" id="date_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $salesTomorrow['Delivery_time']; ?>" required>
                      </div>
                       </div>
                       <br>
@@ -1087,7 +1013,7 @@
                       <div class="row">
                         <div class="col-10">
                         <label for="invoiceTomorrow" class="ml-5">Invoice #: </label>
-                          <input type="text" name="invoiceTomorrow" id="invoice_Tomorrow<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                          <input type="text" name="invoiceTomorrow" id="invoice_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $salesTomorrow['Invoice_Number']; ?>" required>
                         </div>
                       </div>  
                       <br>
@@ -1097,20 +1023,20 @@
                       <div class="row">
                       <div class="col-4">
                       <label for="cashTomorrow">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedTomorrow" id="banked_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
+                          <input type="number" name="bankedTomorrow" id="banked_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($salesTomorrow['Banked'],2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashTomorrow">Bank Slip #: </label>
-                          <input type="text" name="slipTomorrow" id="slip_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $slip; ?>" required>
+                          <input type="text" name="slipTomorrow" id="slip_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $salesTomorrow['Slip_Number']; ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashTomorrow">Banked By: </label>
-                          <input type="text" name="bankedByTomorrow" id="banked_By_Tomorrow<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $banked_by; ?>" required>
+                          <input type="text" name="bankedByTomorrow" id="banked_By_Tomorrow<?php echo $salesTomorrow['id']; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $salesTomorrow['Banked_By']; ?>" required>
                         </div>
                       </div>  
                   </div>
                   <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderTomorrow(<?php echo $id; ?>)" id="<?php echo $id; ?>">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderTomorrow(<?php echo $salesTomorrow['id']; ?>)" id="<?php echo $salesTomorrow['id']; ?>">Save Changes</button>
                   </form>
                   </div>
               </div>
@@ -1121,7 +1047,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
         ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $id; ?>)">Return</button>
+          <button id="<?php echo $salesTomorrow['id']; ?>" data_id="<?php echo $salesTomorrow['id']; ?>" class="btn btn-secondary btn-sm active deleteOrderTomorrow" role="button" aria-pressed="true" onclick="deleteOrderTomorrow(this,<?php echo $salesTomorrow['id']; ?>)">Return</button>
           <?php
           }
           ?>

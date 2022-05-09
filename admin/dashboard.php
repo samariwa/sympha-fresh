@@ -92,7 +92,13 @@
 
             <!-- Content Column -->
             <div class="col-lg-6 mb-4">
-
+              <?php
+              $userId = mysqli_query($connection,"SELECT id  FROM `users` WHERE email = '$logged_in_email'")or die($connection->error);
+              $value = mysqli_fetch_array($userId);
+              $userID = $value['id'];
+              $pendingTasks = mysqli_query($connection,"SELECT * FROM event where User_id = '$userID' AND DATE(start_event) = '$Today' AND status = '0'ORDER BY id")or die($connection->error);
+              $completeTasks = mysqli_query($connection,"SELECT * FROM event where User_id = '$userID' AND DATE(start_event) = '$Today' AND status = '1'ORDER BY id")or die($connection->error);
+              ?>
               <!-- Project Card Example -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -119,6 +125,42 @@
                   <div class="progress">
                     <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
+                  <div class="addTask">
+                    <input type="text" id="taskInput" placeholder="Add a Task">
+                    <button id="taskAddBtn">Add</button>
+                  </div>
+                  <ol class="notCompleted">
+                    <h4><img src="bars-icon.svg" alt="icon"> Pending</h4>
+                    <?php
+                        foreach($pendingTasks as $row)
+                        {
+                    ?>
+                    <li>
+                      <?php
+                       echo $row['title'];
+                      ?>
+                      <button><i class="fa fa-check"></i></button>
+                    </li>
+                    <?php
+                        }
+                    ?>
+                  </ol>
+                  <ol class="Completed">
+                    <h4><img src="bars-icon.svg" alt="icon"> Complete</h4>
+                    <?php
+                        foreach($completeTasks as $row)
+                        {
+                    ?>
+                    <li>
+                     <?php
+                       echo $row['title'];
+                      ?>
+                      <button><i class="fa fa-rotate-left"></i></button>
+                    </li>
+                    <?php
+                        }
+                    ?>
+                  </ol>
                 </div>
               </div>  
             </div>
@@ -162,6 +204,9 @@
             </div>
           </div>
         </div>
+
+
+        
         <!-- /.container-fluid -->
 
       </div>

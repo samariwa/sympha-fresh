@@ -891,9 +891,26 @@ elseif ($where == 'adjusted_unit') {
     $row = mysqli_query($connection,"SELECT * FROM animal_product_units WHERE id = '".$id."'")or die($connection->error);
       $result = mysqli_fetch_array($row);
       $stock_id = $result['stock_id'];
-      $unit_id = $result['animal_product_unit_id'];       
-mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity + '$adjustment' WHERE `id` = '".$unit_id."'") or die(mysqli_error($connection));
-mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity - '$adjustment' WHERE `id` = '".$stock_id."'") or die(mysqli_error($connection));
+      $unit_id = $result['animal_product_unit_id'];  
+      $row2 = mysqli_query($connection,"SELECT Quantity FROM stock WHERE id = '".$stock_id."'")or die($connection->error); 
+      $result2 = mysqli_fetch_array($row2);    
+      $stock_qty = $result2['Quantity'];
+      $row3 = mysqli_query($connection,"SELECT Quantity FROM stock WHERE id = '".$unit_id."'")or die($connection->error); 
+      $result3 = mysqli_fetch_array($row3);    
+      $unit_qty = $result3['Quantity'];
+      if(($adjustment > 0) && ($adjustment > $stock_qty))
+      {
+         echo 1;
+      }
+      elseif(($adjustment < 0) && (abs($adjustment) > $unit_qty))
+      {
+         echo 2;
+      }
+      else
+      {
+        mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity + '$adjustment' WHERE `id` = '".$unit_id."'") or die(mysqli_error($connection));
+        mysqli_query($connection,"UPDATE `stock` SET `Quantity` = Quantity - '$adjustment' WHERE `id` = '".$stock_id."'") or die(mysqli_error($connection));
+      }
 }
 elseif ($where == 'deliverer') {
   $id = $_POST['id'];
@@ -908,6 +925,18 @@ elseif ($where == 'deliverer') {
 mysqli_query($connection,"UPDATE `users` SET `number` = '".$contact."',`staffID` = '".$staffId."',`nationalID` = '".$nationalId."',`KRA` = '".$kra."',`NSSF` = '".$nssf."',`NHIF` = '".$nhif."',`salary` = '".$figure."' WHERE `id` = '".$id."'")or die($connection->error);
 }
 elseif ($where == 'cook') {
+  $id = $_POST['id'];
+    $contact = $_POST['contact'];
+    $staffId = $_POST['staffId'];
+    $nationalId = $_POST['nationalId'];
+    $salary = $_POST['salary'];
+    $kra = $_POST['kra'];
+    $nssf = $_POST['nssf'];
+    $nhif = $_POST['nhif'];
+    $figure = str_replace("Ksh. ","",$salary);
+mysqli_query($connection,"UPDATE `users` SET `number` = '".$contact."',`staffID` = '".$staffId."',`nationalID` = '".$nationalId."',`KRA` = '".$kra."',`NSSF` = '".$nssf."',`NHIF` = '".$nhif."',`salary` = '".$figure."' WHERE `id` = '".$id."'")or die($connection->error);
+}
+elseif ($where == 'butcher') {
   $id = $_POST['id'];
     $contact = $_POST['contact'];
     $staffId = $_POST['staffId'];

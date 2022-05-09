@@ -15,20 +15,20 @@
            include "dashboard_tabs.php";
           ?>
          <div class="row">
-       <div class="col-md-4">   
+       <div class="col-4">   
       <a href="stock_settings.php" class="btn btn-primary btn-md active " role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
       <?php
         $unitsrowcount = mysqli_num_rows($unitsList);
       ?>
-      <div class="col-md-4">   
+      <div class="col-4">   
       <h6 class="offset-3">Total Number: <?php echo $unitsrowcount; ?></h6>
     </div>
       <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
 
         ?>
-     <div class="col-md-4">   
+     <div class="col-4">   
       <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active offset-6" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Add Unit</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -43,7 +43,7 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="unit" id="unit" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Unit Name..." required>
+                 <input type="text" name="unit" id="unit" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Unit Name..." required>
                   </div>
                   <input type="hidden" name="where" id= "where"  value="units">
             </div>

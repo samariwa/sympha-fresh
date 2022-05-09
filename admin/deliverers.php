@@ -16,7 +16,7 @@
            include "dashboard_tabs.php";
           ?>
  <div class="row">
-  <div class="col-md-3">
+  <div class="col-3">
              <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Deliverer</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -31,25 +31,25 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="fname" id="fname" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder=" First Name..." required>
+                 <input type="text" name="fname" id="fname" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder=" First Name..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="lname" id="lname" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Last Name..." required>
+                 <input type="text" name="lname" id="lname" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Last Name..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="contact" id="contact" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Contact Number..." required>
+                 <input type="text" name="contact" id="contact" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Contact Number..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="staffId" id="staffId" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Staff Id..." required>
+                 <input type="text" name="staffId" id="staffId" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Staff Id..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="nationalId" id="nationalId" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="National Id..." required>
+                 <input type="text" name="nationalId" id="nationalId" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="National Id..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="yob" id="yob" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Year of Birth..." required>
+                 <input type="text" name="yob" id="yob" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Year of Birth..." required>
                   </div><br>
                   <div class="row">
-                 <select id="gender" name="gender" class="form-control col-md-9" required style="margin-left: 60px">
+                 <select id="gender" name="gender" class="form-control col-9" required style="margin-left: 60px">
                                     <option value="">Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -57,7 +57,7 @@
                                     </select>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="salary" id="salary" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Salary..." required>
+                 <input type="text" name="salary" id="salary" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Salary..." required>
                   </div>
                   <input type="hidden" name="where" id= "where"  value="deliverer">
             </div>
@@ -69,19 +69,19 @@
         </div>
       </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="payroll.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true" >Employee Payroll</a>
       </div>
-     <div class="col-md-2">
+     <div class="col-2">
            <?php
         $deliverersrowcount = mysqli_num_rows($deliverersStaffList);
       ?>
       <h6 class="offset-2">Total Number: <?php echo $deliverersrowcount; ?></h6>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="sickoff.php" class="btn btn-light btn-md active offset-4" role="button" aria-pressed="true" >Employee Sick Off</a>
       </div>
-    <div class="col-md-3">
+    <div class="col-3">
       <a href="leave.php" class="btn btn-primary btn-md active offset-7" role="button" aria-pressed="true" >Employee Leave</a>
       </div>
         </div><br>

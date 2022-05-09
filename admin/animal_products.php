@@ -16,13 +16,13 @@
            include "dashboard_tabs.php";
           ?>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-2">
       <a href="stock.php" class="btn btn-primary btn-md active float-left" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-      <div class="col-md-7">
+      <div class="col-7">
       <p style="text-align:center;">Increase / Decrease Animal Product Units from their respective parent units</p>
     </div>
-    <div class="col-md-3">
+    <div class="col-3">
       <a href="animal_product_units.php" class="btn btn-info btn-md active offset-2" role="button" aria-pressed="true">Animal Product Units</a>
       </div>
     </div><br>

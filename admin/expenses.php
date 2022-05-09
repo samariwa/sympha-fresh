@@ -17,7 +17,7 @@
           ?>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-4">
              <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Add Expense</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -32,7 +32,7 @@
             <div class="modal-body">
              <form method="POST">
                  <div class="row">
-                 <select type="text" name="heading" id="heading" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                 <select type="text" name="heading" id="heading" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Expense Heading...</option>
                   <?php
                     $count = 0;
@@ -47,20 +47,20 @@
                  </select>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="particular" id="particular" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Expense Particular..." required>
+                 <input type="text" name="particular" id="particular" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Expense Particular..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="party" id="party" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Party Name..." required>
+                 <input type="text" name="party" id="party" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Party Name..." required>
                   </div><br>
                   <div class="row">
-                 <input type="number" name="total" id="total" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Total Amount..." required>
+                 <input type="number" name="total" id="total" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Total Amount..." required>
                   </div><br>
                   <div class="row">
-                 <input type="number" name="paid" id="paid" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Paid Amount..." required>
+                 <input type="number" name="paid" id="paid" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Paid Amount..." required>
                   </div><br>
                   <div class="row">
                     <label for="date" style="margin-left: 60px;">Payment Date:</label>
-                 <input type="date" name="date" id="date" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required>
+                 <input type="date" name="date" id="date" class="form-control col-9" style="padding:15px;margin-left: 60px"  required>
                   </div><br>
                   <input type="hidden" name="where" id= "where"  value="expense">
             </div>
@@ -72,13 +72,13 @@
         </div>
       </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-4">
            <?php
         $expensesrowcount = mysqli_num_rows($expensesList);
       ?>
       <h6 class="offset-4">Total Number: <?php echo $expensesrowcount; ?></h6>
       </div>
-      <div class="col-md-4">
+      <div class="col-4">
        <a href="expense_heading.php" class="btn btn-primary btn-md active offset-6" role="button" aria-pressed="true" >Expense Heading</a>
        </div>
         </div><br>

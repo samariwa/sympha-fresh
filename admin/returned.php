@@ -15,10 +15,10 @@
            include "dashboard_tabs.php";
           ?>
    <div class="row">
-     <div class="col-md-4">
+     <div class="col-4">
           <a href="sales.php" class="btn btn-primary btn-md active" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
     </div>
-    <div class="col-md-8">
+    <div class="col-8">
       <?php
         $returnedrowcount = mysqli_num_rows($returnedList);
       ?>

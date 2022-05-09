@@ -17,16 +17,16 @@
           ?>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-4">
         <a href="expenses.php" class="btn btn-primary btn-md active" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
         </div>   
-        <div class="col-md-4"> 
+        <div class="col-4"> 
            <?php
         $expenseheadingrowcount = mysqli_num_rows($expenseHeadingList);
       ?>
       <h6 class="offset-3">Total Number: <?php echo $expenseheadingrowcount ?></h6>
     </div>
-    <div class="col-md-4">
+    <div class="col-4">
         <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-secondary btn-md active offset-4" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Expense Heading</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -41,7 +41,7 @@
             <div class="modal-body">
              <form method="POST">
                  <div class="row">
-                 <input type="text" name="heading" id="heading" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder=" Expense Heading..." required>
+                 <input type="text" name="heading" id="heading" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder=" Expense Heading..." required>
                   </div><br>
                   <input type="hidden" name="where" id= "where"  value="expenseHeading">
             </div>

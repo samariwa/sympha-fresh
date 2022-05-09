@@ -16,7 +16,7 @@
           ?>
 
          <div class="row">
-      <div class="col-md-6 offset-6">
+      <div class="col-6 offset-6">
         <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active float-left offset-7" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Leave Application</a>
          <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -31,7 +31,7 @@
             <div class="modal-body">
               <form method="POST">
                 <div class="row">
-                 <select type="text" name="employee" id="employee" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                 <select type="text" name="employee" id="employee" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Employee Name...</option>
                   <?php
                     $count = 0;
@@ -49,13 +49,13 @@
                   </div><br>
                  <div class="row">
                  <label for="leaveStart" style="margin-left: 60px">Start Date:</label>
-                 <input type="date" name="leaveStart" id="leaveStart" class="form-control col-md-9" required style="padding:15px;margin-left: 60px">
+                 <input type="date" name="leaveStart" id="leaveStart" class="form-control col-9" required style="padding:15px;margin-left: 60px">
                   </div><br>
                  <div class="row">
-                 <input type="number" name="leaveNumber" id= "leaveNumber"class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Number of Days...">
+                 <input type="number" name="leaveNumber" id= "leaveNumber"class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Number of Days...">
                   </div><br>
                   <div class="row">
-                 <select type="text" name="standIn" id="standIn" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                 <select type="text" name="standIn" id="standIn" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Stand In Employee Name...</option>
                   <?php             
                     $count = 0;
@@ -82,10 +82,10 @@
     </div>
     </div><br>
      <div class="row">
-        <h6 class="col-md-8 offset-2">Employee leave data for the past month. The maximum leave days annually is 21 days.</h6><br>
+        <h6 class="col-8 offset-2">Employee leave data for the past month. The maximum leave days annually is 21 days.</h6><br>
         </div>
         <div class="row">
-       <div class="col-md-8">
+       <div class="col-8">
            <?php
         $leaverowcount = mysqli_num_rows($leaveList);
       ?>

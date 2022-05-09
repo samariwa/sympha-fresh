@@ -58,10 +58,10 @@ $view = $_SESSION['role'];
             $login = $row['loginattempt'];
                if ($activity == 1) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/online.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . 
                 "</div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button id='deactivate' name='$name' class='btn btn-danger btn-sm active ' role='button' aria-pressed='true'><i class='fa fa-toggle-off'></i>&ensp;Deactivate</button>
                 </form>
@@ -74,10 +74,10 @@ $view = $_SESSION['role'];
                }
                else if (($activity == 1) && ($active == 2)) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/online.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . 
                 "</div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button id='reactivate' name='$name' class='btn btn-success btn-sm active ' role='button' aria-pressed='true'><i class='fa fa-toggle-on'></i>&ensp;Reactivate</button>
                 </form>
@@ -111,10 +111,10 @@ $view = $_SESSION['role'];
             $today = date('d.m.Y', time());
                if (($activity == 0) && ($day == $yesterday) && ($active == 1)) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: Yesterday $time 
                 </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button  class='btn btn-danger btn-sm active ' role='button' aria-pressed='true' id='deactivate' name='$name'><i class='fa fa-toggle-off'></i>&ensp;Deactivate</button>
                 </form>
@@ -127,10 +127,10 @@ $view = $_SESSION['role'];
                }
                 else if (($activity == 0) && ($day == $yesterday) && ($active == 2)) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: Yesterday $time 
                 </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button class='btn btn-success btn-sm active ' role='button' aria-pressed='true' id='reactivate' name='$name'><i class='fa fa-toggle-on'></i>&ensp;Reactivate</button>
                 </form>
@@ -143,10 +143,10 @@ $view = $_SESSION['role'];
                }
                else if(($activity == 0) && ($day == $today) && ($active == 1)){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $time
                  </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button class='btn btn-danger btn-sm active ' role='button' aria-pressed='true' id='deactivate' name='$name'><i class='fa fa-toggle-off'></i>&ensp;Deactivate</button>
                 </form>
@@ -159,10 +159,10 @@ $view = $_SESSION['role'];
                }
                 else if (($activity == 0) && ($day == $yesterday) && ($active == 2)) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $time
                  </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button class='btn btn-success btn-sm active ' role='button' aria-pressed='true' id='reactivate' name='$name'><i class='fa fa-toggle-on'></i>&ensp;Reactivate</button>
                 </form>
@@ -175,10 +175,10 @@ $view = $_SESSION['role'];
                }
                else if(($activity == 0) && ($day != $yesterday) && ($day != $today) && ($active == 1)){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $date
                 </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button class='btn btn-danger btn-sm active' role='button' aria-pressed='true' id='deactivate' name='$name'><i class='fa fa-toggle-off'></i>&ensp;Deactivate</button>
                 </form>
@@ -191,10 +191,10 @@ $view = $_SESSION['role'];
                }
                else if(($activity == 0) && ($day != $yesterday) && ($day != $today) && ($active == 2)){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $date
                 </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <form method='post'>
                 <button class='btn btn-success btn-sm active' role='button' aria-pressed='true' id='reactivate' name='$name'><i class='fa fa-toggle-on'></i>&ensp;Reactivate</button>
                 </form>
@@ -207,10 +207,10 @@ $view = $_SESSION['role'];
                }
                else if($active == 0){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='10' width='10' style='margin-top:0px;'>&emsp;" . $name . "
                 </div>
-                <div class='col-md-5'>
+                <div class='col-5'>
                 <button class='btn btn-danger btn-sm active' role='button' aria-pressed='true' disabled ><i class='fa fa-ban'></i>&ensp;Inactive Account</button>
                 </div>
                 </div><br/>"; 
@@ -245,7 +245,7 @@ $view = $_SESSION['role'];
             $lastActivity = $row['lastActivity'];
                if ($activity == 1) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/online.png' height='13' width='13' style='margin-top:0px;'>&emsp;" . $name . 
                 "</div>
                 </div><br/>";
@@ -272,19 +272,19 @@ $view = $_SESSION['role'];
             $today = date('d.m.Y', time());
                if (($activity == 0) && ($day == $yesterday)) {
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='13' width='13' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: Yesterday $time 
                 </div>
                 </div><br/>";    
                }else if(($activity == 0) && ($day == $today)){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='13' width='13' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $time
                  </div>
                  </div><br/>"; 
                }else if(($activity == 0) && ($day != $yesterday) && ($day != $today)){
                 echo "<div class='row'>
-                <div class='col-md-7'>
+                <div class='col-7'>
                 <img src='assets/img/offline.png' height='13' width='13' style='margin-top:0px;'>&emsp;" . $name . "&emsp;Last Seen: $date
                 </div>
                 </div><br/>"; 

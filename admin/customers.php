@@ -17,7 +17,7 @@
            include "dashboard_tabs.php";
           ?>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-3">
       <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Customer</a>
       <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -32,16 +32,16 @@
             <div class="modal-body">
               <form method="POST">
                 <div class="row">
-                 <input type="text" name="name" id= "name" class="form-control col-md-9" style="padding:15px;margin-left: 60px" required  placeholder="Customer Name...">
+                 <input type="text" name="name" id= "name" class="form-control col-9" style="padding:15px;margin-left: 60px" required  placeholder="Customer Name...">
                   </div><br>
                  <div class="row">
-                 <input type="text" name="location" id= "location" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Customer Location...">
+                 <input type="text" name="location" id= "location" class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Customer Location...">
                   </div><br>
                  <div class="row">
-                 <input type="text" name="number" id= "number"class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Contact Number...">
+                 <input type="text" name="number" id= "number"class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Contact Number...">
                   </div><br>
                 <!-- <div class="row">
-                 <select type="text" name="deliverer" id="deliverer" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                 <select type="text" name="deliverer" id="deliverer" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Deliverer...</option>
                   <?php
                     $count = 0;
@@ -65,10 +65,10 @@
         </div>
       </div>
        </div>
-       <div class="col-md-5">
+       <div class="col-5">
       <h6 class="offset-5">Total Number: <?php echo $Customer->activeCustomersCount(); ?></h6>
       </div>
-      <div class="col-md-4">
+      <div class="col-4">
       <a href="blacklisted.php" class="btn btn-dark btn-md active offset-5" role="button" aria-pressed="true" >Blacklisted Customers</a>
       </div>
     </div><br>

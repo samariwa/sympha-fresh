@@ -8,23 +8,23 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard <span style="font-size: 18px;">/Staff</span><span style="font-size: 15px;"> /Cleaners</span></h1>
+            <h1 class="h3 mb-0 text-gray-800">Dashboard <span style="font-size: 18px;">/Staff</span><span style="font-size: 15px;"> /Butchery</span></h1>
            <h6 class="h6 mb-0 text-gray-600 mr-3">Time: <span id="time"></span></h6>
           </div>
 
-         <?php
+          <?php
            include "dashboard_tabs.php";
           ?>
 
    <div class="row">
     <div class="col-2">
-             <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Cleaner</a>
+             <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Butcher</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalScrollableTitle">New Cleaner</h5>
+              <h5 class="modal-title" id="exampleModalScrollableTitle">New Butcher</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -60,24 +60,24 @@
                   <div class="row">
                  <input type="text" name="salary" id="salary" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Salary..." required>
                   </div>
-                  <input type="hidden" name="where" id= "where"  value="cleaner">
+                  <input type="hidden" name="where" id= "where"  value="butcher">
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" style="margin-right: 50px" id="addCleaner">Add Cleaner</button>
+              <button type="submit" class="btn btn-primary" style="margin-right: 50px" id="addButcher">Add Butcher</button>
             </form>
             </div>
           </div>
         </div>
       </div>
       </div>
-       <div class="col-3">
-      <a href="payroll.php" class="btn btn-warning btn-md active offset-1" role="button" aria-pressed="true" >Employee Payroll</a>
+      <div class="col-3">
+      <a href="payroll.php" class="btn btn-warning btn-md active " role="button" aria-pressed="true" >Employee Payroll</a>
       </div>
       <div class="col-2">
            <?php
-        $cleanersrowcount = mysqli_num_rows($cleanersStaffList);
+        $butcherrowcount = mysqli_num_rows($butcherStaffList);
       ?>
-      <h6 class="offset-1">Total Number: <?php echo $cleanersrowcount; ?></h6>
+      <h6 >Total Number: <?php echo $butcherrowcount; ?></h6>
       </div>
       <div class="col-2">
       <a href="sickoff.php" class="btn btn-light btn-md active offset-4" role="button" aria-pressed="true" >Employee Sick Off</a>
@@ -87,7 +87,7 @@
       </div>
         </div><br>
 
-        <table id="cleanersEditable" class="table table-striped table-hover paginate" style="display:block;overflow-y:scroll;text-align: center;">
+        <table id="butcherEditable" class="table table-striped table-hover paginate" style="display:block;overflow-y:scroll;text-align: center;">
   <thead class="thead-dark">
     <tr>
       <th scope="col" width="5%">#</th>
@@ -107,7 +107,7 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($cleanersStaffList as $row){
+        foreach($butcherStaffList as $row){
          $count++;
         $id = $row['id'];
         $fname = $row['firstname'];
@@ -138,7 +138,7 @@
         <td class="editable" id="nssf<?php echo $count; ?>"><?php echo $nssf; ?></td>
          <td class="editable" id="nhif<?php echo $count; ?>"><?php echo $nhif; ?></td>
        <td>
-        <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteCook" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>&ensp;Delete</button>
+        <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteButcher" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>&ensp;Delete</button>
        </td>
     </tr>
     <?php

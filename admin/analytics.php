@@ -136,10 +136,10 @@
 </div>
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Product Sales Comparison</h4>
   </div>
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Expenditure</h4>
   </div>
 </div>
@@ -149,10 +149,10 @@
 </div>
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Key Customers</h4>
   </div>
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Company Performance</h4>
   </div>
 </div>
@@ -162,28 +162,28 @@
 </div>  
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Customer Type Comparison</h4>
   </div>
  <div id="customerTypeChart" style="width: 1100px; height: 500px"></div>
 </div>
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Payment Mode</h4>
   </div>
  <div id="paymentModeChart" style="width: 1100px; height: 500px"></div>
 </div>
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Sales Performance</h4>
   </div>
  <div id="curve_chart" style="width: 1100px; height: 500px"></div>
 </div>
 <br>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-6">
     <h4>Profit / Loss</h4>
   </div>
 </div>

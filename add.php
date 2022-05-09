@@ -4,6 +4,7 @@ use PHPMailer\PHPMailer\SMTP;
 require('config.php');
 require_once 'core/init.php';
 require_once "functions.php";
+session_start();
 $where =$_POST['where'];
 $token_verification = new Token();
 if($where == 'customer' )
@@ -264,6 +265,26 @@ else if ($where == 'cook') {
       mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`Job_Id`,`staffID`,`nationalID`,`yob`,`gender`,`salary`) VALUES ('$fname','$lname','$contact','$role','$staffId','$nationalId','$yob','$gender','$salary')") or die(mysqli_error($connection));
      }
 }
+else if ($where == 'butcher') {
+  $fname = $_POST['fname'];
+  $lname = $_POST['lname'];
+  $contact = $_POST['contact'];
+  $staffId = $_POST['staffId'];
+  $nationalId = $_POST['nationalId'];
+  $yob = $_POST['yob'];
+  $gender = $_POST['gender'];
+  $salary = $_POST['salary'];
+  $role = '11';
+  $row = mysqli_query($connection,"SELECT * FROM users WHERE nationalID = '".$nationalId."' or staffID = '".$staffId."'")or die($connection->error);
+  $result = mysqli_fetch_array($row);
+  if ( $result == TRUE) {
+    echo "exists";
+  }
+  else{
+   echo "success";
+   mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`Job_Id`,`staffID`,`nationalID`,`yob`,`gender`,`salary`) VALUES ('$fname','$lname','$contact','$role','$staffId','$nationalId','$yob','$gender','$salary')") or die(mysqli_error($connection));
+  }
+}
 else if ($where == 'cleaner') {
      $fname = $_POST['fname'];
      $lname = $_POST['lname'];
@@ -334,8 +355,8 @@ elseif ($where == 'calendar') {
   $title = $_POST["title"];
   $start_event = $_POST["start"];
   $end_event = $_POST["end"];
-  $user = $_SESSION['user'];
-   $userId = mysqli_query($connection,"SELECT id  FROM `users` WHERE username = '$user'")or die($connection->error);
+  $user = $_SESSION['email'];
+   $userId = mysqli_query($connection,"SELECT id  FROM `users` WHERE email = '$user'")or die($connection->error);
    $value = mysqli_fetch_array($userId);
    $userID = $value['id'];
   mysqli_query($connection,"INSERT INTO event (title,User_id, start_event, end_event) VALUES ('$title','$userID', '$start_event', '$end_event')") or die(mysqli_error($connection));

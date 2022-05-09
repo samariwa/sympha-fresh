@@ -22,7 +22,7 @@
 
         ?>
          <div class="row">
-          <div class="col-md-2">
+          <div class="col-2">
       <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Stock</a>
       <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -37,7 +37,7 @@
             <div class="modal-body">
               <form method="POST">
                 <div class="row">
-                 <select type="text" name="category" id="category" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="category" id="category" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" selected="selected" disabled>Category...</option>
                   <?php
                     $count = 0;
@@ -51,10 +51,10 @@
                  </select>
                   </div><br>
                  <div class="row">
-                 <input type="text" name="name" id="name" class="form-control col-md-9" style="padding:15px;margin-left: 60px" required  placeholder="Stock Name...">
+                 <input type="text" name="name" id="name" class="form-control col-9" style="padding:15px;margin-left: 60px" required  placeholder="Stock Name...">
                   </div><br>
                   <div class="row">
-                 <select type="text" name="unit" id="unit" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="unit" id="unit" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" selected="selected" disabled>Unit...</option>
                   <?php
                     $count = 0;
@@ -70,8 +70,8 @@
                  </select>
                  </div><br>
                  <div class="row">
-                 <input type="number" name="contains" id="contains" class="form-control col-md-4 " style="padding:15px;margin-left: 60px" placeholder="Contains..." oninput="replenishDisable()">
-                 <select type="text" name="subunit" id="subunit" class="form-control col-md-4 " style="padding-right:15px;padding-left:15px;margin-left: 40px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur(); replenishDisable();'>
+                 <input type="number" name="contains" id="contains" class="form-control col-4 " style="padding:15px;margin-left: 60px" placeholder="Contains..." oninput="replenishDisable()">
+                 <select type="text" name="subunit" id="subunit" class="form-control col-4 " style="padding-right:15px;padding-left:15px;margin-left: 40px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur(); replenishDisable();'>
                   <option value="" selected="selected" disabled>Sub-Units...</option>
                   <?php
                     $count = 0;
@@ -87,10 +87,10 @@
                  </select>
                   </div><br>
                   <div class="row">
-                 <input type="number" name="replenish" id="replenish" class="form-control col-md-9"  style="padding:15px;margin-left: 60px" placeholder="Sub-Unit Replenish Quantity..." oninput="subunitsDisable()">
+                 <input type="number" name="replenish" id="replenish" class="form-control col-9"  style="padding:15px;margin-left: 60px" placeholder="Sub-Unit Replenish Quantity..." oninput="subunitsDisable()">
                   </div><br>
                   <div class="row">
-                 <select type="text" name="supplier" id="supplier" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="supplier" id="supplier" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                    <option value="" selected="selected" disabled>Supplier...</option>
                   <?php
                     $count = 0;
@@ -111,23 +111,23 @@
                   </div><br>
                   <div class="row">
                     <label for="received" style="margin-left: 60px;">Date Received:</label>
-                 <input type="date" name="received" id="received" class="form-control col-md-9" required  style="padding:15px;margin-left: 60px" >
+                 <input type="date" name="received" id="received" class="form-control col-9" required  style="padding:15px;margin-left: 60px" >
                   </div><br>
                   <div class="row">
                     <label for="expiry" style="margin-left: 60px;">Expiration Date:</label>
-                 <input type="date" name="expiry" id="expiry" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" >
+                 <input type="date" name="expiry" id="expiry" class="form-control col-9" required style="padding:15px;margin-left: 60px" >
                   </div><br>
                  <div class="row">
-                 <input type="number" name="bp" id="bp" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Buying Price...">
+                 <input type="number" name="bp" id="bp" class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Buying Price...">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="sp" id="sp" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Selling Price...">
+                 <input type="number" name="sp" id="sp" class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Selling Price...">
                   </div><br>
                  <div class="row">
-                 <input type="number" name="qty" id="qty" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Quantity...">
+                 <input type="number" name="qty" id="qty" class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Quantity...">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="restock" id="restock" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" placeholder="Restock Level...">
+                 <input type="number" name="restock" id="restock" class="form-control col-9" required style="padding:15px;margin-left: 60px" placeholder="Restock Level...">
                   </div>
                   <input type="hidden" name="where" id="where"  value="stock">
             </div>
@@ -139,19 +139,19 @@
         </div>
       </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="shelf_life.php" class="btn btn-info btn-md active" role="button" aria-pressed="true">Stock Shelf Life</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a href="animal_products.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Animal Products</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a href="damaged.php" class="btn btn-secondary btn-md active" role="button" aria-pressed="true" >Damaged Stock</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a href="valuation.php" class="btn btn-warning btn-md active" role="button" aria-pressed="true" >Stock Valuation</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a href="categories.php" class="btn btn-primary btn-md active" role="button" aria-pressed="true">Stock Categories</a>
     </div>
     </div><br>  
@@ -159,16 +159,16 @@
           }else{
             ?>
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-3">
       <a href="shelf_life.php" class="btn btn-info btn-md active  ml-2" role="button" aria-pressed="true">Stock Shelf Life</a>
     </div>
-    <div class="col-md-3">
+    <div class="col-3">
       <a href="damaged.php" class="btn btn-light btn-md active" role="button" aria-pressed="true" >Damaged Stock</a>
       </div>
-      <div class="col-md-3">
+      <div class="col-3">
       <a href="animal_products.php" class="btn btn-secondary btn-md active offset-4" role="button" aria-pressed="true" >Animal Products</a>
       </div>
-    <div class="col-md-3">
+    <div class="col-3">
       <a href="categories.php" class="btn btn-primary btn-md active offset-4" role="button" aria-pressed="true">Stock Categories</a>
     </div>
     </div><br> 
@@ -258,20 +258,20 @@
               <form method="POST">
                  <div class="row">
                   <label for="expiry" style="margin-left: 60px;">Date Received:</label>
-                 <input type="date" name="received" id="received<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Date Received..." required>
+                 <input type="date" name="received" id="received<?php echo $stock['id']; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Date Received..." required>
                   </div><br>
                   <div class="row">
-                 <input type="number" name="qty" id="quantity<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Quantity Purchased..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
+                 <input type="number" name="qty" id="quantity<?php echo $stock['id']; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Quantity Purchased..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="bp" id="bp<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Buying Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
+                 <input type="number" name="bp" id="bp<?php echo $stock['id']; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Buying Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
-                 <input type="number" name="sp" id="sp<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Selling Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
+                 <input type="number" name="sp" id="sp<?php echo $stock['id']; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Selling Price..." required min="0.01" step="0.01" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
                     <label for="expiry" style="margin-left: 60px;">Expiration Date:</label>
-                 <input type="date" name="expiry" id="expiry<?php echo $stock['id']; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Expiry Date..." required>
+                 <input type="date" name="expiry" id="expiry<?php echo $stock['id']; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Expiry Date..." required>
                   </div>
             </div>
              <div class="modal-footer">

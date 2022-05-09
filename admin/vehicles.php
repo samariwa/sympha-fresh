@@ -17,7 +17,7 @@
           ?>
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-4">
              <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;New Vehicle</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -32,10 +32,10 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="type" id="type" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Vehicle Type..." required>
+                 <input type="text" name="type" id="type" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Vehicle Type..." required>
                   </div><br>
                   <div class="row">
-                 <select type="text" name="driver" id="driver" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                 <select type="text" name="driver" id="driver" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Vehicle Driver...</option>
                   <?php
                     foreach($deliverersStaffList as $row){           
@@ -48,10 +48,10 @@
                  </select>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="reg" id="reg" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Registration Number..." required>
+                 <input type="text" name="reg" id="reg" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Registration Number..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="route" id="route" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Vehicle Route..." required>
+                 <input type="text" name="route" id="route" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Vehicle Route..." required>
                   </div>
                   <input type="hidden" name="where" id= "where"  value="vehicles">
             </div>
@@ -63,7 +63,7 @@
         </div>
       </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-8">
            <?php
         $vehiclesrowcount = mysqli_num_rows($vehicleList);
       ?>
@@ -125,7 +125,7 @@
                  </div>
                  <div class="row"  style="padding:15px;margin-left: 60px;margin-top: -30px">
                   <?php echo $Driver ?>
-                     <select type="text" name="driver" id="driver<?php echo $id?>" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 10px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                     <select type="text" name="driver" id="driver<?php echo $id?>" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 10px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="<?php echo $Driver_id ?>" selected="selected" disabled>Change Vehicle Driver...</option>
                   <?php
                     foreach($deliverersStaffList as $row){
@@ -203,14 +203,14 @@
               <form method="POST">
                  <div class="row">
                   <label for="now" style="margin-left: 60px">Service Date...</label>
-                 <input type="date" name="now" id="now<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required>
+                 <input type="date" name="now" id="now<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="note" id="note<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Service Notes..." >
+                 <input type="text" name="note" id="note<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Service Notes..." >
                   </div><br>
                   <div class="row">
                      <label for="next" style="margin-left: 60px">Next Service Date...</label>
-                 <input type="date" name="next" id="next<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required>
+                 <input type="date" name="next" id="next<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required>
                   </div>
             </div>
             <div class="modal-footer">
@@ -236,14 +236,14 @@
               <form method="POST">
                  <div class="row">
                   <label for="now" style="margin-left: 60px">Inspection Date...</label>
-                 <input type="date" name="now" id="Now<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required>
+                 <input type="date" name="now" id="Now<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="note" id="Note<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Inspection Notes..." >
+                 <input type="text" name="note" id="Note<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Inspection Notes..." >
                   </div><br>
                   <div class="row">
                      <label for="next" style="margin-left: 60px">Next Inspection Date...</label>
-                 <input type="date" name="next" id="Next<?php echo $id?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required>
+                 <input type="date" name="next" id="Next<?php echo $id?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required>
                   </div>
             </div>
             <div class="modal-footer">

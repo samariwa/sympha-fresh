@@ -17,7 +17,7 @@
           ?>
           
   <div class="row">
-    <div class="col-md-2 offset-5">
+    <div class="col-2 offset-5">
            <?php
         $liabilitiesrowcount = mysqli_num_rows($liabilitiesList);
       ?>

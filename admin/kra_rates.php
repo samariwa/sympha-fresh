@@ -15,10 +15,10 @@
           ?>
 
          <div class="row">
-          <div class="col-md-2">
+          <div class="col-2">
             <a href="payroll.php" class="btn btn-primary btn-md active float-left ml-3" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
             </div>
-            <div class="col-md-8">
+            <div class="col-8">
               <h6 class="offset-4">Latest PAYE Rates Issued.</h6>
             </div>
     </div><br>
@@ -54,7 +54,7 @@
   </tbody>
 </table><br>
         <div class="row">
-          <div class="col-md-12 offset-3">
+          <div class="col-12 offset-3">
            <p>For more information or queries, <a href="https://www.kra.go.ke/en/individual/filing-paying/types-of-taxes/paye">Visit KRA Page <i class="fa fa-globe"></i></a></p>
          </div>
         </div>

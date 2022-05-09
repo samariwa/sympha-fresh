@@ -224,7 +224,7 @@
           <div class="input-group-prepend" >
            <span class="input-group-text" id="inputGroup-sizing-default">Customer #:</span>
            </div>
-         <input type="text" class="form-control col-md-6" required aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;" placeholder='Search...&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&#xf002;' name="customerSearch" id="customerSearch">
+         <input type="text" class="form-control col-6" required aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;" placeholder='Search...&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&#xf002;' name="customerSearch" id="customerSearch">
        </div>
        <div class="list-group" id="customer_results" style="margin-top: -5px;margin-left: 350px;">
 
@@ -236,11 +236,11 @@
           <div class="input-group-prepend" >
            <span class="input-group-text" id="inputGroup-sizing-default">Product:</span>
            </div>
-         <input type="text" class="form-control col-md-6" required aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;" placeholder='Search...&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&#xf002;' name="productSearch" id="productSearch">
+         <input type="text" class="form-control col-6" required aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;" placeholder='Search...&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&#xf002;' name="productSearch" id="productSearch">
          <div class="input-group-prepend"style="margin-left: 30px;" >
            <span class="input-group-text" id="inputGroup-sizing-default">Quantity:</span>
            </div>
-         <input type="number" class="form-control col-md-1" name="orderQty" id="orderQty" min="1" oninput="validity.valid||(value='');">
+         <input type="number" class="form-control col-1" name="orderQty" id="orderQty" min="1" oninput="validity.valid||(value='');">
        </div>
        <div class="list-group" id="product_results" style="margin-top: -5px;margin-left: 350px;">
          
@@ -248,7 +248,7 @@
         </div><br>
 
         <div class="row">
-          <button type="button" class="btn btn-success col-md-4 " style="margin-left: 320px"><i class="fa fa-cart-plus" id="addToCart"></i>&emsp;Add to Cart</button>
+          <button type="button" class="btn btn-success col-4 " style="margin-left: 320px"><i class="fa fa-cart-plus" id="addToCart"></i>&emsp;Add to Cart</button>
         </div><br>
         </form>
 -->

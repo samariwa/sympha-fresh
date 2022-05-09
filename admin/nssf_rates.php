@@ -15,10 +15,10 @@
           ?>
 
          <div class="row">
-          <div class="col-md-2">
+          <div class="col-2">
             <a href="payroll.php" class="btn btn-primary btn-md active float-left ml-3" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
             </div>
-            <div class="col-md-8">
+            <div class="col-8">
               <h6 class="offset-4">Latest NSSF Deductable Rates Issued.</h6>
             </div>
     </div><br>
@@ -89,7 +89,7 @@
   </tbody>
 </table><br>
         <div class="row">
-          <div class="col-md-10 offset-1">
+          <div class="col-10 offset-1">
            <p>According to the new NSSF Act, employer will contribute 50% and employee will contribute the other 50% of the total contribution expected based on the income of employee. For more information or queries, <a href="https://www.nssf.or.ke/downloads">Visit NSSF Page <i class="fa fa-globe"></i></a></p>
          </div>
         </div>

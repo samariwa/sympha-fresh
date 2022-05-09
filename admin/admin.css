@@ -29,3 +29,68 @@
 	font-family: sans-serif;
 }
 
+.addTask{
+	width:100%;
+	display: flex;
+	color: #858796;
+	padding: 10px 0;
+}
+
+.addTask > input[type="text"]{
+    border:none;
+	width: 100%;
+	border-bottom: 2px grey solid;
+	background: none;
+	padding: 10px;
+	outline: none;
+}
+
+.addTask button{
+	margin: 0 10px;
+	background: #fff;
+	color:#858796;
+	border:2px grey solid;
+	border-radius: 10px;
+	text-transform: uppercase;
+	padding: 5px;
+	outline: none;
+	cursor: pointer;
+}
+
+.notCompleted .Completed{
+	margin: 5px 0;
+	padding: 20px;
+}
+h4{
+    text-align:center;
+	color:#858796;
+}
+ol{
+	List-style: none;
+}
+ol li{
+	margin: 5px 0;
+	padding: 10px 20px;
+	background:#e96969bb;
+	border-radius: 15px;
+	width:100%;
+	color:#fff;
+}
+ol.Completed li{
+	background:#00ff62;
+	color:#858796;
+}
+
+li button{
+	float: right;
+	padding: 5px;
+	line-height: 1px;
+    margin-right: 15px;
+	background:none;
+	border:none;
+	color:#fff;
+}
+
+.Completed li button{
+	color:#858796;
+}

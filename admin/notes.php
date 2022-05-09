@@ -16,7 +16,7 @@
           ?>
          <br>
          <div class="row">
-          <div class="col-md-2 offset-10">
+          <div class="col-2 offset-10">
          <button data-toggle="modal" data-target="#exampleModalScrollable" type="button" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Place Note</button>
          <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -30,10 +30,10 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="title" id="title" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Note Title..." required>
+                 <input type="text" name="title" id="title" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Note Title..." required>
                   </div><br>
                    <div class="row">
-                 <textarea type="text" name="body" id="body" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Message..." required></textarea>
+                 <textarea type="text" name="body" id="body" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Message..." required></textarea>
                   </div><br>
                   <div class="row">
                     <p style="margin-left: 100px;">Accessibility:</p>
@@ -94,9 +94,9 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="title" id="title<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" value="<?php echo $title ?>" required>
+                 <input type="text" name="title" id="title<?php echo $id; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" value="<?php echo $title ?>" required>
                   </div><br>
-                   <textarea type="text" name="body" id="body<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required><?php echo $note ?></textarea>
+                   <textarea type="text" name="body" id="body<?php echo $id; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required><?php echo $note ?></textarea>
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary editPublicNote" style="margin-right: 50px" id="<?php echo $id; ?>">Done</button>
@@ -156,9 +156,9 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="title" id="title<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px" value="<?php echo $title ?>" required>
+                 <input type="text" name="title" id="title<?php echo $id; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px" value="<?php echo $title ?>" required>
                   </div><br>
-                   <textarea type="text" name="body" id="body<?php echo $id; ?>" class="form-control col-md-9" style="padding:15px;margin-left: 60px"  required><?php echo $note ?></textarea>
+                   <textarea type="text" name="body" id="body<?php echo $id; ?>" class="form-control col-9" style="padding:15px;margin-left: 60px"  required><?php echo $note ?></textarea>
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary editPrivateNote" style="margin-right: 50px" id="<?php echo $id; ?>">Done</button>

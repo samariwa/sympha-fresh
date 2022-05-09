@@ -152,6 +152,26 @@ else if ($where == 'cook') {
       mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`Job_Id`,`staffID`,`nationalID`,`yob`,`gender`,`salary`) VALUES ('$fname','$lname','$contact','$role','$staffId','$nationalId','$yob','$gender','$salary')") or die(mysqli_error($connection));
      }
 }
+else if ($where == 'butcher') {
+  $fname = $_POST['fname'];
+  $lname = $_POST['lname'];
+  $contact = $_POST['contact'];
+  $staffId = $_POST['staffId'];
+  $nationalId = $_POST['nationalId'];
+  $yob = $_POST['yob'];
+  $gender = $_POST['gender'];
+  $salary = $_POST['salary'];
+  $role = '11';
+  $row = mysqli_query($connection,"SELECT * FROM users WHERE nationalID = '".$nationalId."' or staffID = '".$staffId."'")or die($connection->error);
+  $result = mysqli_fetch_array($row);
+  if ( $result == TRUE) {
+    echo "exists";
+  }
+  else{
+   echo "success";
+   mysqli_query($connection,"INSERT INTO `users` (`firstname`,`lastname`,`number`,`Job_Id`,`staffID`,`nationalID`,`yob`,`gender`,`salary`) VALUES ('$fname','$lname','$contact','$role','$staffId','$nationalId','$yob','$gender','$salary')") or die(mysqli_error($connection));
+  }
+}
 else if ($where == 'cleaner') {
      $fname = $_POST['fname'];
      $lname = $_POST['lname'];

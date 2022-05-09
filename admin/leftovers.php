@@ -15,10 +15,10 @@
            include "dashboard_tabs.php";
           ?>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-2">
       <a href="stock.php" class="btn btn-primary btn-md active float-left" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-      <div class="col-md-10">
+      <div class="col-10">
       <p class="offset-3">Cereal Leftovers from today's orders.</p>
     </div>
     </div><br>

@@ -33,7 +33,7 @@
         ?>
                         <div class="row">
                     <!-- Column -->
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                    <div class="col-lg-4 col-xlg-3 col-5">
                         <div class="card">
                             <div class="card-body">
                                 <center class="m-t-30"> <img src="assets/img/avatar.jpg" class="rounded-circle" width="150" />
@@ -54,26 +54,26 @@
                             <div class="card-body">
                                 <form class="form-horizontal form-material">
                                     <div class="form-group">
-                                        <label class="col-md-12">Username</label>
-                                        <div class="col-md-12">
+                                        <label class="col-12">Username</label>
+                                        <div class="col-12">
                                             <input type="text" value="<?php echo $user; ?>" class="form-control form-control-line" name="username" id="username" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="example-email" class="col-md-12">Email</label>
-                                        <div class="col-md-12">
+                                        <label for="example-email" class="col-12">Email</label>
+                                        <div class="col-12">
                                             <input type="email" value="<?php echo $email; ?>" class="form-control form-control-line" name="email" id="email" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-12">Phone No</label>
-                                        <div class="col-md-12">
+                                        <label class="col-12">Phone No</label>
+                                        <div class="col-12">
                                             <input type="text" value="<?php echo $number; ?>" class="form-control form-control-line" name="number" id="number" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-12">National Id</label>
-                                        <div class="col-md-12">
+                                        <label class="col-12">National Id</label>
+                                        <div class="col-12">
                                            <input type="text" value="<?php echo $nationalid; ?>" class="form-control form-control-line" name="nationalid" id="nationalid" required>
                                          </div>
                                     </div><br>

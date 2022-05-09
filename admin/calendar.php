@@ -76,14 +76,15 @@ setTime();
      var title = prompt("Enter Event Title");
      if(title)
      {
-      var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-      var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+      var start = moment(start).format('YYYY/MM/DD HH:mm:ss');
+      var end = moment(end).format('YYYY/MM/DD HH:mm:ss');
       var where = 'calendar';
+      
       $.ajax({
-       url:"add.php",
+       url:"../add.php",
        type:"POST",
        data:{title:title, start:start, end:end, where:where},
-       success:function()
+       success:function(result)
        {
         calendar.fullCalendar('refetchEvents');
         alert("Added Successfully");
@@ -94,13 +95,13 @@ setTime();
     editable:true,
     eventResize:function(event)
     {
-     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+     var start = moment(event.start).format('YYYY/MM/DD HH:mm:ss');
+     var end = moment(event.end).format('YYYY/MM/DD HH:mm:ss');
      var title = event.title;
      var id = event.id;
      var where = 'calendar';
      $.ajax({
-      url:"save.php",
+      url:"../save.php",
       type:"POST",
       data:{title:title, start:start, end:end, id:id, where:where},
       success:function(){
@@ -112,13 +113,13 @@ setTime();
 
     eventDrop:function(event)
     {
-     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+     var start = moment(event.start).format('YYYY/MM/DD HH:mm:ss');
+     var end = moment(event.start).format('YYYY/MM/DD HH:mm:ss');
      var title = event.title;
      var id = event.id;
      var where = 'calendar';
      $.ajax({
-      url:"save.php",
+      url:"../save.php",
       type:"POST",
       data:{title:title, start:start, end:end, id:id, where:where},
       success:function()
@@ -136,7 +137,7 @@ setTime();
       var id = event.id;
       var where = 'calendar';
       $.ajax({
-       url:"delete.php",
+       url:"../delete.php",
        type:"POST",
        data:{id:id, where:where},
        success:function()

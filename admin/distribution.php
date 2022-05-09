@@ -20,13 +20,13 @@
          </div
     </div><br><br>
      <div class="row">
-      <div class="col-md-10 offset-1">
-        <h6 class="col-md-10 offset-1">To print tomorrow's distribution list, enter deliverer's name and click the 'Print button'. Otherwise include point in time from which the distribution list should be printed.</h6><br>
+      <div class="col-10 offset-1">
+        <h6 class="col-10 offset-1">To print tomorrow's distribution list, enter deliverer's name and click the 'Print button'. Otherwise include point in time from which the distribution list should be printed.</h6><br>
         </div>
      </div>
         <div class="row">
-          <div class="col-md-7 offset-2">
-                 <select type="text" name="deliverer" id="deliverer" class="form-control col-md-12 " style="padding-right:15px;padding-left:15px;" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+          <div class="col-7 offset-2">
+                 <select type="text" name="deliverer" id="deliverer" class="form-control col-12 " style="padding-right:15px;padding-left:15px;" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
                   <option value="" selected="selected" disabled>Deliverer...</option>
                   <?php
                     $count = 0;
@@ -43,18 +43,18 @@
                   </div><br><br>
 
         <div class="row">
-          <div class="col-md-7 offset-2">
+          <div class="col-7 offset-2">
            <div class="input-group mb-3">
           <div class="input-group-prepend" >
            <span class="input-group-text" id="inputGroup-sizing-default">Point in Time:</span>
            </div>
-         <input type="text" class="form-control col-md-12" aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;"  name="time" id="distributionTime">
+         <input type="text" class="form-control col-12" aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;"  name="time" id="distributionTime">
        </div>
        </div>
         </div><br>
 
         <div class="row">
-          <div class="col-md-2 offset-5">
+          <div class="col-2 offset-5">
            <button class="btn btn-light btn-md active printDistribution" role="button" aria-pressed="true"><i class="fa fa-print"></i>&ensp;Print</button>
          </div>
         </div><br><br>

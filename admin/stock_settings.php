@@ -16,10 +16,10 @@
            include "dashboard_tabs.php";
           ?>
          <div class="row">
-       <div class="col-md-5">   
+       <div class="col-5">   
       <a href="stock.php" class="btn btn-primary btn-md active " role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-       <div class="col-md-7">
+       <div class="col-7">
        <a href="inventory_units.php" class="btn btn-secondary btn-md active offset-9" role="button" aria-pressed="true" >Inventory Units</a>
        </div>
     </div>
@@ -77,11 +77,11 @@
               <form method="POST">
                 <div class="row">
                   <label for="stock" style="margin-left: 60px;">Stock Name:</label>
-                 <input type="text" name="stock" id="stock<?php echo $id?>" class="form-control col-md-9 " style="padding:15px;margin-left: 60px" value="<?php echo $name ?>" disabled required min="0" step="1" oninput="validity.valid||(value='');">
+                 <input type="text" name="stock" id="stock<?php echo $id?>" class="form-control col-9 " style="padding:15px;margin-left: 60px" value="<?php echo $name ?>" disabled required min="0" step="1" oninput="validity.valid||(value='');">
                   </div><br>
                  <div class="row">
                   <label for="unit" style="margin-left: 60px;">Unit:</label>
-                 <select type="text" name="unit" id="unit<?php echo $id?>" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="unit" id="unit<?php echo $id?>" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <?php
                     $count = 0;
                     foreach($unitsList as $row){
@@ -104,11 +104,11 @@
                  </div><br>
                   <div class="row">
                   <label for="contains" style="margin-left: 60px;">Contains:</label>
-                 <input type="number" name="contains" id="contains<?php echo $id?>" class="form-control col-md-9 " style="padding:15px;margin-left: 60px" value="<?php echo $contains ?>" required min="0" step="1" oninput="validity.valid||(value='');">
+                 <input type="number" name="contains" id="contains<?php echo $id?>" class="form-control col-9 " style="padding:15px;margin-left: 60px" value="<?php echo $contains ?>" required min="0" step="1" oninput="validity.valid||(value='');">
                   </div><br>
                   <div class="row">
                     <label for="subunit" style="margin-left: 60px;">Sub-Units:</label>
-                 <select type="text" name="subunit" id="subunit<?php echo $id?>" class="form-control col-md-9 " style="padding-right:15px;padding-left:15px;margin-left: 60px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="subunit" id="subunit<?php echo $id?>" class="form-control col-9 " style="padding-right:15px;padding-left:15px;margin-left: 60px" onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <?php
                     $count = 0;
                     foreach($unitsList as $row){
@@ -131,11 +131,11 @@
                   </div><br>
                   <div class="row">
                     <label for="replenish" style="margin-left: 60px;">Sub-Unit Replenish Quantity:</label>
-                 <input type="number" name="replenish" id="replenish<?php echo $id?>" class="form-control col-md-9"  style="padding:15px;margin-left: 60px" placeholder="Sub-Unit Replenish Quantity..." required min="0" step="1" oninput="validity.valid||(value='');" value="<?php echo $replenish_qty ?>">
+                 <input type="number" name="replenish" id="replenish<?php echo $id?>" class="form-control col-9"  style="padding:15px;margin-left: 60px" placeholder="Sub-Unit Replenish Quantity..." required min="0" step="1" oninput="validity.valid||(value='');" value="<?php echo $replenish_qty ?>">
                   </div><br>
                   <div class="row">
                     <label for="restock" style="margin-left: 60px;">Restock/Replenish Level:</label>
-                 <input type="number" name="restock" id="restock<?php echo $id?>" class="form-control col-md-9" required style="padding:15px;margin-left: 60px" required min="1" step="1" oninput="validity.valid||(value='');"value="<?php echo $restock_level; ?>">
+                 <input type="number" name="restock" id="restock<?php echo $id?>" class="form-control col-9" required style="padding:15px;margin-left: 60px" required min="1" step="1" oninput="validity.valid||(value='');"value="<?php echo $restock_level; ?>">
                   </div>
             </div>
              <div class="modal-footer">

@@ -18,7 +18,7 @@
  
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-4">
              <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active" role="button" aria-pressed="true" ><i class="fa fa-plus-circle"></i>&ensp;New Supplier</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -33,10 +33,10 @@
             <div class="modal-body">
               <form method="POST">
                  <div class="row">
-                 <input type="text" name="name" id="name" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Supplier Name..." required>
+                 <input type="text" name="name" id="name" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Supplier Name..." required>
                   </div><br>
                   <div class="row">
-                 <input type="text" name="contact" id="contact" class="form-control col-md-9" style="padding:15px;margin-left: 60px" placeholder="Supplier Contact..."required>
+                 <input type="text" name="contact" id="contact" class="form-control col-9" style="padding:15px;margin-left: 60px" placeholder="Supplier Contact..."required>
                   </div>
                   <input type="hidden" name="where" id="where"  value="supplier">
             </div>
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-8">
            <?php
         $suppliersrowcount = mysqli_num_rows($suppliersList);
       ?>

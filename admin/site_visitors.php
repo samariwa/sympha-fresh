@@ -16,14 +16,14 @@
 
          
      <div class="row">
-        <h5 class="col-md-6 offset-4">Traffic flow per page</h5><br>
+        <h5 class="col-6 offset-4">Traffic flow per page</h5><br>
      </div>
      <?php
      $total_website_views = total_views($connection); // Returns total website views
      echo "<strong>Total Website Views:</strong> " . $total_website_views;
      ?>
      <div class="row">
-        <h6 class="col-md-6 offset-2" style="text-align:center">For more traffic insight, visit <a href="https://dashboard.tawk.to/#/dashboard/6044ce9b385de407571d74b6">Tawk.to</a></h6><br>
+        <h6 class="col-6 offset-2" style="text-align:center">For more traffic insight, visit <a href="https://dashboard.tawk.to/#/dashboard/6044ce9b385de407571d74b6">Tawk.to</a></h6><br>
      </div>
        <br>
 

@@ -1,6 +1,7 @@
 <?php
  include "admin_nav.php";
 include('../queries.php');
+$Customer = new Customer();
  ?> 
 
         <!-- Begin Page Content -->
@@ -18,11 +19,8 @@ include('../queries.php');
       <div class="col-md-4">
       <a href="customers.php" class="btn btn-primary btn-md active" role="button" aria-pressed="true" ><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-      <?php
-        $blacklistedrowcount = mysqli_num_rows($blacklistedList);
-      ?>
       <div class="col-md-8">
-      <h6 class="offset-2">Total Number: <?php echo $blacklistedrowcount; ?></h6>
+      <h6 class="offset-2">Total Number: <?php echo $Customer->blacklistedCustomersCount(); ?></h6>
     </div>
     </div><br>
     <table id="blacklistEditable" class="table table-striped table-hover paginate" style="display:block;overflow-y:scroll;text-align: center;">
@@ -35,7 +33,6 @@ include('../queries.php');
       <th scope="col" width="10%">Deliverer</th>
        <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
-
         ?>
       <th scope="col" width="10%">Balance</th>
       <th scope="col"width="15%"></th>
@@ -47,26 +44,19 @@ include('../queries.php');
   <tbody >
     <?php
         $count = 0;    
-        foreach($blacklistedList as $row){
+        foreach($Customer->fetchBlacklistedCustomers() as $customer){
          $count++;
-          $id = $row['id'];
-         $name = $row['Name'];
-        $location = $row['Location'];
-        $number = $row['Number'];
-        $deliverer = $row['Deliverer'];
-        $balance = $row['Balance'];
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $id; ?></th>
-      <td class="uneditable" id="name<?php echo $count; ?>"><?php echo $name; ?></td>
-      <td class="editable" id="location<?php echo $count; ?>"><?php echo $location; ?></td>
-      <td class="editable" id="number<?php echo $count; ?>"><?php echo $number; ?></td>
-      <td class="uneditable" id="deliverer<?php echo $count; ?>"><?php echo $deliverer; ?></td>
+      <th scope="row" class="uneditable" id="id<?php echo $count; ?>"><?php echo $customer['id']; ?></th>
+      <td class="uneditable" id="name<?php echo $count; ?>"><?php echo $customer['Name']; ?></td>
+      <td class="editable" id="location<?php echo $count; ?>"><?php echo $customer['Location']; ?></td>
+      <td class="editable" id="number<?php echo $count; ?>"><?php echo $customer['Number']; ?></td>
+      <td class="uneditable" id="deliverer<?php echo $count; ?>"><?php echo $customer['Deliverer']; ?></td>
       <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
-
         ?>
-      <td class="editable" id="balance<?php echo $count; ?>"><?php echo $balance; ?></td>
+      <td class="editable" id="balance<?php echo $count; ?>"><?php echo $customer['Balance']; ?></td>
        <td> <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-success btn-sm active restoreBlacklist" role="button" aria-pressed="true" >Restore</button>
          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-danger btn-sm active deleteBlacklist" role="button" aria-pressed="true" ><i class="fa fa-user-times"></i>Delete</button>
      </td>

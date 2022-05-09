@@ -81,9 +81,10 @@ else{
 <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css"/>-->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 <!--Calendar-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" />
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
 <!-- MDBootstrap Datatables  -->
 <link href="css/addons/datatables.min.css" rel="stylesheet">
 <!-- MDBootstrap Datatables  -->
@@ -402,6 +403,7 @@ Preloader
             <a class="collapse-item" href="office.php">Office</a>
             <a class="collapse-item" href="cooks.php">Cooks</a>
             <a class="collapse-item" href="cleaners.php">Cleaners</a>
+            <a class="collapse-item" href="butchery.php">Butchery</a>
           </div>
         </div>
       </li>
@@ -438,6 +440,15 @@ Preloader
        <br>
        
 -->
+
+      <li class="nav-item">&emsp;
+        <a style="color: black;" href="calendar.php">
+          <i class="fa fa-calendar"></i>
+          <span>Calendar</span></a>
+      </li>
+
+       <br>
+
         <li class="nav-item">&emsp;
         <a style="color: black;" href="vehicles.php">
           <i class="bx bxs-truck"></i>

@@ -15,23 +15,23 @@
           ?>
 
          <div class="row">
-          <div class="col-md-4">
+          <div class="col-4">
             <a href="kra_rates.php" class="btn btn-secondary btn-md active float-left ml-3" role="button" aria-pressed="true">KRA Tax Rates</a>
           </div>
-          <div class="col-md-4">
+          <div class="col-4">
             <a href="nssf_rates.php" class="btn btn-warning btn-md active float-left offset-4" role="button" aria-pressed="true">NSSF Rates</a>
           </div>
-          <div class="col-md-4">
+          <div class="col-4">
             <a href="nhif_rates.php" class="btn btn-info btn-md active float-left offset-7" role="button" aria-pressed="true">NHIF Rates</a>
           </div>
     </div><br>
      <div class="row">
-      <div class="col-md-10 offset-2">
-        <h6 class="col-md-6 offset-3">Select employee to print pay slip.</h6>
+      <div class="col-10 offset-2">
+        <h6 class="col-6 offset-3">Select employee to print pay slip.</h6>
         </div>
      </div>
      <div class="row">
-       <div class="col-md-8">
+       <div class="col-8">
            <?php
         $employeesrowcount = mysqli_num_rows($employeesList);
       ?>

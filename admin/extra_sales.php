@@ -29,19 +29,19 @@
            include "dashboard_tabs.php";
           ?>
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-2">
       <a href="sales.php" class="btn btn-primary btn-md active ml-3" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a <?php if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Stores Manager' || $view == 'Stores Supervisor') { ?> href="sales_invoice.php" <?php }else{ ?> href = "#" <?php } ?> class="btn btn-secondary btn-md active"  role="button" aria-pressed="true">Sales Invoice</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a  class="btn btn-warning btn-md active offset-3" <?php if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Stores Supervisor') { ?> href="credit_note.php" <?php }else{ ?> href = "#" <?php } ?> role="button" aria-pressed="true">Credit Note</a>
       </div>
-      <div class="col-md-2">
+      <div class="col-2">
       <a  class="btn btn-info btn-md active offset-5" <?php if ($view == 'Software' || $view == 'Director' || $view == 'CEO' || $view == 'Data Entry Clerk') { ?> href="payment_status.php" <?php }else{ ?> href = "#" <?php } ?> role="button" aria-pressed="true">Payment Status</a>
       </div>
-    <div class="col-md-2">
+    <div class="col-2">
       <a href="goods_requisition.php" class="btn btn-success btn-md active offset-9" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Goods Requisition</a>
     </div>
     </div><br>
@@ -51,7 +51,7 @@
         $extraSalesLastMonthrowcount = mysqli_num_rows($extraSalesListLastMonth );
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $extraSalesLastMonthrowcount; ?></h6>
     </div>
       </div> 
@@ -182,7 +182,7 @@
         $ordersrowcount = mysqli_num_rows($extraSalesListYesterday);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -310,7 +310,7 @@
         $ordersrowcount = mysqli_num_rows($extraSalesListToday);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -438,7 +438,7 @@
         $ordersrowcount = mysqli_num_rows($extraSalesListTomorrow);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 
@@ -566,7 +566,7 @@
         $ordersrowcount = mysqli_num_rows($extraSalesListNextMonth);
       ?>
       <div class="row">
-         <div class="col-md-12">
+         <div class="col-12">
       <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
     </div>
       </div> 

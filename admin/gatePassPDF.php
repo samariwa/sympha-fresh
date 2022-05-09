@@ -31,7 +31,7 @@
 <p>   '.$today.' </p>
 <hr>
 <div class="row">
-<div class="col-md-12">
+<div class="col-12">
 <h3 style="text-align:center"><u>Orders</u></h3>
 <table class="table table-striped" style="display:block;text-align:center;"">
   <thead>
@@ -79,7 +79,7 @@ echo $pdf;
 <p> '.$today.' </p>
 <hr>
 <div class="row">
-<div class="col-md-12">
+<div class="col-12">
 <h3 style="text-align:center"><u>Orders</u></h3>
 <table class="table table-striped" style="display:block;"">
   <thead>

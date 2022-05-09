@@ -16,13 +16,13 @@
            include "dashboard_tabs.php";
           ?>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-2">
       <a href="animal_products.php" class="btn btn-primary btn-md active float-left" role="button" aria-pressed="true"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
       </div>
-      <div class="col-md-7">
+      <div class="col-7">
       <h6 class="offset-5">Total Number: <?php echo $Product_Units->productUnitsCount(); ?></h6>
     </div>
-    <div class="col-md-3">   
+    <div class="col-3">   
       <a data-toggle="modal" data-target="#exampleModalScrollable" class="btn btn-success btn-md active offset-6" role="button" aria-pressed="true"><i class="fa fa-plus-circle"></i>&ensp;Add Unit</a>
        <!-- Modal -->
       <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -37,7 +37,7 @@
             <div class="modal-body">
               <form method="POST">
               <div class="row">
-                 <select type="text" name="parent_unit" id="parent_unit" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="parent_unit" id="parent_unit" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" selected="selected" disabled>Parent Unit...</option>
                   <?php
                     $count = 0;
@@ -53,7 +53,7 @@
                  </select>
                   </div><br>
                   <div class="row">
-                 <select type="text" name="child_unit" id="child_unit" class="form-control col-md-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                 <select type="text" name="child_unit" id="child_unit" class="form-control col-9" style="padding-right:15px;padding-left:15px;margin-left: 60px" required onfocus='this.size=3;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" selected="selected" disabled>Child Unit...</option>
                   <?php
                     $count = 0;
