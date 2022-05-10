@@ -1060,12 +1060,9 @@
 </table>
     </div>
     <div id="menu5" class="tab-pane fade">
-        <?php
-        $ordersrowcount = mysqli_num_rows($salesListNextMonth);
-      ?>
       <div class="row">
          <div class="col-12">
-      <h6 class="offset-5">Total Number: <?php echo $ordersrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Sales->ordersNextMonthCount(); ?></h6>
     </div>
       </div> 
       <table id="salesEditableNextMonth" class="table table-striped table-hover table-responsive  paginate" style="overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -1093,99 +1090,75 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($salesListNextMonth as $row){
+        foreach($Sales->fetchOrdersNextMonth() as $salesNextMonth){
          $count++;
-         $id = $row['id'];
-         $order_id = $row['order_id'];
-         $name = $row['Name'];
-         if($name == 'Unregistered Customer')
-         {
-           $name = $row['new_name'];
-         }
-         $cust_type = $row['type'];
-        $contact = $row['Number'];
-        $product = $row['name'];
-        $qty = $row['Quantity'];
-        $discount = $row['Discount'];
-        //MariaDB Only
-        //$selling_price = mysqli_query($connection,"SELECT Selling_price FROM (SELECT s.Name as sname,sf.Selling_price as Selling_Price, sf.Created_at,ROW_NUMBER() OVER (PARTITION BY s.id ORDER BY sf.Created_at DESC) as rn FROM stock s JOIN stock_flow sf ON s.id = sf.Stock_id join orders o on s.id = o.Stock_id ) q WHERE rn = 1 AND sname = '$product'")or die($connection->error);
-        //MySQL Only
-        $selling_price = mysqli_query($connection,"SELECT sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND s.name = '$product';")or die($connection->error);
-         $row2 = mysqli_fetch_array($selling_price);
-        $price = $row2['Selling_price'];
-        $newCost = $price - $discount;
-        $cost = $qty * $newCost; 
-        $debt = $row['Debt'];
-        $mpesa = $row['MPesa'];
-        $cash = $row['Cash'];
-        $fine = $row['Fine'];
-        $balance = ($mpesa + $cash) + $debt - $cost + $fine;
-        if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
-        {
-          $balance = 0;
-        }
-        if ($balance == "0.0" ) {
-          $name_color = "#2ECC71";
-        }
-        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-          $name_color = "grey";
-        }
-        if ($balance > "0.0" ) {
-          $name_color = "orange";
-        }
-        if ($balance < "-100.0" ) {
-          $name_color = "red";
-        }
-        $delivery_date = $row['Delivery_time'];
-        $returned = $row['Returned'];
-        $banked = $row['Banked'];
-        $slip = $row['Slip_Number'];
-        $invoice = $row['Invoice_Number'];
-        $banked_by = $row['Banked_By'];
+         $name = $salesNextMonth['Name'];
+          if($name == 'Unregistered Customer')
+          {
+            $name = $salesNextMonth['new_name'];
+          }
+          $cost = $salesNextMonth['Quantity'] * ($Sales->fetchSellingPrice($salesNextMonth['name']) - $salesNextMonth['Discount']);
+          $balance = ($salesNextMonth['MPesa'] + $salesNextMonth['Cash']) + $salesNextMonth['Debt'] - $salesNextMonth['Quantity'] * $cost + $salesNextMonth['Fine'];
+          if(($balance > 0 && $balance < 1) || ($balance > -1 && $balance < 0))
+          {
+            $balance = 0;
+          }
+          if ($balance == "0.0" ) {
+            $name_color = "#2ECC71";
+          }
+          if ($balance  < "0.0" && $balance  >= "-100.0" ) {
+            $name_color = "grey";
+          }
+          if ($balance > "0.0" ) {
+            $name_color = "orange";
+          }
+          if ($balance < "-100.0" ) {
+            $name_color = "red";
+          }
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $salesNextMonth['order_id']; ?></th>
       <td class="uneditable" ></td>
       <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameNextMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="productNextMonth<?php echo $count; ?>"><?php echo $product; ?></td>
+      <td class="uneditable" id="productNextMonth<?php echo $count; ?>"><?php echo $salesTomorrow['name']; ?></td>
       <td class="uneditable" ></td>
-      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyNextMonth<?php echo $count; ?>"><?php echo round($qty,2); ?></td>
+      <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyNextMonth<?php echo $count; ?>"><?php echo round($salesNextMonth['Quantity'],2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="priceNextMonth<?php echo $id; ?>"><?php echo round($price,2); ?></td>
+      <td class="uneditable" id="priceNextMonth<?php echo $salesNextMonth['id']; ?>"><?php echo round($Sales->fetchSellingPrice($salesNextMonth['name']),2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="costNextMonth<?php echo $id; ?>"><?php echo round($cost,2); ?></td>
+      <td class="uneditable" id="costNextMonth<?php echo $salesNextMonth['id']; ?>"><?php echo round($cost,2); ?></td>
       <td class="uneditable" ></td>
-      <td class="uneditable" id="balanceNextMonth<?php echo $id; ?>"><?php echo round($balance,2); ?></td>
+      <td class="uneditable" id="balanceNextMonth<?php echo $salesNextMonth['id']; ?>"><?php echo round($balance,2); ?></td>
       <td class="uneditable" ></td>
        <td>
-       <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" data-toggle="modal" data-target="#viewOrderNextMonth<?php echo $id; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderNextMonth" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
-          <div class="modal fade bd-example-modal-lg" id="viewOrderNextMonth<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+       <button id="<?php echo $salesNextMonth['id']; ?>" data_id="<?php echo $salesNextMonth['id']; ?>" data-toggle="modal" data-target="#viewOrderNextMonth<?php echo $salesNextMonth['id']; ?>" role="dialog" class="btn btn-warning btn-sm active viewOrderNextMonth" role="button" aria-hidden="true" ><i class="fa fa-eye"></i> View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewOrderNextMonth<?php echo $salesNextMonth['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $salesNextMonth['order_id']; ?> - <?php echo $salesNextMonth['type']; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <form method="POST">
-                    Customer Tel: <?php echo $contact; ?>
+                    Customer Tel: <?php echo $salesTomorrow['Number']; ?>
                     <div class="row">
                           <p class="ml-4"><b><i>Order Details</i></b></p>
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>Product: <span id="name_NextMonth<?php echo $id; ?>"><?php echo $product; ?></span></p>
+                            <p>Product: <span id="name_NextMonth<?php echo $salesNextMonth['id']; ?>"><?php echo $salesTomorrow['name']; ?></span></p>
                         </div>
                         <div class="col-4">
                             <label for="qtyNextMonth">Quantity: </label>
-                            <input type="number" name="qtyNextMonth" id="qty_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($qty,2); ?>" required>
+                            <input type="number" name="qtyNextMonth" id="qty_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Product Quantity..." value="<?php echo round($salesNextMonth['Quantity'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <label for="qtyNextMonth">Returned: </label>
-                            <input type="number" name="returnedNextMonth" id="returned_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($returned,2); ?>" required>
+                            <input type="number" name="returnedNextMonth" id="returned_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Returned Quantity..." value="<?php echo round($salesNextMonth['Returned'],2); ?>" required>
                         </div>
                       </div>
                       <br>
@@ -1194,14 +1167,14 @@
                       </div>
                       <div class="row">
                         <div class="col-3">
-                            <p>Unit Price: Ksh. <?php echo round($price,2); ?></p>
+                            <p>Unit Price: Ksh. <?php echo round($Sales->fetchSellingPrice($salesNextMonth['name']),2); ?></p>
                         </div>
                         <div class="col-3">
                         <label for="qtyNextMonth">Discount/Unit (Ksh.): </label>
-                           <input type="number" name="discountNextMonth" id="discount_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($discount,2); ?>" required>
+                           <input type="number" name="discountNextMonth" id="discount_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Discount given per Unit..." value="<?php echo round($salesNextMonth['Discount'],2); ?>" required>
                         </div>
                         <div class="col-3">
-                            <p>Fine: <?php echo round($fine,2); ?></p>
+                            <p>Fine: <?php echo round($salesNextMonth['Fine'],2); ?></p>
                         </div>
                         <div class="col-3">
                             <p>Net Cost: Ksh. <?php echo round($cost,2); ?></p>
@@ -1213,15 +1186,15 @@
                       </div>
                       <div class="row">
                         <div class="col-4">
-                            <p>C/F/Debt: Ksh. <?php echo round($debt,2); ?></p>
+                            <p>C/F/Debt: Ksh. <?php echo round($salesNextMonth['Debt'],2); ?></p>
                         </div>
                         <div class="col-2">
                         <label for="mpesaNextMonth">MPesa (Ksh.): </label>
-                           <input type="number" name="mpesaNextMonth" id="mpesa_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($mpesa,2); ?>" required>
+                           <input type="number" name="mpesaNextMonth" id="mpesa_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in MPesa..." value="<?php echo round($salesNextMonth['MPesa'],2); ?>" required>
                         </div>
                         <div class="col-2">
                         <label for="cashNextMonth">Cash (Ksh.): </label>
-                           <input type="number" name="cashNextMonth" id="cash_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($cash,2); ?>" required>
+                           <input type="number" name="cashNextMonth" id="cash_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount paid in Cash..." value="<?php echo round($salesNextMonth['Cash'],2); ?>" required>
                         </div>
                         <div class="col-4">
                             <p>New Balance: Ksh. <?php echo round($balance,2); ?></p>
@@ -1231,7 +1204,7 @@
                       <div class="row">
                       <label for="dateNextMonth" class="ml-5">Order Expected On: </label>
                       <div class="col-10">
-                          <input type="date" name="dateNextMonth" id="date_NextMonth<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $delivery_date; ?>" required>
+                          <input type="date" name="dateNextMonth" id="date_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Date Expected..." value="<?php echo $salesNextMonth['Delivery_time']; ?>" required>
                      </div>
                       </div>
                       <br>
@@ -1241,7 +1214,7 @@
                       <div class="row">
                         <div class="col-10">
                         <label for="invoiceNextMonth" class="ml-5">Invoice #: </label>
-                          <input type="text" name="invoiceNextMonth" id="invoice_NextMonth<?php echo $id; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $invoice; ?>" required>
+                          <input type="text" name="invoiceNextMonth" id="invoice_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control offset-1" style="padding:15px;" placeholder="Invoice Number..." value="<?php echo $salesNextMonth['Invoice_Number']; ?>" required>
                         </div>
                       </div>  
                       <br>
@@ -1251,20 +1224,20 @@
                       <div class="row">
                       <div class="col-4">
                       <label for="cashNextMonth">Amount Banked (Ksh.): </label>
-                          <input type="number" name="bankedNextMonth" id="banked_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($banked,2); ?>" required>
+                          <input type="number" name="bankedNextMonth" id="banked_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Amount banked..." value="<?php echo round($salesNextMonth['Banked'],2); ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashNextMonth">Bank Slip #: </label>
-                          <input type="text" name="slipNextMonth" id="slip_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $slip; ?>" required>
+                          <input type="text" name="slipNextMonth" id="slip_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Bank Slip Number..." value="<?php echo $salesNextMonth['Slip_Number']; ?>" required>
                         </div>
                         <div class="col-4">
                         <label for="cashNextMonth">Banked By: </label>
-                          <input type="text" name="bankedByNextMonth" id="banked_By_NextMonth<?php echo $id; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $banked_by; ?>" required>
+                          <input type="text" name="bankedByNextMonth" id="banked_By_NextMonth<?php echo $salesNextMonth['id']; ?>" class="form-control" style="padding:15px;" placeholder="Banked By Who?" value="<?php echo $salesNextMonth['Banked_By']; ?>" required>
                         </div>
                       </div>  
                   </div>
                   <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderNextMonth(<?php echo $id; ?>)" id="<?php echo $id; ?>">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 50px" onclick="saveOrderNextMonth(<?php echo $salesNextMonth['id']; ?>)" id="<?php echo $salesNextMonth['id']; ?>">Save Changes</button>
                   </form>
                   </div>
               </div>
@@ -1275,7 +1248,7 @@
         <?php
            if ($view == 'Software'  || $view == 'CEO' || $view == 'Director' || $view == 'Stores Manager') {
         ?>
-          <button id="<?php echo $id; ?>" data_id="<?php echo $id; ?>" class="btn btn-secondary btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $id; ?>)">Return</button>
+          <button id="<?php echo $salesNextMonth['id']; ?>" data_id="<?php echo $salesNextMonth['id']; ?>" class="btn btn-secondary btn-sm active deleteOrderNextMonth" role="button" aria-pressed="true" onclick="deleteOrderNextMonth(this,<?php echo $salesNextMonth['id']; ?>)">Return</button>
           <?php
           }
           ?>  
