@@ -93,11 +93,40 @@
             <!-- Content Column -->
             <div class="col-lg-6 mb-4">
               <?php
+              $taskCompletionPc = 0;
+              $taskCompletionColor = '';
               $userId = mysqli_query($connection,"SELECT id  FROM `users` WHERE email = '$logged_in_email'")or die($connection->error);
               $value = mysqli_fetch_array($userId);
               $userID = $value['id'];
               $pendingTasks = mysqli_query($connection,"SELECT * FROM event where User_id = '$userID' AND DATE(start_event) = '$Today' AND status = '0'ORDER BY id")or die($connection->error);
               $completeTasks = mysqli_query($connection,"SELECT * FROM event where User_id = '$userID' AND DATE(start_event) = '$Today' AND status = '1'ORDER BY id")or die($connection->error);
+              $total_tasks = (int)mysqli_num_rows($pendingTasks) + (int)mysqli_num_rows($completeTasks);
+              if($total_tasks == 0)
+              {
+                $total_tasks += 1;
+              }
+              $taskCompletionPc = number_format(((float)mysqli_num_rows($completeTasks)/(float)$total_tasks) * 100 ,2);
+
+              if($taskCompletionPc <= 20)
+              {
+                $taskCompletionColor = 'danger';
+              }
+              elseif(($taskCompletionPc > 20) && ($taskCompletionPc <= 40))
+              {
+                $taskCompletionColor = 'warning';
+              }
+              elseif(($taskCompletionPc > 40) && ($taskCompletionPc <= 60))
+              {
+                $taskCompletionColor = '';
+              }
+              elseif(($taskCompletionPc > 60) && ($taskCompletionPc <= 80))
+              {
+                $taskCompletionColor = 'info';
+              }
+              elseif(($taskCompletionPc > 80) && ($taskCompletionPc <= 100))
+              {
+                $taskCompletionColor = 'success';
+              }
               ?>
               <!-- Project Card Example -->
               <div class="card shadow mb-4">
@@ -105,32 +134,16 @@
                   <h6 class="m-0 font-weight-bold text-success"><i class="fa fa-tasks"></i> Today's Tasks</h6>
                 </div>
                 <div class="card-body">
-                  <h4 class="small font-weight-bold">Processing orders <span class="float-right">20%</span></h4>
+                  <h4 class="small font-weight-bold">Tasks Completion<span class="float-right"><?php echo $taskCompletionPc; ?>%</span></h4>
                   <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Inspecting work area <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Debriefing staff <span class="float-right">80%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Order Inventory <span class="float-right">Complete!</span></h4>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-<?php echo $taskCompletionColor; ?>" role="progressbar" style="width: <?php echo $taskCompletionPc; ?>%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <div class="addTask">
                     <input type="text" id="taskInput" placeholder="Add a Task">
                     <button id="taskAddBtn">Add</button>
                   </div>
                   <ol class="notCompleted">
-                    <h4><img src="bars-icon.svg" alt="icon"> Pending</h4>
+                    <h4 class="taskStatus"><img src="bars-icon.svg" alt="icon"> Pending</h4>
                     <?php
                         foreach($pendingTasks as $row)
                         {
@@ -139,14 +152,14 @@
                       <?php
                        echo $row['title'];
                       ?>
-                      <button><i class="fa fa-check"></i></button>
+                      <button class="completeTask" id="<?php echo $row['id'];?>"><i class="fa fa-check"></i></button>
                     </li>
                     <?php
                         }
                     ?>
                   </ol>
                   <ol class="Completed">
-                    <h4><img src="bars-icon.svg" alt="icon"> Complete</h4>
+                    <h4 class="taskStatus"><img src="bars-icon.svg" alt="icon"> Complete</h4>
                     <?php
                         foreach($completeTasks as $row)
                         {
@@ -155,7 +168,7 @@
                      <?php
                        echo $row['title'];
                       ?>
-                      <button><i class="fa fa-rotate-left"></i></button>
+                      <button class="undoTask" id="<?php echo $row['id'];?>"><i class="fa fa-rotate-left"></i></button>
                     </li>
                     <?php
                         }

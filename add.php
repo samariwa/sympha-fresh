@@ -360,6 +360,9 @@ elseif ($where == 'calendar') {
    $value = mysqli_fetch_array($userId);
    $userID = $value['id'];
   mysqli_query($connection,"INSERT INTO event (title,User_id, start_event, end_event) VALUES ('$title','$userID', '$start_event', '$end_event')") or die(mysqli_error($connection));
+  $eventId = mysqli_query($connection,"SELECT id FROM `event` ORDER BY id DESC LIMIT 1")or die($connection->error);
+   $row = mysqli_fetch_array($eventId);
+   echo $row['id'];
 }
 }
 elseif ($where == 'asset') {

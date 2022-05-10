@@ -2995,17 +2995,67 @@ function(result){
           })
       }
 
-      function addTask(e)
-      {
-        if($('#taskInput').val() != '')
-        {
-          alert('hi')
-        }
-      }
       $('#taskAddBtn').click(function(){
-        if($('#taskInput').val() != '')
+        var newTask = $('#taskInput').val();
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date+' '+time;
+        var start = moment(dateTime).format('YYYY/MM/DD HH:mm:ss');
+        var end = moment(dateTime).format('YYYY/MM/DD HH:mm:ss');
+        if(newTask != '')
         {
-          alert('hi')
+          $.post("../add.php",{title:newTask,start:start, end:end,where:'calendar'},
+        function(result){
+          pendingList = $('.notCompleted').html();
+          pendingList += '<li>';
+          pendingList += newTask;
+          pendingList += '<button class="completeTask" id="';
+          pendingList += result;
+          pendingList += '"><i class="fa fa-check"></i></button></li>';
+          $('.notCompleted').html(pendingList);
+          $('#taskInput').val('');
+        });
         }
       });
+
+      $('.completeTask').click(function(){
+        var el = $(this);
+        var id = $(this).attr("id");
+        $.post("../save.php",{id:id, status:'1', where:'tasks'},
+        function(result){
+          completedList = $('.Completed').html();
+          completedList += '<li>';
+          completedList += result;
+          completedList += '<button class="undoTask" id="';
+          completedList += id;
+          completedList += '"><i class="fa fa-rotate-left"></i></button></li>';
+          $('.Completed').html(completedList);
+          $(el).closest('li').css('background','tomato');
+          $(el).closest('li').fadeOut(800,function(){
+          $(this).remove();
+        });
+        });
+      });
+
+      $('.undoTask').click(function(){
+        var el = $(this);
+        var id = $(this).attr("id");
+        $.post("../save.php",{id:id, status:'0', where:'tasks'},
+        function(result){
+          completedList = $('.notCompleted').html();
+          completedList += '<li>';
+          completedList += result;
+          completedList += '<button class="completeTask" id="';
+          completedList += id;
+          completedList += '"><i class="fa fa-check"></i></button></li>';
+          $('.notCompleted').html(completedList);
+          $(el).closest('li').css('background','tomato');
+          $(el).closest('li').fadeOut(800,function(){
+          $(this).remove();
+        });
+        });
+      });
+
+
       

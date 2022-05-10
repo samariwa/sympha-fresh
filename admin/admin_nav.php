@@ -364,6 +364,13 @@ Preloader
           <span>Home</span></a>
       </li>
       <br>
+      <li class="nav-item">&emsp;
+        <a style="color: black;" href="calendar.php">
+          <i class="fa fa-calendar"></i>
+          <span>Calendar</span></a>
+      </li>
+
+       <br>
       <?php
        if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
 
@@ -441,13 +448,6 @@ Preloader
        
 -->
 
-      <li class="nav-item">&emsp;
-        <a style="color: black;" href="calendar.php">
-          <i class="fa fa-calendar"></i>
-          <span>Calendar</span></a>
-      </li>
-
-       <br>
 
         <li class="nav-item">&emsp;
         <a style="color: black;" href="vehicles.php">

@@ -1031,6 +1031,17 @@ elseif ($where == 'calendar') {
   mysqli_query($connection,"UPDATE event SET title='$title', start_event='$start_event', end_event='$end_event' WHERE id='$id'")or die($connection->error);
 }
 }
+elseif ($where == 'tasks') {
+  if(isset($_POST["id"]))
+{
+ $id =$_POST["id"];
+ $status = $_POST["status"];
+ mysqli_query($connection,"UPDATE event SET `status` ='$status' WHERE id='$id'")or die($connection->error);
+ $event = mysqli_query($connection,"SELECT title FROM `event` WHERE id = '$id'")or die($connection->error);
+   $row = mysqli_fetch_array($event);
+   echo $row['title'];
+}
+}
 elseif ($where == 'profile') {
   $staffid = $_POST['staffid'];
     $username = $_POST['username'];

@@ -32,6 +32,6 @@
 
       <script src="../assets/js/mindmup-editabletable.js"></script>
       <script src='../assets/js/multi-countdown.js?723535'></script>
-        <script type="text/javascript" src="admin.js?4895732"></script>
+        <script type="text/javascript" src="admin.js?34932"></script>
       </body>
 </html>
