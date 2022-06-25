@@ -1,6 +1,5 @@
 <?php
  include "admin_nav.php";
- include('../queries.php');
  $Sales = new Sales();
  ?>
 
@@ -354,23 +353,11 @@
          {
            $balance = 0;
          }
-         if ($balance == "0.0" ) {
-           $name_color = "#2ECC71";
-         }
-         if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-           $name_color = "grey";
-         }
-         if ($balance > "0.0" ) {
-           $name_color = "orange";
-         }
-         if ($balance < "-100.0" ) {
-           $name_color = "red";
-         }
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idYesterday<?php echo $count; ?>"><?php echo $salesYesterday['order_id']; ?></th>
       <td class="uneditable" ></td>
-      <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameYesterdayMonth<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td style = "background-color: <?php echo $Sales->getCustomerBalanceColor($balance); ?>;color: white"class="uneditable" id="nameYesterdayMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
       <td class="uneditable" id="productYesterday<?php echo $count; ?>"><?php echo $salesYesterday['name']; ?></td>
       <td class="uneditable" ></td>
@@ -521,13 +508,10 @@
 </table>
     </div>
     <div id="menu3" class="tab-pane fade main show active">
-        <?php
-        $deliveriesrowcount = mysqli_num_rows($pendingDeliveries);
-      ?>
       <h4>Pending Deliveries</h4>
       <div class="row">
          <div class="col-12">
-      <h6 class="offset-5">Total Number: <?php echo $deliveriesrowcount; ?></h6>
+      <h6 class="offset-5">Total Number: <?php echo $Sales->pendingDeliveriesCount(); ?></h6>
     </div>
       </div> 
       <table id="salesEditableToday" class="table table-striped table-hover table-responsive  paginate" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -543,42 +527,29 @@
   <tbody >
     <?php
         $count = 0;
-        foreach($pendingDeliveries as $row){
+        foreach($Sales->fetchPendingDeliveries() as $pendingDeliveries){
          $count++;
-         $id = $row['id'];
-         $order_id = $row['order_id'];
-        $name = $row['Name'];
+        $name = $pendingDeliveries['Name'];
         if($name == 'Unregistered Customer')
         {
-          $name = $row['new_name'];
+          $name = $pendingDeliveries['new_name'];
         }
-        $cust_type = $row['type'];
-        $contact = $row['Number'];
-        $created_at = $row['created_at'];
+        $created_at = $pendingDeliveries['created_at'];
         $deliverytime = new DateTime($created_at);
         $deliverytime->add(new DateInterval('PT' . $delivery_time_limit . 'M'));
         $delivery_stamp = $deliverytime->format('Y-m-d H:i');
         $from_time = strtotime(date("Y-m-d H:i:s"));
         $to_time = strtotime($delivery_stamp);
         $time_diff = ($to_time - $from_time) / 60;
-        if ($time_diff > 12 ) {
-          $name_color = "#2ECC71";
-        }
-        if (($time_diff > 6) && ($time_diff < 12)) {
-          $name_color = "orange";
-        }
-        if ($time_diff < 6) {
-          $name_color = "red";
-        }
 
 
       ?>
     <tr>
-      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $order_id; ?></th>
+      <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $pendingDeliveries['order_id']; ?></th>
       <td class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
       <!--<td><?php //echo $time_diff; ?><td>-->
-      <input type="hidden" name="timeLeft" id="time_left<?php echo $order_id; ?>" value="<?php echo round($time_diff,2); ?>">
-      <td style = "background-color: <?php echo $name_color; ?>;color: white"><div class="countdown show" data-Date='<?php echo $delivery_stamp; ?>' data-endText="00:00">
+      <input type="hidden" name="timeLeft" id="time_left<?php echo $pendingDeliveries['order_id']; ?>" value="<?php echo round($time_diff,2); ?>">
+      <td style = "background-color: <?php echo $Sales->getDeliveryTimerColor($time_diff); ?>;color: white"><div class="countdown show" data-Date='<?php echo $delivery_stamp; ?>' data-endText="00:00">
         <div class="running">
             <timer class="ml-5">
                <b><span class = "minutes ml-4"></span>:<span class = "seconds"></span></b>
@@ -590,25 +561,25 @@
         </div>
       </td>
       <td>
-         <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" class="btn btn-success btn-sm active completeDelivery" onclick="completeDelivery(<?php echo $order_id; ?>, this)"role="button" aria-pressed="true" ><i class="fa fa-check"></i>&ensp;Complete</button>     
+         <button id="<?php echo $pendingDeliveries['order_id']; ?>" data_id="<?php echo $pendingDeliveries['order_id']; ?>" class="btn btn-success btn-sm active completeDelivery" onclick="completeDelivery(<?php echo $order_id; ?>, this)"role="button" aria-pressed="true" ><i class="fa fa-check"></i>&ensp;Complete</button>     
          &nbsp;&nbsp;&nbsp;
-         <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" data-toggle="modal" data-target="#viewDeliveriesToday<?php echo $order_id; ?>" role="dialog" class="btn btn-primary btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i>&ensp;View Details</button>
-          <div class="modal fade bd-example-modal-lg" id="viewDeliveriesToday<?php echo $order_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <button id="<?php echo $pendingDeliveries['order_id']; ?>" data_id="<?php echo $pendingDeliveries['order_id']; ?>" data-toggle="modal" data-target="#viewDeliveriesToday<?php echo $pendingDeliveries['order_id']; ?>" role="dialog" class="btn btn-primary btn-sm active viewOrderToday" role="button" aria-hidden="true" ><i class="fa fa-eye"></i>&ensp;View Details</button>
+          <div class="modal fade bd-example-modal-lg" id="viewDeliveriesToday<?php echo $pendingDeliveries['order_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
               <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $order_id; ?> - <?php echo $cust_type; ?> customer</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle"><?php echo $name; ?> - #ORD<?php echo $pendingDeliveries['order_id']; ?> - <?php echo $pendingDeliveries['type']; ?> customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    Customer Tel: <?php echo $contact; ?>
+                    Customer Tel: <?php echo $pendingDeliveries['Number']; ?>
                     <div class="row">
                           <p class="ml-4"><b><i>Order Details</i></b></p>
                       </div>
                       <?php
-                      $details = mysqli_query($connection,"SELECT o.id as order_id, s.Name as name, o.Quantity as qty, sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND o.Order_id = '$order_id';")or die($connection->error);
+                      $details = mysqli_query($connection,"SELECT o.id as order_id, s.Name as name, o.Quantity as qty, sf.Selling_price as Selling_price FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id INNER JOIN (SELECT s.id AS max_id, MAX(sf.Created_at) AS max_created_at FROM stock s INNER JOIN stock_flow sf ON s.id = sf.Stock_id INNER JOIN orders o ON o.Stock_id = s.id GROUP BY s.id) subQuery ON subQuery.max_id = s.id AND subQuery.max_created_at = sf.Created_at AND o.Order_id = '".$pendingDeliveries['order_id']."';")or die($connection->error);
                       foreach($details as $row)
                       {
                          $id = $row['order_id'];
@@ -641,7 +612,7 @@
             </div>
           </div>
           &nbsp;&nbsp;&nbsp;
-          <button id="<?php echo $order_id; ?>" data_id="<?php echo $order_id; ?>" class="btn btn-danger btn-sm active deleteDelivery" role="button" aria-pressed="true" onclick="deleteDelivery(<?php echo $order_id; ?>, this)"><i class="fa fa-times"></i>&ensp;Cancel</button>
+          <button id="<?php echo $pendingDeliveries['order_id']; ?>" data_id="<?php echo $pendingDeliveries['order_id']; ?>" class="btn btn-danger btn-sm active deleteDelivery" role="button" aria-pressed="true" onclick="deleteDelivery(<?php echo $pendingDeliveries['order_id']; ?>, this)"><i class="fa fa-times"></i>&ensp;Cancel</button>
           </td>
     </tr>
     <?php
@@ -686,22 +657,10 @@
         {
           $balance = 0;
         }
-        if ($balance == "0.0" ) {
-          $name_color = "#2ECC71";
-        }
-        if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-          $name_color = "grey";
-        }
-        if ($balance > "0.0" ) {
-          $name_color = "orange";
-        }
-        if ($balance < "-100.0" ) {
-          $name_color = "red";
-        }
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idToday<?php echo $count; ?>"><?php echo $salesToday['order_id']; ?></th>
-      <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td style = "background-color: <?php echo $Sales->getCustomerBalanceColor($balance); ?>;color: white"class="uneditable" id="nameToday<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" id="productToday<?php echo $count; ?>"><?php echo $salesToday['name']; ?></td>
       <td <?php if( $view == 'Software' ){?>class="editable"<?php }else{ ?> class="uneditable"<?php } ?> id="qtyToday<?php echo $count; ?>"><?php echo round($salesToday['Quantity'],2); ?></td>
       <td class="uneditable" id="priceToday<?php echo $salesToday['id']; ?>"><?php echo round($Sales->fetchSellingPrice($salesToday['name']),2); ?></td>
@@ -900,23 +859,11 @@
           {
             $balance = 0;
           }
-          if ($balance == "0.0" ) {
-            $name_color = "#2ECC71";
-          }
-          if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-            $name_color = "grey";
-          }
-          if ($balance > "0.0" ) {
-            $name_color = "orange";
-          }
-          if ($balance < "-100.0" ) {
-            $name_color = "red";
-          }
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idTomorrow<?php echo $count; ?>"><?php echo $salesTomorrow['order_id']; ?></th>
       <td class="uneditable" ></td>
-      <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameTomorrow<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td style = "background-color: <?php echo $Sales->getCustomerBalanceColor($balance); ?>;color: white"class="uneditable" id="nameTomorrow<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
       <td class="uneditable" id="productTomorrow<?php echo $count; ?>"><?php echo $salesTomorrow['name'];?></td>
       <td class="uneditable" ></td>
@@ -1103,23 +1050,11 @@
           {
             $balance = 0;
           }
-          if ($balance == "0.0" ) {
-            $name_color = "#2ECC71";
-          }
-          if ($balance  < "0.0" && $balance  >= "-100.0" ) {
-            $name_color = "grey";
-          }
-          if ($balance > "0.0" ) {
-            $name_color = "orange";
-          }
-          if ($balance < "-100.0" ) {
-            $name_color = "red";
-          }
       ?>
     <tr>
       <th scope="row" class="uneditable" id="idNextMonth<?php echo $count; ?>"><?php echo $salesNextMonth['order_id']; ?></th>
       <td class="uneditable" ></td>
-      <td style = "background-color: <?php echo $name_color; ?>;color: white"class="uneditable" id="nameNextMonth<?php echo $count; ?>"><?php echo $name; ?></td>
+      <td style = "background-color: <?php echo $Sales->getCustomerBalanceColor($balance); ?>;color: white"class="uneditable" id="nameNextMonth<?php echo $count; ?>"><?php echo $name; ?></td>
       <td class="uneditable" ></td>
       <td class="uneditable" id="productNextMonth<?php echo $count; ?>"><?php echo $salesTomorrow['name']; ?></td>
       <td class="uneditable" ></td>

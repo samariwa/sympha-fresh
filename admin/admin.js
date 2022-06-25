@@ -60,7 +60,7 @@ setTime();
         ]);
         var options = {
           title: 'Fast moving products',
-          legend: 'none',
+          legend: { position: 'bottom', maxLines: 3 },
            is3D:true,
           pieSliceText: 'label',
           slices: {  1: {offset: 0.2},
@@ -107,7 +107,7 @@ setTime();
         ]);
         var options = {
           title: 'Fast moving products',
-          legend: 'none',
+          legend: { position: 'bottom', maxLines: 3 },
            is3D:true,
           pieSliceText: 'label',
           slices: {  1: {offset: 0.2},

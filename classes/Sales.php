@@ -78,5 +78,48 @@ class Sales extends Database{
         return $query->fetch()['Selling_price'];
     }
 
+    public function fetchPendingDeliveries()
+    {
+        $query = $this->connect()->query("SELECT orders.Order_id AS order_id , Number, orders.Customer_type as type, customers.Name AS Name,orders.Walk_in_name as new_name, orders.Created_at as created_at FROM orders INNER JOIN customers ON orders.Customer_id=customers.id INNER JOIN (SELECT orders.Order_id AS order_id, MAX(orders.id) as max FROM orders WHERE DATE(Delivery_time) = CURRENT_DATE() AND Delivery = '1' GROUP BY orders.order_id) subQuery ON subQuery.max = orders.id;");
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    public function pendingDeliveriesCount()
+    {
+        $query = $this->connect()->query("SELECT orders.Order_id AS order_id , Number, orders.Customer_type as type, customers.Name AS Name,orders.Walk_in_name as new_name, orders.Created_at as created_at FROM orders INNER JOIN customers ON orders.Customer_id=customers.id INNER JOIN (SELECT orders.Order_id AS order_id, MAX(orders.id) as max FROM orders WHERE DATE(Delivery_time) = CURRENT_DATE() AND Delivery = '1' GROUP BY orders.order_id) subQuery ON subQuery.max = orders.id;");
+        return $query->rowCount();
+    }
+
+    public function getDeliveryTimerColor($time_diff)
+    {
+        $time_color = '';
+        if ($time_diff > 12 ) {
+            $time_color = "#2ECC71";
+          }
+          if (($time_diff > 6) && ($time_diff < 12)) {
+            $time_color = "orange";
+          }
+          if ($time_diff < 6) {
+            $time_color = "red";
+          }
+          return $time_color;
+    }
+
+    public function getCustomerBalanceColor($balance)
+    {
+        $name_color = '';
+        if ($balance == "0.0" ) {
+            $name_color = "#2ECC71";
+        }
+        elseif ($balance  < "0.0" && $balance  >= "-100.0" ) {
+        $name_color = "grey";
+        }
+        elseif ($balance > "0.0" ) {
+        $name_color = "orange";
+        }
+        elseif ($balance < "-100.0" ) {
+        $name_color = "red";
+        }
+        return $name_color;
+    }
 }

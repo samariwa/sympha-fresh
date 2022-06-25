@@ -151,6 +151,7 @@ if (!$_SESSION['logged_in']):
            ?>
            <input type="hidden" id="token" name="token">                   
         </form>
+        <div class="login100-form-title-color" style="background-image:url('../assets/images/color_band.png')"></div>
       </div>
     </div>
   </div>

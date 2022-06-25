@@ -2,6 +2,7 @@
  include "admin_nav.php";
  include('../queries.php');
  require('config.php');
+ $Summary = new Summary();
  ?> 
 
         <!-- Begin Page Content -->
@@ -25,6 +26,8 @@
      $yesterday1 = date('d/m/Y',strtotime('-2 day'));
      $yesterday2 = date('d/m/Y',strtotime('-3 day'));
      $yesterday3 = date('d/m/Y',strtotime('-4 day'));
+     $yesterday4 = date('d/m/Y',strtotime('-5 day'));
+     $yesterday5 = date('d/m/Y',strtotime('-6 day'));
     ?>
     <table  class="table table-striped table-hover paginate" style="display:block;overflow-y:scroll;text-align: center;">
   <thead class="thead-dark">
@@ -135,6 +138,92 @@
 </table>
 </div>
 <br>
+<?php
+       if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
+
+        ?>
+        <div class="row">
+<h4>Week's Summary</h4>
+</div>
+<div class="row">
+<table  class="table table-striped table-hover" style="text-align: center;">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" width="10%"></th>
+      <th scope="col" width="10%"><?php echo $yesterday5; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday4; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday3; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday2; ?></th>
+      <th scope="col" width="10%"><?php echo $yesterday1; ?></th>
+      <th scope="col"width="10%">Yesterday</th>
+      <th scope="col"width="10%">Today</th>
+    </tr>
+  </thead>
+  <tbody >
+    <tr>
+      <th>Sales Value</th>
+      <td ><?php echo $Summary->sales_day_6(); ?></td>
+      <td ><?php echo $Summary->sales_day_5(); ?></td>
+      <td ><?php echo $Summary->sales_day_4(); ?></td>
+      <td ><?php echo $Summary->sales_day_3(); ?></td>
+      <td ><?php echo $Summary->sales_day_2(); ?></td>
+      <td ><?php echo $Summary->salesYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->salesToday(); ?></th>
+    </tr>
+    <tr>
+      <th>Revenue Realized</th>
+      <td ><?php echo $Summary->revenue_day_6(); ?></td>
+      <td ><?php echo $Summary->revenue_day_5(); ?></td>
+      <td ><?php echo $Summary->revenue_day_4(); ?></td>
+      <td ><?php echo $Summary->revenue_day_3(); ?></td>
+      <td ><?php echo $Summary->revenue_day_2(); ?></td>
+      <td ><?php echo $Summary->revenueYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->revenueToday(); ?></th>
+    </tr>
+    <tr>
+      <th>Paid in M-Pesa</th>
+      <td ><?php echo $Summary->mpesa_day_6(); ?></td>
+      <td ><?php echo $Summary->mpesa_day_5(); ?></td>
+      <td ><?php echo $Summary->mpesa_day_4(); ?></td>
+      <td ><?php echo $Summary->mpesa_day_3(); ?></td>
+      <td ><?php echo $Summary->mpesa_day_2(); ?></td>
+      <td ><?php echo $Summary->mpesaYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->mpesaToday(); ?></th>
+    </tr>
+    <tr>
+      <th>Paid in Cash</th>
+      <td ><?php echo $Summary->cash_day_6(); ?></td>
+      <td ><?php echo $Summary->cash_day_5(); ?></td>
+      <td ><?php echo $Summary->cash_day_4(); ?></td>
+      <td ><?php echo $Summary->cash_day_3(); ?></td>
+      <td ><?php echo $Summary->cash_day_2(); ?></td>
+      <td ><?php echo $Summary->cashYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->cashToday(); ?></th>
+    </tr>
+    <tr>
+      <th>Banked</th>
+      <td ><?php echo $Summary->banked_day_6(); ?></td>
+      <td ><?php echo $Summary->banked_day_5(); ?></td>
+      <td ><?php echo $Summary->banked_day_4(); ?></td>
+      <td ><?php echo $Summary->banked_day_3(); ?></td>
+      <td ><?php echo $Summary->banked_day_2(); ?></td>
+      <td ><?php echo $Summary->bankedYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->bankedToday(); ?></th>
+    </tr>
+    <tr>
+      <th>Expenditure</th>
+      <td ><?php echo $Summary->expenditure_day_6(); ?></td>
+      <td ><?php echo $Summary->expenditure_day_5(); ?></td>
+      <td ><?php echo $Summary->expenditure_day_4(); ?></td>
+      <td ><?php echo $Summary->expenditure_day_3(); ?></td>
+      <td ><?php echo $Summary->expenditure_day_2(); ?></td>
+      <td ><?php echo $Summary->expenditureYesterday(); ?></td>
+      <th scope="row"><?php echo $Summary->expenditureToday(); ?></th>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br>
 <div class="row">
   <div class="col-6">
     <h4>Product Sales Comparison</h4>
@@ -190,5 +279,8 @@
 <div class="row">
     <div id="profitchart" style="width: 1200px; height: 600px;"></div>   
 </div>  
+<?php
+       }
+       ?>  
   <!-- Scroll to Top Button-->
   <?php include "admin_footer.php" ?> 

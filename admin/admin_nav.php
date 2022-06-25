@@ -371,17 +371,25 @@ Preloader
       </li>
 
        <br>
-      <?php
-       if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
-
-        ?>
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">&emsp;
+       <li class="nav-item">&emsp;
         <a style="color: black;" href="expenses.php">
         <i class="fa fa-calculator"></i>
           <span>Expenses</span></a>
       </li>
       <br>
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">&emsp;
+        <a style="color: black;" href="analytics.php">
+         <i class="fa fa-pie-chart" ></i>
+          <span>Analytics</span></a>
+      </li>
+       <br>
+      <?php
+       if ($view == 'Software' || $view == 'Director' || $view == 'CEO') {
+
+        ?>
+      <!-- Nav Item - Pages Collapse Menu -->
 
       <li class="nav-item">&emsp;
         <a style="color: black;" href="assets.php">
@@ -415,13 +423,7 @@ Preloader
         </div>
       </li>
        <br>
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">&emsp;
-        <a style="color: black;" href="analytics.php">
-         <i class="fa fa-pie-chart" ></i>
-          <span>Analytics</span></a>
-      </li>
-       <br>
+      
 <!--       
       <li class="nav-item">&emsp;
         <a style="color: black;" href="#">
