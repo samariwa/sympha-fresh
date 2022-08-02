@@ -885,6 +885,12 @@ else if ($where == 'sickoff') {
     mysqli_query($connection,"INSERT INTO `employee_sickoff_data` (`Staff_id`,`Reason`,`Start_day`,`sickoff_days_no`,`End_day`) VALUES ('$employee','$reason','$start','$number',DATE_ADD( '".$start."', INTERVAL ".$number." DAY ))") or die(mysqli_error($connection));
      echo "success";
 }
+else if ($where == 'employee_mailing') {
+  $id = $_POST['userId'];
+  $type = 'reports';
+   mysqli_query($connection,"INSERT INTO `employee_mailing_list` (`user_id`,`mail_type`) VALUES ('$id','$type')") or die(mysqli_error($connection));
+    echo "success";
+}
 else if ($where == 'leave') {
    $employee = $_POST['employee'];
    $standIn = $_POST['standIn'];

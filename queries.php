@@ -5,7 +5,8 @@ require('config.php');
 $customersList = mysqli_query($connection,"SELECT id, Name,Location,Number,Deliverer,Status,Note FROM customers WHERE Status != 'blacklisted' AND NOT id = '1' ORDER BY id DESC")or die($connection->error);
 $subscribersList = mysqli_query($connection,"SELECT * FROM newsletter_subscribers ORDER BY id DESC")or die($connection->error);
 $customersPrintList = mysqli_query($connection,"SELECT customers.id as id,Name,customers.Location as Location,Number,Deliverer,Status,Note FROM customers inner join orders on customers.id=orders.Customer_id WHERE Status != 'blacklisted' and DATE(orders.Delivery_time) >= DATE_ADD(CURRENT_DATE(), INTERVAL -10 DAY) group by customers.id")or die($connection->error);
-
+$employeeMailingList = mysqli_query($connection,"SELECT employee_mailing_list.id as id, firstname, lastname, email,mail_type FROM employee_mailing_list INNER JOIN users ON employee_mailing_list.user_id = users.id WHERE access = 'admin' ORDER BY employee_mailing_list.id ASC")or die($connection->error);
+$adminList = mysqli_query($connection,"SELECT id, firstname, lastname FROM users WHERE access = 'admin' ORDER BY id ASC")or die($connection->error);
 //$blacklistedList =  mysqli_query($connection,"SELECT customers.id as id,customers.Name, MAX(orders.created_at),customers.Location,customers.Number,customers.Deliverer,orders.Balance FROM orders INNER JOIN customers ON orders.Customer_id=customers.id where customers.Status='blacklisted' GROUP BY customers.id;")or die($connection->error);
 $assetsList = mysqli_query($connection,"SELECT * FROM `assets`")or die($connection->error);
 $liabilitiesList = mysqli_query($connection,"SELECT expense_details.id as id,Name,Party,Total_amount,Paid_amount,Payment_date FROM `expense_details` inner join expenses on expense_details.Expense_id = expenses.id where Due_amount > '0' ")or die($connection->error);

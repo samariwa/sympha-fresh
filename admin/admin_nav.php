@@ -468,9 +468,9 @@ Preloader
       <br>
 
       <li class="nav-item">&emsp;
-        <a style="color: black;" href="#">
+        <a style="color: black;" href="employee_mailing.php">
            <i class="fa fa-envelope"></i>
-          <span>Site Mailbox</span></a>
+          <span>Employee Mailing List</span></a>
       </li>
 
       <br>

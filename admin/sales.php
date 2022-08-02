@@ -43,8 +43,11 @@
     <div class="col-2">
       <a href="receipt.php" class="btn btn-secondary btn-md active" role="button" aria-pressed="true" >Print Recipt</a>
     </div>
-    <div class="col-2">
+    <!--<div class="col-2">
       <a href="gatePass.php" class="btn btn-dark btn-md active" role="button" aria-pressed="true" >Gate Pass</a>
+    </div>-->
+    <div class="col-2">
+      <a href="search_orders.php" class="btn btn-dark btn-md active" role="button" aria-pressed="true" >Search Orders</a>
     </div>
     <div class="col-2">
       <a href="returned.php" class="btn btn-info btn-md active" role="button" aria-pressed="true">Returned Goods</a>

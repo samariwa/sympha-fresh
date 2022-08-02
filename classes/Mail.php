@@ -77,6 +77,19 @@ class Mail{
         return false;
     }
 
+    public function sendReport($email, $user_first_name, $report)
+    {
+        $message = "Find attached the monthly report.";
+        $mail = $this->create($email, $user_first_name, 'Monthly Report', $message);
+        $mail->AddAttachment($report);
+        $sendMail = $this->send($mail);
+        if($sendMail == TRUE)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function registrationVerificationMail($email, $user_first_name, $verification_key)
     {
         $verified_link = Config::get('server_id/protocol').Config::get('server_id/host').'/sympha-fresh/auth/registration.php?email='.$email.'&verification='.$verification_key;

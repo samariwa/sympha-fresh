@@ -225,6 +225,105 @@
 </div>
 <br>
 <div class="row">
+<h4>Week's Average</h4>
+<div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Sales</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style="height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->sales_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Revenue</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style="height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->revenue_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+<div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily M-Pesa Payment</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style="height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->mpesa_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Cash Payment</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style="height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->cash_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Banked</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style="height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->banked_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Expenditure</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style=" height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->expenditure_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily No. of Deliveries</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style=" height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->delivery_count_weekly_avg(); ?></p>
+    </div>
+ </div>
+ </div>
+ <div class="col-lg-3 mb-4" style="margin-left: -7px;">   
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-success">Daily Delivery Speed</h6>    
+        </div>
+        <!-- Card Body -->
+    <div class="card-body" style=" height: 80px;">
+      <p style="text-align: center;font-size: 22px"><?php echo $Summary->delivery_speed_weekly_avg().' '."minutes"; ?></p>
+    </div>
+ </div>
+ </div>
+</div>
+<div class="row">
   <div class="col-6">
     <h4>Product Sales Comparison</h4>
   </div>

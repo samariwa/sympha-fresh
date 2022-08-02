@@ -591,6 +591,12 @@ setTime();
 
        });
 
+       $(document).ready(function(){
+        $("#OrderSearch").DataTable({
+        "searching": false,
+         "pageLength": 25
+        });
+      });
 
    $(document).ready(function(){
          $("#customerOrderSearch").DataTable({
@@ -1252,6 +1258,15 @@ $(document).on('click','.placeOrder',function(){
             completeOrderBalance(customerArr[0],cartItems,newCustomer,cleared,'n/a', '0');
             location.reload(true);
         });
+
+        $('#filter_orders').keyup(function(){
+          $('#dynamic-section').html('<div style="margin-left:470px; margin-top:180px; margin-bottom:180px;" class="spinner-border text-success"</div>');
+          var value = $(`#filter_orders`).val();
+          $.post("order_search_controller.php",{value:value},
+          function(data){
+            $('#dynamic-section').html(data);      
+       });
+      });
 
 
       function completeOrderBalance(custID,cartArr,newCust,cleared, mode, delivery){
@@ -2278,11 +2293,16 @@ function(result){
           alert(module+' Already Exists');
          }
            else{
+            alert(data)
           alert("Something went wrong");
          }
          }
         });
  }
+
+ $(document).on('click','#addToMailing',function(){
+  formAjax('Employee');
+     });  
 
  $(document).on('click','#addAnimalProductUnit',function(){
       formAjax('Animal Product Unit');
@@ -2415,6 +2435,7 @@ function(result){
        $(document).on('click','#addAsset',function(){
         formAjax('Asset');
            });
+       
 
   $(document).on('click','#addSickoffApplication',function(){
         var employee = $('#employee').val();
@@ -2572,6 +2593,10 @@ function(result){
 
     $('.deleteBlog').click(function(){
       deleteAjax($(this).attr("id"),$(this),'Blog', 'blog');
+    });
+
+    $('.deleteMailingList').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'Mail item', 'mailingList');
     });
 
   $(document).ready(function(){
