@@ -846,6 +846,19 @@ elseif($where == 'debtPayment')
    $cash = $_POST['cash'];
    $total = $mpesa + $cash;
    mysqli_query($connection,"UPDATE `orders` SET balance = balance + '$total' ,mpesa = mpesa + '$mpesa', cash = cash + '$cash' WHERE `id` = '".$id."'")or die($connection->error);
+   $result2 = mysqli_query($connection,"SELECT orders.Balance as newBalance, customers.id as customer from orders INNER JOIN customers ON orders.Customer_id=customers.id where orders.id='".$id."'; ")or die($connection->error);
+	 $row2 = mysqli_fetch_array($result2);
+   $newBalance = $row2['newBalance'];
+   $customerID = $row2['customer'];
+   if ($newBalance == 0) {
+    mysqli_query($connection,"UPDATE `customers`  SET `Status` = 'clean' WHERE `id` = '".$customerID."'")or die($connection->error);
+  }else if ($newBalance > 0) {
+    mysqli_query($connection,"UPDATE `customers`  SET `Status` = 'credit' WHERE `id` = '".$customerID."'")or die($connection->error);
+  }else if ($newBalance < 0 && $newBalance >= -100) {
+    mysqli_query($connection,"UPDATE `customers`  SET `Status` = 'fined' WHERE `id` = '".$customerID."'")or die($connection->error);
+  }else if ($newBalance < -100) {
+   mysqli_query($connection,"UPDATE `customers`  SET `Status` = 'no delivery' WHERE `id` = '".$customerID."'")or die($connection->error);
+}
    echo 1;
 }
 

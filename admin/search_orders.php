@@ -35,6 +35,16 @@
       <div class="col-6">
       <input type="text" class="form-control col-12 offset-2" aria-label="Default" aria-describedby="inputGroup-sizing-default" style="font-family: FontAwesome, Arial; font-style: normal;"  name="filter_orders" id="filter_orders" placeholder="&#xf0b0 Filter customer/date...">
         </div>
+        <div class="col-4">
+        <select type="text" name="time_frame" id="time_frame" class="form-control col-7 offset-5"  required onfocus='this.size=6;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                      <option value="3days" selected="selected">Last three days</option>
+                      <option value="1week">Last one week</option>
+                      <option value="2weeks">Last two weeks</option>
+                      <option value="1month">Last one month</option>
+                      <option value="2months">Last two months</option>
+                      <option value="alltime">All time</option>
+        </select>
+        </div>
     </div><br>
           <div id="dynamic-section">
           <?php

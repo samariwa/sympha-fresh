@@ -1260,14 +1260,21 @@ $(document).on('click','.placeOrder',function(){
         });
 
         $('#filter_orders').keyup(function(){
-          $('#dynamic-section').html('<div style="margin-left:470px; margin-top:180px; margin-bottom:180px;" class="spinner-border text-success"</div>');
-          var value = $(`#filter_orders`).val();
-          $.post("order_search_controller.php",{value:value},
-          function(data){
-            $('#dynamic-section').html(data);      
-       });
+          ordersFilter($(`#filter_orders`).val(), $(`#time_frame`).val());
       });
 
+      $(`#time_frame`).change(function() {
+        ordersFilter($(`#filter_orders`).val(), $(`#time_frame`).val());
+      });
+
+      function ordersFilter(value, frame)
+      {
+        $('#dynamic-section').html('<div style="margin-left:470px; margin-top:180px; margin-bottom:180px;width: 3rem; height: 3rem;" class="spinner-border spinner-border-lg text-success"</div>');
+        $.post("order_search_controller.php",{value:value, frame:frame},
+        function(data){
+          $('#dynamic-section').html(data);      
+        });
+      }
 
       function completeOrderBalance(custID,cartArr,newCust,cleared, mode, delivery){
         $.post("../load.php",{where:'order_id'},
@@ -2344,6 +2351,14 @@ function(result){
     formAjax('Category');
     });
 
+    $(document).on('click','#addDutyCategory',function(){
+      formAjax('Duty category');
+      });
+
+      $(document).on('click','#addDuty',function(){
+        formAjax('Duty');
+        });
+    
     $(document).on('click','#addFAQ',function(){
       formAjax('Question');
       });
@@ -2597,6 +2612,14 @@ function(result){
 
     $('.deleteMailingList').click(function(){
       deleteAjax($(this).attr("id"),$(this),'Mail item', 'mailingList');
+    });
+
+    $('.deleteDuty').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'duty', 'duty');
+    });
+
+    $('.deleteDutyCategory').click(function(){
+      deleteAjax($(this).attr("id"),$(this),'duty category', 'dutyCategory');
     });
 
   $(document).ready(function(){

@@ -48,7 +48,7 @@
     </tr>
     <?php
         $count = 0;
-        foreach($Customer->fetchActiveCustomers() as $customer){
+        foreach($Customer->fetchFinedCustomers() as $customer){
          $count++;
       ?>
     <tr>

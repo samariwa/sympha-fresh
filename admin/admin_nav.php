@@ -404,7 +404,14 @@ Preloader
           <span>Liabilities</span></a>
       </li>
       <br>
-      
+
+      <li class="nav-item">&emsp;
+        <a style="color: black;" href="duties.php">
+        <i class="fa fa-list"></i> 
+          <span>Staff Duties</span></a>
+      </li>
+      <br>
+         
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">&emsp;
         <a style="color: black;" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">

@@ -3,27 +3,44 @@ require('../config.php');
 require_once '../core/init.php';
 $Sales = new Sales();
 $value = $_POST['value'];
+$frame = $_POST['frame'];
+$duration = '';
+$time = array("3days", "1week", "2weeks", "1month", "2months", "alltime");
+$limit = array(">= DATE_SUB( CURDATE(), INTERVAL 3 DAY)",
+               ">= DATE_SUB( CURDATE(), INTERVAL 1 WEEK)", 
+               ">= DATE_SUB( CURDATE(), INTERVAL 2 WEEK)", 
+               ">= DATE_SUB( CURDATE(), INTERVAL 1 MONTH)", 
+               ">= DATE_SUB( CURDATE(), INTERVAL 2 MONTH)", 
+               "<= CURDATE()");
+for ($i = 0; $i <= 6; $i++) {
+    if($_POST['frame'] == $time[$i])
+    {
+        $duration = $limit[$i];
+    }
+}
 $statement = "SELECT orders.id AS id, orders.Order_id AS order_id,customers.Name AS Name,orders.Customer_type as type,orders.Walk_in_name as new_name, Number,stock.Name AS name, orders.Quantity AS Quantity,orders.Discount as Discount,Debt,MPesa,Cash,Fine,Balance,Delivery_time,Returned,Banked,Slip_Number,Invoice_Number,Banked_By,orders.Created_at as created_at FROM orders INNER JOIN customers ON orders.Customer_id=customers.id INNER JOIN stock ON orders.Stock_id=stock.id  WHERE ";
 $nums = str_replace("-", "", $value);
 $nums2 = str_replace("/", "", $nums);
 if(is_numeric($nums2)){
     $date = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
-    $statement .= "DATE(Delivery_time) = '$date'";
+    $statement .= "DATE(Delivery_time) = '$date' AND DATE(Delivery_time) $duration ORDER BY orders.id ASC;";
 } 
-elseif ($value == NULL){
-  $statement .= "DATE(Delivery_time) = CURRENT_DATE() ORDER BY orders.id ASC;";
+elseif (empty($value)){
+  $statement .= "DATE(Delivery_time) = CURRENT_DATE() AND DATE(Delivery_time) $duration ORDER BY orders.id ASC;";
 }
 else{
-    $statement .= "customers.Name LIKE '%$value%'";
+    $statement .= "customers.Name LIKE '%$value%' AND DATE(Delivery_time) $duration ORDER BY orders.id ASC;";
 }
 
 $searchQuery = mysqli_query($connection, $statement)or die($connection->error);
-
+$searchCount = mysqli_num_rows($searchQuery);
+if (($searchCount > 0) || (empty($value)))
+{
 $table = '
 <div id="menu" class="tab-pane fade main show active">
 <div class="row">
 <div class="col-12">
-<h6 class="offset-5">Total Number: '.mysqli_num_rows($searchQuery).'</h6>
+<h6 class="offset-5">Total Number: '.$searchCount.'</h6>
 </div>
 </div> 
 <table id="OrderSearch" class="table table-striped table-hover table-responsive" style="display:block;overflow-x:scroll;overflow-y:scroll;text-align: center;">
@@ -220,5 +237,15 @@ $table .= '</tbody>
 <ul class="nav nav-tabs">
 <li class="active"><a data-toggle="tab" class="nav-link salesTab active" href="#menu" style="color: inherit;">Filtered Orders</a></li>
 </ul>';
-
+}
+else
+{
+  $table = '<h4 style="display: flex;align-items: center;justify-content: center;top: 50%;left: 50%;margin-bottom:180px;margin-top:180px;">Order not found</h4>';
+}
 echo $table;
+
+
+
+  
+
+  

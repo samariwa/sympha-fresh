@@ -209,6 +209,20 @@ mysqli_query($connection,"Delete from `users` where id='".$id."'")or die($connec
     echo 1;
     exit();
  }
+ else if($where == 'duty' )
+{  
+    $id =$_POST['id'];
+   mysqli_query($connection,"Delete from `duties` where id='".$id."'")or die($connection->error);
+    echo 1;
+    exit();
+ }
+ else if($where == 'dutyCategory' )
+{  
+    $id =$_POST['id'];
+   mysqli_query($connection,"Delete from `duty_categories` where id='".$id."'")or die($connection->error);
+    echo 1;
+    exit();
+ }
  else if($where == 'asset' )
  {  
      $id =$_POST['id'];

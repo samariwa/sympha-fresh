@@ -102,6 +102,34 @@ else if ($where == 'categories') {
     mysqli_query($connection,"INSERT INTO `category` (`Category_Name`) VALUES ('$category')") or die(mysqli_error($connection));
    }
 }
+
+else if ($where == 'duty_categories') {
+  $category = $_POST['category'];
+  $row = mysqli_query($connection,"SELECT * FROM duty_categories WHERE category = '".$category."'")or die($connection->error);
+  $result = mysqli_fetch_array($row);
+  if ( $result == TRUE) {
+    echo "exists";
+  }
+  else{
+   echo "success";
+   mysqli_query($connection,"INSERT INTO `duty_categories` (`category`) VALUES ('$category')") or die(mysqli_error($connection));
+  }
+}
+
+else if ($where == 'duties') {
+  $category = $_POST['dutyCategoryId'];
+  $duty = $_POST['duty_name'];
+  $row = mysqli_query($connection,"SELECT * FROM duties WHERE duty = '".$duty."'")or die($connection->error);
+  $result = mysqli_fetch_array($row);
+  if ( $result == TRUE) {
+    echo "exists";
+  }
+  else{
+   echo "success";
+   mysqli_query($connection,"INSERT INTO `duties` (`duty`, `duty_category`) VALUES ('$duty','$category')") or die(mysqli_error($connection));
+  }
+}
+
 else if ($where == 'animal_product_units') {
   $parent = $_POST['parent_unit'];
   $child = $_POST['child_unit'];

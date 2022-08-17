@@ -3,12 +3,14 @@ class Customer extends Database{
 
     private $_db,
             $active_customers_stmt,
+            $clean_customers_stmt,
             $blacklisted_customers_stmt;
 
     public function __construct($customer = null)
     {
         $this->_db = Database::getInstance();
         $this->$active_customers_stmt = $this->connect()->query("SELECT * from customers WHERE Status != 'blacklisted' AND NOT id = '1' ORDER BY id DESC");
+        $this->$fined_customers_stmt = "SELECT * from customers WHERE Status = 'fined' OR Status = 'clean' OR Status = 'credit' AND NOT id = '1' ORDER BY id DESC";
       //$this->$blacklisted_customers_stmt = $this->connect()->query("SELECT customers.id as id,customers.Name, MAX(orders.created_at),customers.Location,customers.Number,customers.Deliverer,orders.Balance FROM orders INNER JOIN customers ON orders.Customer_id=customers.id where customers.Status='blacklisted' GROUP BY customers.id");
     }
 
@@ -19,6 +21,7 @@ class Customer extends Database{
             throw new Exception('error');
         }
     }
+
     
     public function deleteCustomer($id)
     {
@@ -48,6 +51,12 @@ class Customer extends Database{
     public function fetchActiveCustomers()
     {
         return $this->$active_customers_stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchFinedCustomers()
+    {
+        $query = $this->connect()->query($this->$fined_customers_stmt);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function activeCustomersCount()
